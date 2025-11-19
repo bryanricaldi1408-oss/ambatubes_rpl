@@ -1,0 +1,50 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Upload Kelas</title>
+</head>
+<body>
+    <header>
+        <div id="left">
+            <div class="header-left">AMBaTuBes</div>
+            <div class="header-center">Dashboard / Upload Kelas</div>
+        </div>
+        <div class="header-right">
+            <div class="user-icon">PP</div>
+            <div class="logout-icon">↪</div>
+        </div>
+        <link rel="stylesheet" href="addClasses.css"> 
+        <script type="text/javascript" src="addClasses.js" defer></script>
+    </header>
+
+    <main>
+        <h1 class="upload-title">Upload Kelas</h1>
+        <div class="upload-container">
+            <!-- Initial state (before file upload) -->
+            <div class="upload-initial" id="initialState">
+                <p class="file-info">Supported file: .xlsx</p>
+                <div class="upload-btn-container">
+                    <button class="upload-btn">+</button>
+                    <input type="file" id="fileInputInitial" class="file-input-overlay" accept=".xlsx">
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="cancel-btn" id="initialBackBtn">Back</button>
+                </div>
+            </div>
+            
+            <!-- After file upload state -->
+            <div class="upload-after" id="afterUploadState">
+                <div class="file-icon-container">
+                    <div class="file-icon">📊</div>
+                    <input type="file" id="fileInputAfter" class="file-input-overlay" accept=".xlsx">
+                    <p class="file-name" id="fileName">nama_file.xlsx</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="cancel-btn" id="cancelBtn">Cancel</button>
+                    <button class="save-btn" id="afterSaveBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

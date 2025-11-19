@@ -1,0 +1,249 @@
+@font-face {
+  font-family: ubuntuBold;
+  src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+}
+
+@font-face {
+  font-family: montserratBold;
+  src: url("fonts/Montserrat/static/Montserrat-Bold.ttf");
+}
+
+@font-face {
+  font-family: nunito;
+  src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+}
+
+
+@font-face {
+  font-family: nunitoBold;
+  src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+}
+
+@font-face {
+  font-family: nunitoExtraBold;
+  src: url("fonts/Nunito/static/Nunito-ExtraBold.ttf");
+}
+
+@font-face {
+  font-family: nunitoSemiBold;
+  src: url("fonts/Nunito/static/Nunito-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: nunitoExtraLight;
+  src: url("fonts/Nunito/static/Nunito-ExtraLight.ttf");
+}
+
+
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding-top: 70px;
+        }
+
+/* Header Styles */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #0169be;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+    margin-bottom: 60px;
+}
+
+#left{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.header-left {
+    font-size: 26px;
+    font-weight: bold;
+    color: white;
+    font-family: ubuntuBold;
+    margin-right: 30px;
+}
+
+.header-center {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    font-family: montserratBold;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: nunito;
+}
+
+.logout-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+        /* Main Content */
+        main {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            padding: 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Upload Container */
+        .upload-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 20px;
+            width: 850px;
+        }
+
+        .upload-title {
+            margin-bottom: 20px;
+            font-size: 37px;
+            font-family: nunitoExtraBold;
+        }
+
+        /* Initial Upload State */
+        .upload-initial {
+            text-align: center;
+            width: 100%;
+        }
+
+        .file-info {
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-family: nunitoSemiBold;
+        }
+
+        /* Upload Container */
+        .upload-container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn-container{
+            width: 100%;
+            display: flex;
+        }
+
+        .upload-btn {
+            padding: 10px 20px;
+            background-color: #0169be;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-bottom: 30px;
+            width: 100%;
+            height: 200px;
+            font-size: 75px;
+            font-family: nunitoExtraLight;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: right;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 23px;
+            cursor: pointer;
+            font-family: nunitoExtraBold;
+            font-size: 17px;
+            width: 120px;
+        }
+
+        .save-btn {
+            background-color: #0169be;
+            color: white;
+        }
+
+        .cancel-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* After Upload State */
+        .upload-after {
+            display: none;
+            width: 100%;
+            text-align: right;
+        }
+
+        .file-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            margin-top: 30px;
+            cursor: pointer;
+        }
+
+        .file-icon-container {
+            display: flex;
+            background-color: #0169be;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            margin-bottom: 30px;
+            width: 100%;
+            border-radius: 15px;
+        }
+
+        .file-name {
+            margin-bottom: 60px;
+            font-family: nunitoSemiBold;
+            font-size: 17px;
+        }
+
+
+        .file-input-overlay {
+            position: absolute;
+            width: 780px;
+            height: 200px;
+            opacity: 0;
+            cursor: pointer;
+        }
