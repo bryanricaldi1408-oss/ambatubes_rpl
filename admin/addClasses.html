@@ -6,11 +6,13 @@
     <header>
         <div id="left">
             <div class="header-left">AMBaTuBes</div>
-            <div class="header-center">Dashboard / Upload Kelas</div>
+            <div class="header-center">
+                <a id="toHome" href="adminHome.html">Dashboard</a> / Upload Kelas
+            </div>
         </div>
         <div class="header-right">
             <div class="user-icon">PP</div>
-            <div class="logout-icon">↪</div>
+            <div class="logout-icon"><img id="exitIcon" src="icons/exit.png"></div>
         </div>
         <link rel="stylesheet" href="addClasses.css"> 
         <script type="text/javascript" src="addClasses.js" defer></script>
@@ -35,7 +37,9 @@
             <!-- After file upload state -->
             <div class="upload-after" id="afterUploadState">
                 <div class="file-icon-container">
-                    <div class="file-icon">📊</div>
+                    <div class="file-icon">
+                        <img id="excelIcon" src="icons/excel.png">
+                    </div>
                     <input type="file" id="fileInputAfter" class="file-input-overlay" accept=".xlsx">
                     <p class="file-name" id="fileName">nama_file.xlsx</p>
                 </div>

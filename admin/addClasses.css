@@ -85,6 +85,18 @@ header {
     font-family: montserratBold;
 }
 
+#toHome{
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    font-family: montserratBold;
+    text-decoration: none;
+}
+
+#toHome:hover{
+    text-decoration: underline;
+}
+
 .header-right {
     display: flex;
     align-items: center;
@@ -111,6 +123,15 @@ header {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.logout-icon:hover{
+    background-color: #c5c5c5;
+}
+
+#exitIcon{
+    width: 26px;
+    height: 26px;
 }
 
         /* Main Content */
@@ -202,9 +223,17 @@ header {
             color: white;
         }
 
+        .save-btn:hover {
+            background-color: #86c6f1;
+        }
+
         .cancel-btn {
             background-color: #f5f5f5;
             color: #333;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c5c5c5;
         }
 
         /* After Upload State */
@@ -223,12 +252,13 @@ header {
 
         .file-icon-container {
             display: flex;
-            background-color: #0169be;
+            background-color: #f5f5f5;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 200px;
             margin-bottom: 30px;
+            padding-top: 25px;
             width: 100%;
             border-radius: 15px;
         }
@@ -246,4 +276,10 @@ header {
             height: 200px;
             opacity: 0;
             cursor: pointer;
+        }
+
+        #excelIcon{
+            width: 84px;
+            height: 112px;
+            filter: grayscale(100%);
         }

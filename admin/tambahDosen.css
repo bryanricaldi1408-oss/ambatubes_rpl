@@ -84,6 +84,26 @@ header {
     font-family: montserratBold;
 }
 
+#toHome{
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    font-family: montserratBold;
+    text-decoration: none;
+}
+
+#toHome:hover{
+    text-decoration: underline;
+}
+
+#toEdit{
+    font-family: montserratBold;
+}
+
+#toEdit:hover{
+    text-decoration: underline;
+}
+
 .header-right {
     display: flex;
     align-items: center;
@@ -111,6 +131,16 @@ header {
     justify-content: center;
     cursor: pointer;
 }
+
+.logout-icon:hover{
+    background-color: #c5c5c5;
+}
+
+#exitIcon{
+    width: 26px;
+    height: 26px;
+}
+
 /* Main Content */
 main {
     padding: 20px;
@@ -193,5 +223,5 @@ main {
 }
 
 .save-btn:hover {
-    background-color: #303f9f;
+    background-color: #86c6f1;
 }

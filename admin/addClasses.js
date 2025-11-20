@@ -46,10 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = 'adminHome.html';
             });
             
-            // After upload save button - do nothing for now
+            // After upload save button
             afterSaveBtn.addEventListener('click', function() {
-                // Placeholder for future implementation
-                console.log('Save button clicked after file upload');
+                window.location.href = 'adminHome.html';
             });
             
             // Cancel button - redirect to adminHome.html

@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
             nik: formData.get('nik')
         };
         
-        // Get class ID from URL parameters or session storage
+        // Get class ID from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const classId = urlParams.get('classId') || getClassIdFromContext();
+        const classId = urlParams.get('classId');
         
         // Send POST request to server
         submitDosenData(dosenData, classId)
@@ -26,31 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Failed to add dosen. Please try again.');
             });
     });
-    
-    // Function to get class ID from context
-    function getClassIdFromContext() {
-        // Try to get from session storage first
-        const storedClassId = sessionStorage.getItem('currentClassId');
-        if (storedClassId) {
-            return storedClassId;
-        }
-        
-        // If not in session storage, try to get from referrer
-        // This would work if coming from editKelas.html with classId in URL
-        if (document.referrer) {
-            const referrerUrl = new URL(document.referrer);
-            const referrerClassId = referrerUrl.searchParams.get('classId');
-            if (referrerClassId) {
-                // Store for future use
-                sessionStorage.setItem('currentClassId', referrerClassId);
-                return referrerClassId;
-            }
-        }
-        
-        // Fallback - you might want to handle this differently
-        console.warn('No class ID found, using default');
-        return 'default-class-id';
-    }
+
+    const linkToEdit = document.getElementById("toEdit");
+    linkToEdit.addEventListener("click", function(event){
+        // Get class ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const classId = urlParams.get('classId');
+        window.location.href = `editKelas.html?classId=${classId}`;
+    });
     
     // Function to submit dosen data to server
     async function submitDosenData(dosenData, classId) {
