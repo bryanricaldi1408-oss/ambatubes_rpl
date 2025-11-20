@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Tambah Mahasiswa</title>
+    <link rel="stylesheet" href="tambahMahasiswa.css">
+    <script type="text/javascript" src="tambahMahasiswa.js" defer></script>
+</head>
+<body>
+    <header>
+        <div id="left">
+            <div class="header-left">AMBaTuBes</div>
+            <div class="header-center">Dashboard / Edit / Tambah Mahasiswa</div>
+        </div>
+        <div class="header-right">
+            <div class="user-icon">PP</div>
+            <div class="logout-icon">↪</div>
+        </div>
+    </header>
+
+    <main>        
+        <h1 class="page-title">Tambah Mahasiswa</h1>
+        
+        <form id="mahasiswaForm" class="mahasiswa-form">
+            <div class="form-grid">
+                <div class="form-row">
+                    <label for="namaLengkap" class="form-label">Nama Lengkap</label>
+                    <input type="text" id="namaLengkap" name="namaLengkap" class="form-input" required>
+                </div>
+                <div class="form-row">
+                    <label for="nik" class="form-label">NIK</label>
+                    <input type="text" id="nik" name="nik" class="form-input" required>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
