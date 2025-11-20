@@ -23,17 +23,4 @@ document.addEventListener('DOMContentLoaded', function() {
         // In a real implementation, this would save the data and possibly redirect
         // window.location.href = 'homeAdmin.html';
     });
-    
-    // Delete button handlers (event delegation)
-    dosenList.addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-btn')) {
-            e.target.parentElement.remove();
-        }
-    });
-    
-    mahasiswaList.addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-btn')) {
-            e.target.parentElement.remove();
-        }
-    });
 });
