@@ -5,21 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMBaTuBes Dashboard</title>
     <link rel="stylesheet" href="mTubesDashboard.css">
+    <script type="text/javascript" src="mTubesDashboard.js" defer></script>
 </head>
+
 <body>
+    <!-- ========== NAVBAR ========== -->
     <header class="top-navbar">
-        <div class="nav-left">
-            <h1 class="brand-logo">AMBaTuBes</h1>
-            <span class="page-title"><a id="toHome" href="mahasiswaHome.html">Dashboard</a>/Tubes</span>
+    <div class="header-content">
+
+        <!-- KIRI: Brand + Breadcrumb -->
+        <div class="brand">
+            <span class="logo-text">AMBaTuBes</span>
+            <span class="separator">|</span>
+
+            <nav class="breadcrumb">
+                <a href="mahasiswaHome.html">Dashboard</a>
+                <span class="divider">/</span>
+                <span class="current">Tubes</span>
+            </nav>
         </div>
-        
-        <div class="nav-right">
-            <div class="user-initials-circle">PP</div>
-            <a href="#" class="logout-btn">
-                <img src="icons/exit.png" alt="Logout Icon">
-            </a>
+
+        <!-- KANAN: User + Logout -->
+        <div class="user-controls">
+            <div class="user-initials">PP</div>
+            <button class="logout-btn">
+                <img src="icons/exit.png" alt="Logout" class="icon-img">
+            </button>
         </div>
-    </header>
+
+    </div>
+</header>
 
     <main class="main-content">
         

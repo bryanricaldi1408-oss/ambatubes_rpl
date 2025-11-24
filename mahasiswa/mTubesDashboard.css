@@ -2,13 +2,15 @@
    RESET & GLOBAL STYLES
    ========================================= */
 :root {
-    --primary-blue: #0070c0; /* Biru sesuai header & kartu */
-    --bg-gray: #f2f2f2;      /* Background halaman */
-    --text-dark: #333333;
+    --primary: #0169be;
+    --primary-dark: #004e92;
+    --bg-body: #f4f7f9;
     --white: #ffffff;
-    --shadow-soft: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --shadow-card: 6px 6px 10px rgba(0, 0, 0, 0.15); /* Bayangan lebih tebal untuk kartu */
+    --text-dark: #333;
+    --text-light: #666;
+    --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
 }
+
 @font-face {
   font-family: ubuntuBold;
   src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
@@ -61,64 +63,113 @@ body {
 /* =========================================
    HEADER / NAVBAR
    ========================================= */
-.top-navbar {
-    background-color: var(--primary-blue);
-    color: var(--white);
+
+header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+/* supaya konten tidak ketutup header */
+body {
+    background-color: var(--bg-body);
+    font-family: 'nunito', sans-serif;
+    color: var(--text-dark);
+    padding-top: 80px; /* Space for fixed header */
+    min-height: 100vh;
+}
+
+
+.header-content {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
-    height: 70px;
 }
 
-/* Sisi Kiri: Logo & Judul Halaman */
-.nav-left {
+.brand {
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.logo-text {
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.separator {
+    font-size: 20px;
+    opacity: 0.5;
+    margin-right: 15px;
+}
+
+.breadcrumb {
+    font-family: 'nunitoBold';
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: white;
+}
+
+.breadcrumb .divider {
+    margin: 0 8px;
+    color: rgba(255,255,255,0.5);
+}
+
+.current {
+    color: white;
+    text-underline-offset: 4px;
+}
+
+/* USER CONTROLS – sama seperti sebelumnya */
+.user-controls {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.brand-logo {
-    font-size: 1.5rem;
-    font-weight: 800; /* Tebal */
-}
-
-.page-title {
-    font-size: 1.1rem;
-    font-weight: 400;
-    opacity: 0.9;
-}
-
-/* Sisi Kanan: User & Logout */
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.user-initials-circle {
+.user-initials {
     width: 40px;
     height: 40px;
-    background-color: var(--white);
-    color: var(--primary-blue); /* Text warna biru */
+    background: rgba(255,255,255,0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
     font-weight: bold;
-    font-size: 1rem;
+    border: 2px solid rgba(255,255,255,0.4);
 }
 
-.logout-btn img {
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+}
+
+.icon-img {
     width: 24px;
     height: 24px;
-    filter: brightness(0) invert(1); /* Mengubah icon hitam menjadi putih */
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.logout-btn img:hover {
-    transform: scale(1.1);
 }
 
 /* =========================================
@@ -207,7 +258,7 @@ body {
 }
 
 .card-header {
-    background-color: var(--primary-blue);
+    background-color: var(--primary);
     color: var(--white);
     padding: 20px;
     height: 80px; /* Tinggi area biru */
@@ -271,3 +322,4 @@ body {
     text-decoration: none;
     color: white;
 }
+

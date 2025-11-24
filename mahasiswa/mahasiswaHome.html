@@ -7,21 +7,27 @@
 </head>
 <body>
     
-    <header>
-        <div class="header-branding">
-            <div class="brand-logo">AMBaTuBes</div>
-            <div class="brand-divider"></div> 
-            <div class="page-title">Dashboard</div>
-        </div>
-        
-        <div class="header-controls">
-            <div class="user-profile">
-                <span>PP</span>
+    <header class="top-navbar">
+        <div class="header-content">
+            
+            <!-- KIRI: Brand + Breadcrumb -->
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                
+                <nav class="breadcrumb">
+                    <a class="current" href="mahasiswaHome.html">Dashboard</a>
+                </nav>
             </div>
             
-            <div class="logout-btn" title="Logout">
-                <img id="exitIcon" src="icons/exit.png" alt="Exit">
+            <!-- KANAN: User + Logout -->
+            <div class="user-controls">
+                <div class="user-initials">PP</div>
+                <button class="logout-btn">
+                    <img src="icons/exit.png" alt="Logout" class="icon-img">
+                </button>
             </div>
+            
         </div>
     </header>
     <main>
