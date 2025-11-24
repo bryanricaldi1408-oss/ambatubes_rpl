@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Dashboard Tubes Algoritma Pemrograman</title>
+</head>
+<body>
+    <header>
+        <div id="left">
+            <div class="header-left">AMBaTuBes</div>
+            <div class="header-center">Dashboard/Tubes</div>
+        </div>
+        <div class="header-right">
+            <div class="user-icon">PP</div>
+            <div class="logout-icon"><img id="exitIcon" src="icons/exit.png"></div>
+        </div>
+        <link rel="stylesheet" href="dosenTubes.css"> 
+        <script type="text/javascript" src="dosenTubes.js" defer></script>
+    </header>
+
+    <main>
+        <div class="info-dosen">
+            <img class="profile-dosen" src="icons/profile-dosen.png">
+                <!-- edit backend utk gelar-dosen -->
+                <span class="gelar-dosen">Dr. Gede Karya S.T., S.E., M.T. CISA, MPr.</span>
+        </div>
+        
+        <div class="info-matkul">
+            <!-- edit backend utk judul matkul -->
+            <div class="judul-matkul"> AIF 23020100 Algoritma Pemrograman</div>
+            <!-- edit backend utk desc matkul -->
+             <div class="desc-matkul">
+                <div class="info-kelas">Kelas A</div>
+                <div class="info-sem">Sem.Ganjil</div>
+                <div class="info-tahun">2024/2025</div>
+             </div>
+        </div>
+
+        <div class="class-grid">
+            <!-- Class Card Example -->
+            <div class="class-card" id="1">
+                <div class="class-header">
+                    <span></span>
+                    <span class="edit-icon">
+                        <img class="editIcon" src="icons/edit.png">
+                    </span>
+                    <span class="delete-icon">
+                        <img class="deleteIcon" src="icons/delete.png">
+                    </span>
+                </div>
+                <div class="class-details">
+                    <h3>Nama Tugas Besar</h3>
+                    <p>19-08-2025</p>
+                </div>
+            </div>
+
+            <div class="class-card" id="2">
+                <div class="class-header">
+                    <span></span>
+                    <span class="edit-icon">
+                        <img class="editIcon" src="icons/edit.png">
+                    </span>
+                    <span class="delete-icon">
+                        <img class="deleteIcon" src="icons/delete.png">
+                    </span>
+                </div>
+                <div class="class-details">
+                    <h3>Nama Tugas Besar</h3>
+                    <p>19-08-2025</p>
+                </div>
+            </div>
+
+            <!-- Add Class Button -->
+            <div class="add-class-card">
+                <div id="upload" class="add-button">+</div>
+            </div>
+        </div>
+
+        
+    </main>
+</body>
+</html>
