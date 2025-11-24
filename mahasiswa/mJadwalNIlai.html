@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=`, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal & Nilai</title>
     <link rel="stylesheet" href="mJadwalNilai.css">
 </head>
 <body>
+
+    <!-- ========== NAVBAR ========== -->
     <header class="top-navbar">
         <div class="nav-left">
             <h1 class="brand-logo">AMBaTuBes</h1>
-            <span class="page-title"><a id="toHome" href="mahasiswaHome.html">Dashboard</a>/Tubes</span>
+            <span class="page-title">
+                <a id="toHome" href="mahasiswaHome.html">Dashboard</a>/Tubes/Deskripsi/Jadwal&Nilai
+            </span>
         </div>
-        
+
         <div class="nav-right">
             <div class="user-initials-circle">PP</div>
             <a href="#" class="logout-btn">
@@ -20,6 +24,41 @@
             </a>
         </div>
     </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="content-container">
+
+        <h2 class="section-title">Jadwal & Nilai</h2>
+
+        <div class="table-card">
+            <table class="jadwal-table">
+
+                <thead>
+                    <tr>
+                        <th>Deadline</th>
+                        <th>Kegiatan</th>
+                        <th>Nilai</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Pertemuan ke-1</td>
+                        <td>Presentasi</td>
+                        <td>-</td>
+                        <td>
+                            <button class="detail-btn">Lihat Detail</button>
+                        </td>
+                    </tr>
+
+                    <!-- Tambah row lain jika diperlukan -->
+                </tbody>
+
+            </table>
+        </div>
+
+    </main>
 
 </body>
 </html>

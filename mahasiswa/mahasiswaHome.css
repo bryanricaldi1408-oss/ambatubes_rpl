@@ -64,90 +64,111 @@ body {
     min-height: 100vh;
 }
 
-/* =========================================
-   3. HEADER (NAVBAR)
-   ========================================= */
+/* ================= HEADER STYLES ================= */
 
+/* Container Utama Header */
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 80px;
-    background: var(--primary-gradient);
-    box-shadow: var(--shadow-header);
+    height: 70px; /* Tinggi header */
+    /* Gradient Biru Khas AMBaTuBes */
+    background: linear-gradient(90deg, #0072ff 0%, #00c6ff 100%); 
+    /* Atau jika ingin biru solid sesuai gambar sebelumnya: 
+       background-color: #0169be; */
+       
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 40px; /* Padding kiri-kanan lebih lega */
+    padding: 0 30px; /* Jarak kiri kanan */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Bayangan halus */
     z-index: 1000;
-    transition: all 0.3s ease;
+    color: white;
 }
 
-#left {
+/* Bagian Kiri: Logo & Judul Halaman */
+.header-branding {
     display: flex;
     align-items: center;
+    gap: 15px; /* Jarak antar elemen */
 }
 
-.header-left {
-    font-family: 'ubuntuBold', sans-serif;
-    font-size: 28px;
-    color: white;
-    margin-right: 25px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.brand-logo {
+    font-family: 'ubuntuBold', sans-serif; /* Pastikan font ini sudah di-load */
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
 }
 
-.header-center {
-    font-family: 'montserratBold', sans-serif;
+/* Garis Pemisah (Opsional, agar mirip breadcrumb) */
+.brand-divider {
+    height: 25px;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: rotate(15deg); /* Sedikit miring agar estetik */
+}
+
+.page-title {
+    font-family: 'nunitoBold', sans-serif;
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.9);
-    position: relative;
-    top: 2px;
+    opacity: 0.9; /* Sedikit transparan agar logo lebih menonjol */
 }
 
-.header-right {
+/* Bagian Kanan: User & Logout */
+.header-controls {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.user-icon {
-    width: 45px;
-    height: 45px;
+/* Lingkaran Inisial User (PP) */
+.user-profile {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2); /* Transparan putih */
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'nunitoBold';
+    
+    font-family: 'nunitoBold', sans-serif;
     font-size: 14px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(5px);
+    color: white;
+    cursor: default;
+    transition: background 0.3s;
 }
 
-.logout-icon {
-    width: 45px;
-    height: 45px;
-    background-color: white;
-    border-radius: 50%;
+.user-profile:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Tombol Logout */
+.logout-btn {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 35px;
+    height: 35px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    transition: background 0.2s;
 }
 
-.logout-icon:hover {
-    background-color: #ffe5e5; /* Merah muda lembut saat hover */
-    transform: rotate(90deg) scale(1.1);
+.logout-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 #exitIcon {
-    width: 20px;
-    height: 20px;
-    opacity: 0.7;
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1); /* Memaksa icon hitam jadi putih */
+    transition: transform 0.2s;
+}
+
+.logout-btn:hover #exitIcon {
+    transform: translateX(3px); /* Efek gerak sedikit saat hover */
 }
 
 /* =========================================
