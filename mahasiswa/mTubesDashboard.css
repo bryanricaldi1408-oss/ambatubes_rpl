@@ -1,0 +1,273 @@
+/* =========================================
+   RESET & GLOBAL STYLES
+   ========================================= */
+:root {
+    --primary-blue: #0070c0; /* Biru sesuai header & kartu */
+    --bg-gray: #f2f2f2;      /* Background halaman */
+    --text-dark: #333333;
+    --white: #ffffff;
+    --shadow-soft: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-card: 6px 6px 10px rgba(0, 0, 0, 0.15); /* Bayangan lebih tebal untuk kartu */
+}
+@font-face {
+  font-family: ubuntuBold;
+  src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+}
+
+@font-face {
+  font-family: montserratBold;
+  src: url("fonts/Montserrat/static/Montserrat-Bold.ttf");
+}
+
+@font-face {
+  font-family: nunito;
+  src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+}
+
+
+@font-face {
+  font-family: nunitoBold;
+  src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+}
+
+@font-face {
+  font-family: nunitoExtraBold;
+  src: url("fonts/Nunito/static/Nunito-ExtraBold.ttf");
+}
+
+@font-face {
+  font-family: nunitoSemiBold;
+  src: url("fonts/Nunito/static/Nunito-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: nunitoExtraLight;
+  src: url("fonts/Nunito/static/Nunito-ExtraLight.ttf");
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-gray);
+    color: var(--text-dark);
+}
+
+/* =========================================
+   HEADER / NAVBAR
+   ========================================= */
+.top-navbar {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    height: 70px;
+}
+
+/* Sisi Kiri: Logo & Judul Halaman */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-logo {
+    font-size: 1.5rem;
+    font-weight: 800; /* Tebal */
+}
+
+.page-title {
+    font-size: 1.1rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+/* Sisi Kanan: User & Logout */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-initials-circle {
+    width: 40px;
+    height: 40px;
+    background-color: var(--white);
+    color: var(--primary-blue); /* Text warna biru */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.logout-btn img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1); /* Mengubah icon hitam menjadi putih */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.logout-btn img:hover {
+    transform: scale(1.1);
+}
+
+/* =========================================
+   MAIN CONTENT
+   ========================================= */
+.main-content {
+    padding: 30px 50px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* -----------------------------------------
+   SECTION A: PROFIL & INFO KULIAH
+   ----------------------------------------- */
+.lecturer-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.lecturer-profile .profile-icon svg {
+    width: 45px;
+    height: 45px;
+    stroke: #000; /* Warna icon hitam */
+}
+
+.lecturer-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Kartu Putih Panjang (Pill) */
+.course-card-pill {
+    background-color: var(--white);
+    padding: 30px 40px;
+    border-radius: 40px; /* Membuat sudut sangat bulat seperti kapsul */
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.course-code {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.course-meta {
+    display: flex;
+    gap: 30px; /* Jarak antar item (Kelas, Sem, Tahun) */
+    font-size: 1rem;
+    color: #555;
+}
+
+/* -----------------------------------------
+   SECTION B: TUGAS BESAR (KARTU BIRU)
+   ----------------------------------------- */
+.tasks-section .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.cards-container {
+    display: flex;
+    gap: 30px; /* Jarak antar kartu */
+    flex-wrap: wrap; /* Agar turun ke bawah jika layar kecil */
+}
+
+/* Styling Kartu Tugas */
+.task-card {
+    background-color: var(--white);
+    border-radius: 25px; /* Sudut membulat kartu */
+    overflow: hidden; /* Agar header biru mengikuti border-radius */
+    width: 300px; /* Lebar tetap atau bisa pakai flex-basis */
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+}
+
+.task-card:hover {
+    transform: translateY(-5px); /* Efek naik sedikit saat di-hover */
+}
+
+.card-header {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 20px;
+    height: 80px; /* Tinggi area biru */
+    display: flex;
+    align-items: center;
+}
+
+.card-header h4 {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-body {
+    padding: 20px;
+    min-height: 120px; /* Tinggi area putih */
+}
+
+.card-body p {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* =========================================
+   RESPONSIVE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    .top-navbar {
+        padding: 15px;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+
+    .course-card-pill {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .course-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .cards-container {
+        justify-content: center;
+    }
+
+    .task-card {
+        width: 100%; /* Kartu lebar penuh di HP */
+    }
+
+}
+
+.page-title{
+    font-family:montserratBold;
+    font-size: 18px;
+    
+}
+.page-title a{
+    text-decoration: none;
+    color: white;
+}
