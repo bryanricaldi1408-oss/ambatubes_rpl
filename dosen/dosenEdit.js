@@ -1,0 +1,1 @@
+const uploadJadwal = document.querySelector('.progress-bar-container:nth-of-type(2)');

@@ -8,16 +8,31 @@
     <script type="text/javascript" src="dosenEdit.js" defer></script>
 </head>
 <body>
-    <header>
-        <div id="left">
-            <div class="header-left">AMBaTuBes</div>
-            <div class="header-center">Dashboard/Tubes/Edit</div>
+    <header class="top-navbar">
+    <div class="header-content">
+
+        <!-- KIRI: Brand + Breadcrumb -->
+        <div class="brand">
+            <span class="logo-text">AMBaTuBes</span>
+            <span class="separator">|</span>
+
+            <nav class="breadcrumb">
+                <a href="dosenHome.html">Dashboard</a>
+                <span class="divider">/</span>
+                <span class="current">Tubes</span>
+            </nav>
         </div>
-        <div class="header-right">
-            <div class="user-icon">PP</div>
-            <div class="logout-icon"><img id="exitIcon" src="icons/exit.png"></div>
+
+        <!-- KANAN: User + Logout -->
+        <div class="user-controls">
+            <div class="user-initials">PP</div>
+            <button class="logout-btn">
+                <img src="icons/exit.png" alt="Logout" class="icon-img">
+            </button>
         </div>
-    </header>
+
+    </div>
+</header>
 
     <div class="horizontal-progress-wrap">
         <div class="progress-bar-container horizontal">

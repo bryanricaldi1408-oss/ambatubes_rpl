@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Upload Jadwal</title>
+    <link rel="stylesheet" href="uploadJadwal.css"> 
+</head>
+<body>
+    <header class="top-navbar">
+        <div class="header-content">
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                <nav class="breadcrumb">
+                    <a href="dosenHome.html">Dashboard</a>
+                    <span class="divider">/</span>
+                    <a href="#">Tubes</a>
+                </nav>
+            </div>
+            <div class="user-controls">
+                <div class="user-initials">PP</div>
+                <button class="logout-btn">
+                    <img src="icons/exit.png" alt="Logout" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="horizontal-progress-wrap">
+        <div class="progress-bar-container horizontal">
+            <div class="step">
+                <span class="step-num">1</span>
+                <span class="step-desc">Detail Tugas</span>
+            </div>
+            <div class="step active">
+                <span class="step-num">2</span>
+                <span class="step-desc">Upload Jadwal</span>
+            </div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <span class="step-desc">Upload Rubrik</span>
+            </div>
+            <div class="step">
+                <span class="step-num">4</span>
+                <span class="step-desc">Buat Kelompok</span>
+            </div>
+            <div class="step disabled">
+                <span class="step-num">5</span>
+                <span class="step-desc">Penilaian</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        
+        <h1 class="page-title">Upload Jadwal</h1>
+
+        <div class="upload-card">
+            <p class="file-info">Supported file: <span class="ext">.xlsx</span></p>
+            
+            <form action="#" method="POST" enctype="multipart/form-data">
+                <label class="blue-dropzone">
+                    <input type="file" name="jadwalFile" accept=".xlsx" hidden>
+                    <div class="plus-sign">+</div>
+                </label>
+            </form>
+        </div>
+
+        <div class="action-container">
+            <button class="btn-save">Save</button>
+        </div>
+
+    </main>
+</body>
+</html>
