@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Tambah Dosen</title>
+    <link rel="stylesheet" th:href="@{/tambahDosen.css}">
+</head>
+<body>
+    <header>
+        <div id="left">
+            <div class="header-left">AMBaTuBes</div>
+            <div class="header-center">
+                <a id="toHome" th:href="@{/adminHome}">Dashboard</a> / 
+                <a id="toEdit" th:href="@{/editKelas/{classId}(classId=${classId})}">Edit</a> / 
+                Tambah Dosen
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-icon">PP</div>
+            <div class="logout-icon"><img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout"></div>
+        </div>
+    </header>
+
+    <main>        
+        <h1 class="page-title">Tambah Dosen</h1>        
+        <!-- Updated: Use Thymeleaf form with proper action and model binding -->
+        <form id="dosenForm" class="dosen-form" th:action="@{/editKelas/tambahDosen/{classId}(classId=${classId})}" th:object="${tambahDosenDto}" method="post">
+            <div class="form-grid">
+                <div class="form-row">
+                    <label for="namaLengkap" class="form-label">Nama Lengkap</label>
+                    <input type="text" id="namaLengkap" th:field="*{namaLengkap}" class="form-input" required>
+                </div>
+                <div class="form-row">
+                    <label for="nik" class="form-label">NIK</label>
+                    <input type="text" id="nik" th:field="*{nik}" class="form-input" required>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
