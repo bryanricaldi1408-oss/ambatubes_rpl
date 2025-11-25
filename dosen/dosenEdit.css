@@ -1,193 +1,442 @@
+/* =========================================
+   1. FONT SETUP & VARIABLES
+   ========================================= */
+
 @font-face {
-  font-family: ubuntuBold;
-  src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+    font-family: 'ubuntuBold';
+    src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+    font-display: swap; 
 }
 
 @font-face {
-  font-family: montserratBold;
-  src: url("fonts/Montserrat/static/Montserrat-Bold.ttf");
+    font-family: 'nunito';
+    src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+    font-display: swap;
 }
 
 @font-face {
-  font-family: nunito;
-  src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+    font-family: 'nunitoBold';
+    src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+    font-display: swap;
 }
 
-
-@font-face {
-  font-family: nunitoBold;
-  src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+:root {
+    --primary-color: #0169be;
+    --primary-dark: #00509e;
+    --primary-gradient: linear-gradient(135deg, #0169be 0%, #004e92 100%);
+    
+    --bg-body: #f4f7f9; 
+    --bg-white: #ffffff;
+    
+    --text-main: #333333;
+    --text-secondary: #666666;
+    
+    --shadow-soft: 0 5px 20px rgba(0, 0, 0, 0.1);
+    
+    --step-line: #b0c4de;
+    --step-active: var(--primary-color);
+    --step-disabled: #aaa;
 }
 
+/* =========================================
+   2. GLOBAL RESET & BODY
+   ========================================= */
 
-
-        
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-     font-family: Arial, sans-serif;
+    font-family: 'nunito', sans-serif;
 }
 
 body {
-    background-color: #f5f5f5;
-    padding-top: 70px;
+    background-color: var(--bg-body);
+    padding-top: 90px;
+    color: var(--text-main);
+    min-height: 100vh;
+    /* PASTIKAN BODY TIDAK OVERFLOW HIDDEN */
 }
 
-/* Header Styles */
+/* =========================================
+   3. HEADER STYLES
+   ========================================= */
+
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 70px;
-    background-color: #0169be;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: var(--primary-gradient);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 30px;
     z-index: 1000;
 }
 
-#left{
+#left {
     display: flex;
     align-items: center;
-    justify-content: left;
+    gap: 15px;
+    color: white;
 }
 
 .header-left {
-    font-size: 26px;
-    font-weight: bold;
-    color: white;
-    font-family: ubuntuBold;
-    margin-right: 30px;
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.5px;
 }
 
+/* Penyesuaian header-center agar sesuai gambar terakhir */
 .header-center {
+    font-family: 'nunitoBold', sans-serif;
     font-size: 18px;
-    font-weight: bold;
-    color: white;
-    font-family: montserratBold;
+    opacity: 1; /* Non-transparan */
+    position: relative;
+    padding-left: 20px;
+    color: var(--bg-white); /* Pastikan warna putih */
+}
+
+.header-center::before {
+    content: '/'; /* Ganti pemisah kembali ke slash */
+    position: absolute;
+    left: 0;
+    opacity: 0.8;
+    font-size: 20px;
+    top: 50%;
+    transform: translateY(-50%); /* Hapus rotasi */
+    font-family: 'nunito';
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 .user-icon {
     width: 40px;
     height: 40px;
+    background-color: rgba(255, 255, 255, 0.2); 
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
-    background-color: #e0e0e0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: nunito;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 14px;
+    color: white;
+    cursor: default;
 }
 
 .logout-icon {
-    width: 40px;
-    height: 40px;
-    background-color: #e0e0e0;
-    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    background: none;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
-.logout-icon:hover{
-    background-color: #c5c5c5;
+.logout-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-#exitIcon{
-    width: 26px;
-    height: 26px;
+#exitIcon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
 }
 
-/* Main Content */
+/* =========================================
+   4. PROGRESS BAR DAN MAIN LAYOUT
+   ========================================= */
+
+/* Mengganti display:none dari kode sebelumnya */
+.horizontal-progress-wrap {
+    background-color: var(--bg-white);
+    padding: 20px 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    /* Tampilan horizontal sekarang ada di sini */
+}
+
 main {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+    padding: 30px;
+    max-width: 1440px;
+    margin: 0 auto;
+    /* Hapus display:flex agar main tidak membatasi tinggi */
+    display: block; 
 }
 
-.progress-bar{
+/* =========================================
+   5. PROGRESS BAR HORIZONTAL
+   ========================================= */
+
+.progress-bar-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.step {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    height: 2px;
+    background-color: var(--step-line);
+    background-image: linear-gradient(to right, var(--step-line) 50%, rgba(255,255,255,0) 0%);
+    background-position: bottom;
+    background-size: 8px 1px;
+    background-repeat: repeat-x;
+    
+    top: 30px; 
+    left: calc(50% + 20px); 
+    width: calc(100% - 40px);
+    z-index: 0;
+    transition: background-color 0.3s;
+}
+
+.step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 18px;
+    color: var(--text-secondary);
+    background-color: var(--bg-white);
+    border: 3px solid var(--step-line);
+    transition: all 0.3s ease;
+    z-index: 1; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.step-desc {
+    font-family: 'nunitoBold', sans-serif;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* ---- STATE: ACTIVE ---- */
+
+.step.active .step-num {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--bg-white);
+    box-shadow: 0 0 0 5px rgba(1, 105, 190, 0.2);
+}
+
+.step.active .step-desc {
+    color: var(--primary-color);
+}
+
+.step.active:not(:last-child)::before {
+    /* Garis penuh untuk yang aktif (opsional) */
+    background-image: none;
+    background-color: var(--primary-color);
+}
+
+
+/* =========================================
+   6. CONTENT & FORM (Detail Tugas)
+   ========================================= */
+
+.content {
+    /* Menjadikan konten rata tengah di bawah progress bar */
+    max-width: 800px; 
+    margin: 30px auto 0 auto; 
+    padding: 0;
+}
+
+.detail-form-card {
+    background-color: var(--bg-white);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 18px;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.form-group input[type="text"] {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%; 
+    transition: border-color 0.3s;
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(1, 105, 190, 0.2);
+}
+
+.form-group.large-textarea textarea {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%; 
+    min-height: 150px;
+    resize: vertical;
+    font-family: 'nunito', sans-serif;
+    transition: border-color 0.3s;
+}
+
+.form-group.large-textarea textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(1, 105, 190, 0.2);
+}
+
+/* Tombol Aksi */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
     gap: 15px;
-    align-items: center;
-    justify-content: center;
+    margin-top: 30px;
 }
 
-.detail-tugas-desc{
-
+.upload-file-btn, .save-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.upload-jadwal-desc{
-
+.upload-file-btn {
+    background-color: var(--bg-white);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
 
-.upload-rubirk-desc{
-
+.upload-file-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--bg-white);
 }
 
-.buat-kelompok-desc{
-
+.save-btn {
+    background-color: var(--primary-color);
+    color: var(--bg-white);
+    box-shadow: 0 4px 10px rgba(1, 105, 190, 0.3);
 }
 
-.penilaian-desc{
-
+.save-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
+/* =========================================
+   7. RESPONSIVE DESIGN
+   ========================================= */
 
-.progress-bar-icon{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    margin-left: 0;
+@media (max-width: 992px) {
+    .horizontal-progress-wrap {
+        padding: 15px;
+    }
+
+    .progress-bar-container {
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+
+    .step-desc {
+        font-size: 12px;
+    }
 }
 
-.detail-tugas-icon{
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    border-radius: 50%;
+@media (max-width: 576px) {
+    header {
+        padding: 0 15px;
+    }
+
+    .horizontal-progress-wrap {
+        padding: 10px;
+    }
+    
+    .progress-bar-container {
+        flex-wrap: wrap; 
+        justify-content: center;
+        gap: 10px 0;
+    }
+    
+    .step {
+        flex: 0 0 50%;
+        padding: 5px;
+        text-align: center;
+    }
+    
+    .step:not(:last-child)::before {
+        content: none;
+    }
+    
+    .step:nth-child(odd)::after {
+        content: '';
+        position: absolute;
+        height: 2px;
+        width: 100%; 
+        background-color: var(--step-line);
+        bottom: 0;
+        left: 0;
+        opacity: 0.5;
+    }
+
+    .step-desc {
+        font-size: 11px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .upload-file-btn, .save-btn {
+        width: 100%;
+    }
 }
-
-.upload-jadwal-icon{
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    border-radius: 50%;
-}
-
-.upload-rubirk-icon{
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    border-radius: 50%;
-}
-
-.buat-kelompok-icon{
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    border-radius: 50%;
-}
-
-.penilaian-icon{
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    border-radius: 50%;
-}
-
-
-
-
-
