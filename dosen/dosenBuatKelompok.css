@@ -256,7 +256,7 @@ header {
 .form-group {
     margin-bottom: 25px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
 }
 
 .form-group label {
@@ -264,10 +264,7 @@ header {
     font-size: 16px;
     color: var(--text-main);
     margin-bottom: 8px;
-}
-
-.required-icon{
-    color: red;
+    width: 150px;
 }
 
 .form-group input[type="text"] {
@@ -275,9 +272,25 @@ header {
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
-    width: 100%; 
     background-color: #fcfcfc;
     transition: all 0.3s;
+    flex-grow: 1;
+}
+
+.form-group input[type="checkbox"]{
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    background-color: #fcfcfc;
+    transition: all 0.3s;
+    margin-left: 150px;
+    margin-right: 10px;
+}
+
+label[for="auto-create-group"] {
+    /* Gaya CSS khusus untuk label ini */
+    font-weight: bold;
+    padding-top: 5px;
 }
 
 .form-group input[type="text"]:focus {
@@ -290,26 +303,6 @@ header {
 /* Tooltip style warning (optional fix) */
 .form-group {
     position: relative;
-}
-
-.form-group.large-textarea textarea {
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    width: 100%; 
-    min-height: 150px;
-    resize: vertical;
-    font-family: 'nunito', sans-serif;
-    background-color: #fcfcfc;
-    transition: all 0.3s;
-}
-
-.form-group.large-textarea textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background-color: var(--white);
-    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
 }
 
 /* Tombol Aksi */
@@ -328,25 +321,7 @@ header {
     display: none; /* Sembunyikan jika tidak ada di desain, sesuaikan kebutuhan */
 }
 
-/* Kalau mau ada tulisan "Upload File(s)" teks biasa di kiri tombol save: */
-.upload-text-label {
-    font-family: 'nunitoBold', sans-serif;
-    color: var(--text-main);
-    margin-right: 15px;
-}
-
-.upload-file-btn {
-    /* Style disesuaikan jika ingin tombol 'Save' saja seperti gambar */
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-family: 'nunitoBold', sans-serif;
-    background-color: transparent;
-    border: 2px solid #ddd;
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-
-.save-btn {
+.buat-kelompok-btn {
     padding: 12px 35px;
     border: none;
     border-radius: 8px;
@@ -362,7 +337,7 @@ header {
 
 /* Agar tombol Save mirip gambar (Putih shadow, text hitam/abu) */
 /* Atau jika ingin biru seperti tema: */
-.save-btn.primary {
+.buat-kelompok-btn.primary {
     background-color: var(--bg-white); 
     color: var(--text-dark);
     font-weight: bold;
@@ -371,6 +346,19 @@ header {
 .save-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+
+.page-title {
+    font-family: 'nunitoExtraBold', sans-serif;
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.page-title-container{
+    display: flex;
+    justify-content: center;
 }
 
 /* =========================================

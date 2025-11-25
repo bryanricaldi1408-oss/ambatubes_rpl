@@ -1,26 +1,25 @@
 /* =========================================
-   RESET & GLOBAL STYLES
+   1. RESET & VARIABLES (Sama dengan dosenEdit)
    ========================================= */
 :root {
-    /* --- PERBAIKAN VARIABEL DI SINI --- */
-    --primary-color: #0169be;      /* Sebelumnya --primary, diubah agar cocok dgn pemakaian */
+    --primary-color: #0169be;      
     --primary-dark: #004e92;
     --bg-body: #f4f7f9;
-    --bg-gray: #f2f2f2;            /* Ditambahkan karena dipanggil di body */
-    --bg-white: #ffffff;           /* Ditambahkan agar cocok dgn var(--bg-white) */
+    --bg-gray: #f2f2f2;            
+    --bg-white: #ffffff;           
     --white: #ffffff;
     
-    --text-main: #333333;          /* Ditambahkan untuk label form */
+    --text-main: #333333;          
     --text-dark: #333333;
-    --text-secondary: #666666;     /* Ditambahkan untuk deskripsi step */
+    --text-secondary: #666666;     
     
-    --step-line: #dcdcdc;          /* Ditambahkan: Warna garis abu-abu progress bar */
+    --step-line: #dcdcdc;          
     
     --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
     --shadow-soft: 0 4px 8px rgba(0,0,0,0.05);
 }
 
-/* FONT FACES (Pastikan path file font benar) */
+/* FONT FACES */
 @font-face { font-family: ubuntuBold; src: url("fonts/Ubuntu/Ubuntu-Bold.ttf"); }
 @font-face { font-family: montserratBold; src: url("fonts/Montserrat/static/Montserrat-Bold.ttf"); }
 @font-face { font-family: nunito; src: url("fonts/Nunito/static/Nunito-Regular.ttf"); }
@@ -36,17 +35,16 @@
 }
 
 body {
-    font-family: 'nunito', 'Segoe UI', sans-serif; /* Prioritaskan font nunito */
-    background-color: var(--bg-body); /* Menggunakan bg-body agar biru muda */
+    font-family: 'nunito', 'Segoe UI', sans-serif;
+    background-color: var(--bg-body);
     color: var(--text-dark);
     padding-top: 80px; 
     min-height: 100vh;
 }
 
 /* =========================================
-   HEADER / NAVBAR
+   2. HEADER / NAVBAR (Copy dari dosenEdit)
    ========================================= */
-
 header {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     height: 70px;
@@ -91,7 +89,7 @@ header {
     font-size: 16px;
     display: flex;
     align-items: center;
-    color: white; /* Tambahan agar default putih */
+    color: white;
 }
 
 .breadcrumb a {
@@ -109,12 +107,6 @@ header {
     color: rgba(255,255,255,0.5);
 }
 
-.current {
-    color: white;
-    text-underline-offset: 4px;
-}
-
-/* USER CONTROLS */
 .user-controls {
     display: flex;
     align-items: center;
@@ -139,7 +131,7 @@ header {
     border: none;
     cursor: pointer;
     filter: brightness(0) invert(1);
-    display: flex; /* Supaya icon center */
+    display: flex;
 }
 
 .icon-img {
@@ -148,16 +140,14 @@ header {
 }
 
 /* =========================================
-   PROGRESS BAR HORIZONTAL
+   3. PROGRESS BAR (Copy dari dosenEdit)
    ========================================= */
-
-/* Wrapper Putih Panjang di atas */
 .horizontal-progress-wrap {
     background-color: var(--bg-white);
     padding: 20px 40px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     width: 100%;
-    margin-bottom: 30px; /* Jarak ke konten bawah */
+    margin-bottom: 30px;
 }
 
 .progress-bar-container {
@@ -165,7 +155,7 @@ header {
     margin: 0 auto;
     display: flex; 
     justify-content: space-between;
-    align-items: flex-start; /* Ubah ke flex-start agar teks sejajar atas */
+    align-items: flex-start;
     padding: 10px 0;
 }
 
@@ -181,16 +171,15 @@ header {
     z-index: 1;
 }
 
-/* Garis penghubung antar step */
 .step:not(:last-child)::before {
     content: '';
     position: absolute;
-    height: 3px; /* Garis sedikit lebih tebal */
+    height: 3px;
     background-color: var(--step-line);
-    top: 20px; /* Posisi tengah lingkaran (40px / 2) */
+    top: 20px;
     left: 50%; 
-    width: 100%; /* Lebar penuh ke kanan */
-    z-index: -1; /* Di belakang lingkaran */
+    width: 100%;
+    z-index: -1;
 }
 
 .step-num {
@@ -202,12 +191,9 @@ header {
     justify-content: center;
     font-family: 'ubuntuBold', sans-serif;
     font-size: 18px;
-    
-    /* Warna default (sebelum aktif) */
     color: var(--text-secondary);
     background-color: var(--bg-white);
     border: 3px solid var(--step-line);
-    
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -220,13 +206,12 @@ header {
     margin-top: 10px;
 }
 
-/* ---- STATE: ACTIVE ---- */
-
+/* State: Active */
 .step.active .step-num {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     color: var(--white);
-    box-shadow: 0 0 0 4px rgba(1, 105, 190, 0.2); /* Efek glow */
+    box-shadow: 0 0 0 4px rgba(1, 105, 190, 0.2);
 }
 
 .step.active .step-desc {
@@ -236,170 +221,117 @@ header {
 
 
 /* =========================================
-   CONTENT & FORM (Detail Tugas)
+   4. CONTENT: UPLOAD JADWAL (Estetik)
    ========================================= */
 
-.content {
-    max-width: 800px; 
-    margin: 0 auto 50px auto; 
-    padding: 0 20px;
+.main-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px 50px 20px;
+    text-align: center;
 }
 
-.detail-form-card {
-    background-color: var(--bg-white);
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: var(--shadow-card); /* Shadow lebih halus */
-    border: 1px solid rgba(0,0,0,0.03);
-}
-
-.form-group {
-    margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-family: 'nunitoBold', sans-serif;
-    font-size: 16px;
-    color: var(--text-main);
-    margin-bottom: 8px;
-}
-
-.required-icon{
-    color: red;
-}
-
-.form-group input[type="text"] {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    width: 100%; 
-    background-color: #fcfcfc;
-    transition: all 0.3s;
-}
-
-.form-group input[type="text"]:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background-color: var(--white);
-    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
-}
-
-/* Tooltip style warning (optional fix) */
-.form-group {
-    position: relative;
-}
-
-.form-group.large-textarea textarea {
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    width: 100%; 
-    min-height: 150px;
-    resize: vertical;
-    font-family: 'nunito', sans-serif;
-    background-color: #fcfcfc;
-    transition: all 0.3s;
-}
-
-.form-group.large-textarea textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background-color: var(--white);
-    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
-}
-
-/* Tombol Aksi */
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-/* Label "Upload File(s)" */
-.form-actions span {
-    font-family: 'nunitoBold';
-    margin-right: auto; /* Agar teks di kiri, tombol di kanan */
-    display: none; /* Sembunyikan jika tidak ada di desain, sesuaikan kebutuhan */
-}
-
-/* Kalau mau ada tulisan "Upload File(s)" teks biasa di kiri tombol save: */
-.upload-text-label {
-    font-family: 'nunitoBold', sans-serif;
-    color: var(--text-main);
-    margin-right: 15px;
-}
-
-.upload-file-btn {
-    /* Style disesuaikan jika ingin tombol 'Save' saja seperti gambar */
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-family: 'nunitoBold', sans-serif;
-    background-color: transparent;
-    border: 2px solid #ddd;
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-
-.save-btn {
-    padding: 12px 35px;
-    border: none;
-    border-radius: 8px;
-    font-family: 'nunitoBold', sans-serif;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #0169be;
-    color: white;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-}
-
-/* Agar tombol Save mirip gambar (Putih shadow, text hitam/abu) */
-/* Atau jika ingin biru seperti tema: */
-.save-btn.primary {
-    background-color: var(--bg-white); 
+.page-title {
+    font-family: 'nunitoExtraBold', sans-serif;
+    font-size: 2rem;
     color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+/* Kartu Putih Besar */
+.upload-card {
+    background-color: var(--bg-white);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 30px;
+}
+
+.file-info {
+    font-family: 'nunito', sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.ext {
+    font-family: 'nunitoBold', sans-serif;
     font-weight: bold;
 }
 
-.save-btn:hover {
+/* Tombol Biru Besar (Dropzone) */
+.blue-dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    width: 100%;
+    height: 120px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.blue-dropzone:hover {
+    background-color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(1, 105, 190, 0.3);
 }
 
-/* =========================================
-   RESPONSIVE DESIGN
-   ========================================= */
+.plus-sign {
+    color: white;
+    font-size: 4rem;
+    font-weight: 300;
+    margin-top: -8px; 
+    font-family: 'nunitoExtraLight', sans-serif;
+}
 
-@media (max-width: 992px) {
-    .horizontal-progress-wrap {
-        padding: 15px;
-    }
+/* Tombol Save (Pojok Kanan) */
+.action-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.btn-save {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 50px;
+    border-radius: 50px;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(1, 105, 190, 0.3);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-save:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Responsif HP */
+@media (max-width: 768px) {
     .progress-bar-container {
-        padding: 0;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 10px;
     }
-}
-
-@media (max-width: 576px) {
-    .step-desc {
-        font-size: 11px;
+    .progress-bar-container::before {
+        width: 600px; /* Agar garis tetap panjang saat scroll */
+    }
+    .step {
+        min-width: 100px;
     }
     
-    .detail-form-card {
+    .upload-card {
         padding: 20px;
     }
     
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .save-btn {
+    .btn-save {
         width: 100%;
     }
 }
