@@ -1,83 +1,82 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMBaTuBes - Dashboard Tubes Algoritma Pemrograman</title>
-</head>
+    <title>AMBaTuBes Dashboard</title>
+    <link rel="stylesheet" href="dosenTubes.css">
+    <script type="text/javascript" src="dosenTubes.js"></script>
+
 <body>
-    <header>
-        <div id="left">
-            <div class="header-left">AMBaTuBes</div>
-            <div class="header-center">Dashboard/Tubes</div>
-        </div>
-        <div class="header-right">
-            <div class="user-icon">PP</div>
-            <div class="logout-icon"><img id="exitIcon" src="icons/exit.png"></div>
-        </div>
-        <link rel="stylesheet" href="dosenTubes.css"> 
-        <script type="text/javascript" src="dosenTubes.js" defer></script>
-    </header>
+    <!-- ========== NAVBAR ========== -->
+    <header class="top-navbar">
+    <div class="header-content">
 
-    <main>
-        <div class="info-dosen">
-            <img class="profile-dosen" src="icons/profile-dosen.png">
-                <!-- edit backend utk gelar-dosen -->
-                <span class="gelar-dosen">Dr. Gede Karya S.T., S.E., M.T. CISA, MPr.</span>
+        <!-- KIRI: Brand + Breadcrumb -->
+        <div class="brand">
+            <span class="logo-text">AMBaTuBes</span>
+            <span class="separator">|</span>
+
+            <nav class="breadcrumb">
+                <a href="dosenHome.html">Dashboard</a>
+                <span class="divider">/</span>
+                <span class="current">Tubes</span>
+            </nav>
         </div>
+
+        <!-- KANAN: User + Logout -->
+        <div class="user-controls">
+            <div class="user-initials">PP</div>
+            <button class="logout-btn">
+                <img src="icons/exit.png" alt="Logout" class="icon-img">
+            </button>
+        </div>
+
+    </div>
+</header>
+
+    <main class="main-content">
         
-        <div class="info-matkul">
-            <!-- edit backend utk judul matkul -->
-            <div class="judul-matkul"> AIF 23020100 Algoritma Pemrograman</div>
-            <!-- edit backend utk desc matkul -->
-             <div class="desc-matkul">
-                <div class="info-kelas">Kelas A</div>
-                <div class="info-sem">Sem.Ganjil</div>
-                <div class="info-tahun">2024/2025</div>
-             </div>
-        </div>
-
-        <div class="class-grid">
-            <!-- Class Card Example -->
-            <div class="class-card" id="1">
-                <div class="class-header">
-                    <span></span>
-                    <span class="edit-icon">
-                        <img class="editIcon" src="icons/edit.png">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" src="icons/delete.png">
-                    </span>
+        <section class="info-section">
+            <div class="lecturer-profile">
+                <div class="profile-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
                 </div>
-                <div class="class-details">
-                    <h3>Nama Tugas Besar</h3>
-                    <p>19-08-2025</p>
-                </div>
+                <h2 class="lecturer-name">Dr. Gede Karya S.T., S.E., M.T. CISA, MPr.</h2>
             </div>
 
-            <div class="class-card" id="2">
-                <div class="class-header">
-                    <span></span>
-                    <span class="edit-icon">
-                        <img class="editIcon" src="icons/edit.png">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" src="icons/delete.png">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Nama Tugas Besar</h3>
-                    <p>19-08-2025</p>
+            <div class="course-card-pill">
+                <h3 class="course-code">AIF 23020100 Algortima Pemrograman</h3>
+                <div class="course-meta">
+                    <span class="meta-item">Kelas A</span>
+                    <span class="meta-item">Sem. Ganjil</span>
+                    <span class="meta-item">2024/2025</span>
                 </div>
             </div>
+        </section>
 
-            <!-- Add Class Button -->
-            <div class="add-class-card">
-                <div id="upload" class="add-button">+</div>
-            </div>
-        </div>
+        </section>
 
-        
+        <section class="tasks-section">
+            <div class="cards-container">
+                
+                <button class="add-card-dashed" onclick="handleTambahTugas()">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+
+                </div>
+        </section>
+
     </main>
+
+    </main>
+
+    <script type="text/javascript" src="adminHome.js"></script>
 </body>
 </html>

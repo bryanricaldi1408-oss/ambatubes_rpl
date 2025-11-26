@@ -65,117 +65,111 @@ body {
     min-height: 100vh;
 }
 
-/* =========================================
-   3. HEADER STYLES
-   ========================================= */
-
+/* ================= HEADER ================= */
 header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    height: 70px;
+    width: 100%;
     position: fixed;
     top: 0;
     left: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.header-content {
     width: 100%;
-    height: 70px; /* Tinggi header */
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    box-shadow: var(--shadow-header);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 30px; /* Jarak kiri kanan */
-    z-index: 1000;
 }
 
-/* KIRI: Logo + Page Title (meniru breadcrumb) */
-#left {
+.brand {
     display: flex;
     align-items: center;
-    gap: 15px;
     color: white;
 }
 
-/* AMBaTuBes (Brand Logo) */
-.header-left {
+.logo-text {
     font-family: 'ubuntuBold', sans-serif;
     font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
+    margin-right: 15px;
 }
 
-/* Dashboard (Page Title, menggantikan header-center) */
-.header-center {
-    font-family: 'nunitoBold', sans-serif;
-    font-size: 18px;
-    opacity: 0.9;
-    /* Tambahkan pemisah visual */
-    position: relative;
-    padding-left: 20px;
-}
-
-.header-center::before {
-    content: '|';
-    position: absolute;
-    left: 0;
-    opacity: 0.5;
+.separator {
     font-size: 20px;
-    top: 50%;
-    transform: translateY(-50%) rotate(15deg);
+    opacity: 0.5;
+    margin-right: 15px;
 }
 
-
-/* KANAN: User + Logout */
-.header-right {
+/* Breadcrumb Styling */
+.breadcrumb {
+    font-family: 'nunitoBold';
+    font-size: 16px;
     display: flex;
     align-items: center;
-    gap: 20px;
 }
 
-/* Lingkaran Inisial User (PP) */
-.user-icon {
+.breadcrumb a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: white;
+}
+
+.breadcrumb .divider {
+    margin: 0 8px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumb .current {
+    color: white;
+    text-underline-offset: 4px;
+}
+
+/* User Controls */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-initials {
     width: 40px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.2); /* Transparan putih */
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255,255,255,0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    font-family: 'nunitoBold', sans-serif;
-    font-size: 14px;
     color: white;
-    cursor: default;
-    transition: background 0.3s;
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.4);
 }
 
-.user-icon:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Tombol Logout */
-.logout-icon {
-    width: 35px;
-    height: 35px;
+.logout-btn {
     background: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: none;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.2s;
+    filter: brightness(0) invert(1); /* Putihkan icon */
+    opacity: 0.8;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
-.logout-icon:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.logout-btn:hover {
+    transform: translateX(3px);
+    opacity: 1;
 }
 
-#exitIcon {
+.icon-img {
     width: 24px;
     height: 24px;
-    filter: brightness(0) invert(1); /* Memaksa icon hitam jadi putih */
-    transition: transform 0.2s;
-}
-
-.logout-icon:hover #exitIcon {
-    transform: translateX(3px); /* Efek gerak sedikit saat hover */
 }
 
 

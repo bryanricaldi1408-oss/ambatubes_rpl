@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <head>
     <title>AMBaTuBes Dashboard</title>
+    <link rel="stylesheet" href="dosenHome.css"> 
+    <script type="text/javascript" src="dosenHome.js" defer></script>
 </head>
 <body>
-    <header>
-        <div id="left">
-            <div class="header-left">AMBaTuBes</div>
-            <div class="header-center">Dashboard</div>
+    <header class="top-navbar">
+        <div class="header-content">
+            
+            <!-- KIRI: Brand + Breadcrumb -->
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                
+                <nav class="breadcrumb">
+                    <a class="current" href="mahasiswaHome.html">Dashboard</a>
+                </nav>
+            </div>
+            
+            <!-- KANAN: User + Logout -->
+            <div class="user-controls">
+                <div class="user-initials">PP</div>
+                <button class="logout-btn">
+                    <img src="icons/exit.png" alt="Logout" class="icon-img">
+                </button>
+            </div>
+            
         </div>
-        <div class="header-right">
-            <div class="user-icon">PP</div>
-            <div class="logout-icon"><img id="exitIcon" src="icons/exit.png"></div>
-        </div>
-        <link rel="stylesheet" href="dosenHome.css"> 
-        <script type="text/javascript" src="dosenHome.js" defer></script>
     </header>
 
     <main>
