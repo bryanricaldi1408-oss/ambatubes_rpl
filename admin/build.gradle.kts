@@ -36,6 +36,13 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	// Apache POI for Excel parsing
+    implementation("org.apache.poi:poi:5.2.4")
+    implementation("org.apache.poi:poi-ooxml:5.2.4")
+    
+    // For file upload
+    implementation("commons-io:commons-io:2.13.0")
 }
 
 tasks.withType<Test> {
