@@ -21,4 +21,8 @@ public class PengajaranKelas {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "nik", referencedColumnName = "nik", insertable = false, updatable = false)
     private Dosen dosen;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idkelas", referencedColumnName = "idkelas", insertable = false, updatable = false)
+    private Kelas kelas;
 }

@@ -1,10 +1,12 @@
 package com.example.admin.service;
 
 import com.example.admin.dto.ClassDisplayDto;
+import com.example.admin.entity.Kelas;
 import com.example.admin.repository.KelasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,5 +38,25 @@ public class KelasService {
                     kelas.getDosen().getNama()
                 ))
                 .orElseThrow(() -> new RuntimeException("Class not found with id: " + classId));
+    }
+
+    public Kelas saveKelas(Kelas kelas) {
+    return kelasRepository.save(kelas);
+}
+
+    public Optional<Kelas> findKelasByCompositeKey(String kodeMk, String namaKelas, String semester) {
+        return kelasRepository.findByCompositeKey(kodeMk, namaKelas, semester);
+    }
+
+    public boolean existsByCompositeKey(String kodeMk, String namaKelas, String semester) {
+        return kelasRepository.findByCompositeKey(kodeMk, namaKelas, semester).isPresent();
+    }
+    
+    public Optional<Kelas> findByCompositeKey(String kodeMk, String namaKelas, String semester) {
+        return kelasRepository.findByCompositeKey(kodeMk, namaKelas, semester);
+    }
+    
+    public Optional<Integer> findIdKelasByCompositeKey(String kodeMk, String namaKelas, String semester) {
+        return kelasRepository.findIdKelasByCompositeKey(kodeMk, namaKelas, semester);
     }
 }

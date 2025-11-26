@@ -23,4 +23,8 @@ public class PengajaranKelasService {
     public List<PengajaranKelas> findByKelasWithDosen(Integer idKelas) {
         return pengajaranKelasRepository.findByKelasWithDosen(idKelas);
     }
+
+    public boolean existsByCompositeKey(String nik, String kodeMk, String namaKelas, String semester) {
+        return pengajaranKelasRepository.existsByCompositeKey(nik, kodeMk, namaKelas, semester);
+    }
 }

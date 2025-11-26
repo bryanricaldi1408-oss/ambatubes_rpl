@@ -14,7 +14,14 @@ public interface PengambilanKelasRepository extends JpaRepository<PengambilanKel
     List<PengambilanKelas> findByKelasWithMahasiswa(@Param("idKelas") Integer idKelas);
     
     List<PengambilanKelas> findByIdKelas(Integer idKelas);
-
+    
     @Query("SELECT pk FROM PengambilanKelas pk WHERE pk.npm = :npm AND pk.idKelas = :idKelas")
     PengambilanKelas findByNpmAndIdKelas(@Param("npm") String npm, @Param("idKelas") Integer idKelas);
+    
+    @Query("SELECT COUNT(pk) > 0 FROM PengambilanKelas pk JOIN pk.kelas k JOIN k.mataKuliah mk " +
+           "WHERE pk.npm = :npm AND mk.kodeMk = :kodeMk AND k.namaKelas = :namaKelas AND k.semester = :semester")
+    boolean existsByCompositeKey(@Param("npm") String npm, 
+                                @Param("kodeMk") String kodeMk, 
+                                @Param("namaKelas") String namaKelas, 
+                                @Param("semester") String semester);
 }
