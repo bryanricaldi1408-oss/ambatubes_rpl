@@ -18,7 +18,11 @@
         </div>
         <div class="header-right">
             <div class="user-icon">PP</div>
-            <div class="logout-icon"><img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout"></div>
+            <div class="logout-icon">
+                <a th:href="@{/}">
+                    <img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout">
+                </a>
+            </div>
         </div>
     </header>
 

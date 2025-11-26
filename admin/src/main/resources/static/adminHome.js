@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const uploadButton = document.getElementById("upload");
-    
-    // Redirect to addClasses.html
-    uploadButton.addEventListener('click', function() {
-        window.location.href = 'addClasses.html';
-    });
-
     // Toggle filter panel
     const filterBtn = document.getElementById('filterBtn');
     const filterPanel = document.getElementById('filterPanel');

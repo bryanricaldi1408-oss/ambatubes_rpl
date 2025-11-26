@@ -216,6 +216,10 @@ header {
             font-family: nunitoExtraBold;
             font-size: 17px;
             width: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
         }
 
         .save-btn {
