@@ -23,7 +23,7 @@ public class PengambilanKelas {
     private Mahasiswa mahasiswa;
     
     // Add this relationship
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idkelas", referencedColumnName = "idkelas", insertable = false, updatable = false)
     private Kelas kelas;
 }

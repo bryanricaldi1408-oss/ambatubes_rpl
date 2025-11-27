@@ -15,7 +15,11 @@
         </div>
         <div class="header-right">
             <div class="user-icon">PP</div>
-            <div class="logout-icon"><img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout"></div>
+            <div class="logout-icon">
+                <a th:href="@{/}">
+                    <img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout">
+                </a>
+            </div>
         </div>
     </header>
 
@@ -70,9 +74,9 @@
             </div>
                 
             <!-- Add Class Button -->
-            <div class="add-class-card">
-                <div id="upload" class="add-button">+</div>
-            </div>
+            <a th:href="@{/addClasses}" class="add-class-card">
+                <div class="add-button">+</div>
+            </a>
         </div>
     </main>
 </body>

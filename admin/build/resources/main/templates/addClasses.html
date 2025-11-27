@@ -7,12 +7,16 @@
         <div id="left">
             <div class="header-left">AMBaTuBes</div>
             <div class="header-center">
-                <a id="toHome" href="adminHome.html">Dashboard</a> / Upload Kelas
+                <a id="toHome" th:href="@{/adminHome}">Dashboard</a> / Upload Kelas
             </div>
         </div>
         <div class="header-right">
             <div class="user-icon">PP</div>
-            <div class="logout-icon"><img id="exitIcon" th:src="@{/icons/exit.png}"></div>
+            <div class="logout-icon">
+                <a th:href="@{/}">
+                    <img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout">
+                </a>
+            </div>
         </div>
         <link rel="stylesheet" th:href="@{/addClasses.css}"> 
         <script type="text/javascript" th:src="@{/addClasses.js}" defer></script>
@@ -20,6 +24,7 @@
 
     <main>
         <h1 class="upload-title">Upload Kelas</h1>
+        <!-- Replace the entire upload-container div -->
         <div class="upload-container">
             <!-- Initial state (before file upload) -->
             <div class="upload-initial" id="initialState">
@@ -30,22 +35,25 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="cancel-btn" id="initialBackBtn">Back</button>
+                    <a th:href="@{/adminHome}" class="cancel-btn" id="initialBackBtn">Back</a>
                 </div>
             </div>
             
             <!-- After file upload state -->
-            <div class="upload-after" id="afterUploadState">
+            <div class="upload-after" id="afterUploadState" style="display: none;">
                 <div class="file-icon-container">
                     <div class="file-icon">
-                        <img id="excelIcon" th:src="@{/icons/excel.png}">
+                        <img id="excelIcon" th:src="@{/icons/excel.png}" alt="Excel File">
                     </div>
-                    <input type="file" id="fileInputAfter" class="file-input-overlay" accept=".xlsx">
                     <p class="file-name" id="fileName">nama_file.xlsx</p>
                 </div>
                 <div class="action-buttons">
-                    <button class="cancel-btn" id="cancelBtn">Cancel</button>
-                    <button class="save-btn" id="afterSaveBtn">Save</button>
+                    <a th:href="@{/adminHome}" class="cancel-btn" id="cancelBtn">Cancel</a>
+                    <!-- Updated: Use form submit instead of button -->
+                    <form id="uploadForm" th:action="@{/uploadClasses}" method="post" enctype="multipart/form-data" style="display: inline;">
+                        <input type="file" id="fileInput" name="file" style="display: none;" accept=".xlsx">
+                        <button type="submit" class="save-btn" id="afterSaveBtn">Save</button>
+                    </form>
                 </div>
             </div>
         </div>
