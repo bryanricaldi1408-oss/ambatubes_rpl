@@ -9,91 +9,91 @@
 </head>
 
 <body>
-    <!-- ========== NAVBAR ========== -->
     <header class="top-navbar">
-    <div class="header-content">
-
-        <!-- KIRI: Brand + Breadcrumb -->
-        <div class="brand">
-            <span class="logo-text">AMBaTuBes</span>
-            <span class="separator">|</span>
-
-            <nav class="breadcrumb">
-                <a href="mahasiswaHome.html">Dashboard</a>
-                <span class="divider">/</span>
-                <span class="current">Tubes</span>
-            </nav>
-        </div>
-
-        <!-- KANAN: User + Logout -->
-        <div class="user-controls">
-            <div class="user-initials">PP</div>
-            <button class="logout-btn">
+        <div class="header-content">
+            
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                
+                <nav class="breadcrumb">
+                    <a href="/mahasiswa/home">Dashboard</a>
+                    <span class="divider">/</span>
+                    <span class="current">Tubes</span>
+                </nav>
+            </div>
+            
+            <div class="user-controls">
+                <div class="user-initials" 
+                th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
+                PP
+            </div>
+            <button class="logout-btn" onclick="window.location.href='/logout'">
                 <img src="/icons/exit.png" alt="Logout" class="icon-img">
             </button>
         </div>
-
+        
     </div>
 </header>
 
-    <main class="main-content">
-        
-        <section class="info-section">
-            <div class="lecturer-profile">
-                <div class="profile-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </div>
-                <h2 class="lecturer-name">Dr. Gede Karya S.T., S.E., M.T. CISA, MPr.</h2>
+<main class="main-content">
+    
+    <section class="info-section">
+        <div class="lecturer-profile">
+            <div class="profile-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
             </div>
-
-            <div class="course-card-pill">
-                <h3 class="course-code">AIF 23020100 Algortima Pemrograman</h3>
-                <div class="course-meta">
-                    <span class="meta-item">Kelas A</span>
-                    <span class="meta-item">Sem. Ganjil</span>
-                    <span class="meta-item">2024/2025</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="tasks-section">
-            <h3 class="section-title">Nama Tugas Besar</h3>
             
-            <div class="cards-container">
-                <article class="task-card">
-                    <div class="card-header">
-                        <h4>Nama Tugas Besar</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>tanggal upload</p>
-                    </div>
-                </article>
+            <h2 class="lecturer-name" 
+            th:text="${kelasActive.dosen?.nama != null ? kelasActive.dosen.nama : 'Dosen Belum Ditentukan'}">
+            Nama Dosen
+        </h2>
+    </div>
+    
+    <div class="course-card-pill">
+        <h3 class="course-code" 
+        th:text="${(kelasActive.mataKuliah?.kodeMk != null ? kelasActive.mataKuliah.kodeMk : '') + ' ' + (kelasActive.mataKuliah?.namaMk != null ? kelasActive.mataKuliah.namaMk : '')}">
+        Kode & Nama MK
+    </h3>
+    
+    <div class="course-meta">
+        <span class="meta-item" th:text="'Kelas ' + ${kelasActive.namaKelas}">Kelas A</span>
+        
+        <span class="meta-item" th:text="${kelasActive.semester}">Semester</span>
+    </div>
+</div>
+</section>
 
-                <article class="task-card">
-                    <div class="card-header">
-                        <h4>Nama Tugas Besar</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>tanggal upload</p>
-                    </div>
-                </article>
+<section class="tasks-section">
+    <h3 class="section-title">Daftar Tugas Besar</h3>
+    
+    <div class="cards-container">
+        <div th:if="${kelasActive.tugasBesarList == null or kelasActive.tugasBesarList.empty}" 
+        style="padding: 10px; color: #666;">
+        <p>Belum ada tugas besar.</p>
+    </div>
+    
+    <a th:each="tubes : ${kelasActive.tugasBesarList}"
+    th:href="@{/mahasiswa/tubes/deskripsi/{id}(id=${tubes.idTubes})}"
+    style="text-decoration: none; color: inherit;">
+    
+    <article class="task-card">
+        <div class="card-header">
+            <h4 th:text="${tubes.namaTugas}">Nama Tugas</h4>
+        </div>
+        <div class="card-body">
+            <p th:text="'Diunggah: ' + ${tubes.tanggalDibuat}">Tanggal</p>
+        </div>
+    </article>
+    
+</a>
+</div>
+</section>
 
-                <article class="task-card">
-                    <div class="card-header">
-                        <h4>Nama Tugas Besar</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>tanggal upload</p>
-                    </div>
-                </article>
-            </div>
-        </section>
+</main>
 
-    </main>
-
-    <script type="text/javascript" src="adminHome.js"></script>
 </body>
 </html>

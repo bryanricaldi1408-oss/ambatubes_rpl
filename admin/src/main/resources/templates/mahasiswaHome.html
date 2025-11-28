@@ -9,27 +9,25 @@
     
     <header class="top-navbar">
         <div class="header-content">
-            
-            <!-- KIRI: Brand + Breadcrumb -->
             <div class="brand">
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
-                
                 <nav class="breadcrumb">
                     <a class="current" href="mahasiswaHome.html">Dashboard</a>
                 </nav>
             </div>
-            
-            <!-- KANAN: User + Logout -->
             <div class="user-controls">
-                <div class="user-initials">PP</div>
-                <button class="logout-btn">
+                <div class="user-initials" 
+                     th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
+                     PP
+                </div>
+                <button class="logout-btn" onclick="window.location.href='/logout'">
                     <img src="/icons/exit.png" alt="Logout" class="icon-img">
                 </button>
             </div>
-            
         </div>
     </header>
+
     <main>
         <div class="controls">
             <button class="filter-btn" id="filterBtn">
@@ -40,18 +38,14 @@
                 <button class="search-btn">
                     <img id="searchIcon" src="/icons/searchGlass.png">
                 </button>
-                <input type="text">
+                <input type="text" id="searchInput" placeholder="Cari mata kuliah...">
             </div>
         </div>
         
         <div class="filter-panel" id="filterPanel">
             <div class="filter-options">
-                <label>
-                    <input type="checkbox" id="inProgress"> In-Progress
-                </label>
-                <label>
-                    <input type="checkbox" id="past"> Past
-                </label>
+                <label><input type="checkbox" id="inProgress"> In-Progress</label>
+                <label><input type="checkbox" id="past"> Past</label>
             </div>
             <select id="semesterSelect">
                 <option>Pendek 2025/2026</option>
@@ -60,19 +54,31 @@
             </select>
         </div>
         
-        <div class="class-grid">
-            <div class="class-card" th:each="kelas : ${mahasiswa.listKelas}">
+        <div class="class-grid" id="classGrid">
+            
+            <a th:each="kelas : ${mahasiswa.listKelas}"
+               th:href="@{/mahasiswa/tubes/{id}(id=${kelas.idKelas})}" 
+               class="class-card-link"
+               style="text-decoration: none; color: inherit; display: block;">
+            
+                <div class="class-card" 
+                     th:if="${kelas.mataKuliah != null}"
+                     th:data-nama="${#strings.toLowerCase(kelas.mataKuliah.namaMk)}"
+                     th:data-semester="${kelas.semester}">
                 
-                <div class="class-header">
-                    <span></span> 
+                    <div class="class-header">
+                        <span></span>
+                    </div>
+                    
+                    <div class="class-details">
+                        <h3 th:text="${kelas.mataKuliah.namaMk}">Nama MK</h3>
+                        <p th:text="'Kelas ' + ${kelas.namaKelas}">Kelas</p>
+                        <p th:text="${kelas.semester}">Semester</p>
+                        <p th:text="${kelas.dosen != null ? kelas.dosen.nama : '-'}">Dosen</p>
+                    </div>
                 </div>
-                <div class="class-details">
-                    <h3 th:text="${kelas.mataKuliah.namaMk}">Nama Mata Kuliah</h3>
-                    <p th:text="'Kelas ' + ${kelas.namaKelas}">Kelas</p>
-                    <p th:text="${kelas.semester}">Semester</p>
-                    <p th:text="${kelas.dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
+            </a>
+            
         </div>
     </main>
 </body>

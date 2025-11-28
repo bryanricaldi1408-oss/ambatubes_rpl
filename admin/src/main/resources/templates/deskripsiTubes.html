@@ -15,17 +15,22 @@
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
                 <nav class="breadcrumb">
-                    <a href="mahasiswaHome.html">Dashboard</a>
+                    <a href="/mahasiswa/home">Dashboard</a>
                     <span class="divider">/</span>
-                    <a href="mTubesDashboard.html">Tubes</a>
+                    
+                    <a th:href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
+                    
                     <span class="divider">/</span>
                     <span class="current">Deskripsi</span>
                 </nav>
             </div>
             
             <div class="user-controls">
-                <div class="user-initials">PP</div>
-                <button class="logout-btn">
+                <div class="user-initials" 
+                     th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
+                     PP
+                </div>
+                <button class="logout-btn" onclick="window.location.href='/logout'">
                     <img src="/icons/exit.png" alt="Logout" class="icon-img">
                 </button>
             </div>
@@ -35,28 +40,40 @@
     <main>
         <div class="detail-card">
             <div class="card-header">
-                <h1>Nama Tugas Besar</h1>
+                <h1 th:text="${tubesActive.namaTugas}">Nama Tugas Besar</h1>
                 <div class="status-badge">Aktif</div>
             </div>
 
             <div class="card-body">
-                <p class="placeholder-text">[Deskripsi Tugas Besar akan ditampilkan di sini. Misalnya: Penjelasan mengenai spesifikasi tugas, batasan masalah, dan tujuan pengerjaan tugas akhir semester ini.]</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p style="white-space: pre-line;" th:text="${tubesActive.deskripsi}">
+                   Deskripsi tugas akan muncul di sini...
+                </p>
+                
+                <p style="margin-top: 20px; font-size: 0.9em; color: #666;" 
+                   th:text="'Tanggal Dibuat: ' + ${tubesActive.tanggalDibuat}">
+                </p>
             </div>
 
             <div class="card-actions">
-                <button class="action-btn" id="jadwal">
-                    <span class="btn-icon">📅</span> Jadwal & Nilai
-                </button>
+                
+                <a th:href="@{/mahasiswa/tubes/jadwal-nilai/{id}(id=${tubesActive.idTubes})}" 
+                   style="text-decoration: none;">
+                    <button class="action-btn" id="jadwal" type="button">
+                        <span class="btn-icon">📅</span> Jadwal & Nilai
+                    </button>
+                </a>
+
                 <button class="action-btn" id="rubrik">
                     <span class="btn-icon">📄</span> Unduh Rubrik
                 </button>
-                <button class="action-btn" id="kelompok">
-                    <span class="btn-icon">👥</span> Kelompok
-                </button>
+                
+                <a th:href="@{/mahasiswa/kelompok}" style="text-decoration: none;">
+                    <button class="action-btn" id="kelompok" type="button">
+                        <span class="btn-icon">👥</span> Kelompok
+                    </button>
+                </a>
             </div>
         </div>
     </main>
-
 </body>
 </html>

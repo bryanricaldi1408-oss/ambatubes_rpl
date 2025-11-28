@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS Mahasiswa CASCADE;
 DROP TABLE IF EXISTS DosenCredentials CASCADE;
 DROP TABLE IF EXISTS MahasiswaCredentials CASCADE;
 
+
 -- Create table for admins
 CREATE TABLE admins (
     id SERIAL PRIMARY KEY,
@@ -230,6 +231,89 @@ INSERT INTO Pengajaran_Kelas(NIK, idKelas) VALUES
 ('19800003', 6),
 ('19800004', 1),
 ('19800005', 1);
+
+INSERT INTO Tugas_Besar (Nama_Tugas, Deskripsi, Tanggal_Dibuat, idKelas) 
+VALUES 
+-- ==========================================
+-- Data untuk Kelas ID 1 (Operating System)
+-- ==========================================
+(
+    'Tubes 1: Simulasi CPU Scheduling', 
+    'Tugas ini bertujuan untuk membandingkan performa algoritma penjadwalan CPU. Mahasiswa diminta untuk mengimplementasikan algoritma Round Robin (RR), First-Come First-Served (FCFS), dan Shortest Job First (SJF) menggunakan bahasa C. Program harus dapat membaca input berupa file teks yang berisi daftar proses beserta arrival time dan burst time-nya. Output yang diharapkan meliputi visualisasi Gantt Chart sederhana di terminal serta perhitungan rata-rata Waiting Time dan Turnaround Time untuk setiap algoritma. Laporan analisis perbandingan performa wajib dikumpulkan dalam format PDF beserta source code.', 
+    '2024-10-15', 
+    1
+),
+(
+    'Tubes 2: File System User Space (FUSE)', 
+    'Pada tugas besar ini, mahasiswa diminta membuat file system sederhana yang berjalan di user space menggunakan library FUSE pada lingkungan Linux. File system harus memiliki kemampuan dasar seperti membuat direktori (mkdir), membaca file (read), menulis file (write), dan menghapus file (unlink). Tantangan tambahan meliputi enkripsi isi file secara otomatis saat disimpan (At-Rest Encryption) dan manajemen hak akses user. Wajib melakukan demo program ke asisten laboratorium dan menjelaskan bagaimana struktur data i-node diimplementasikan dalam memori.', 
+    '2024-11-20', 
+    1
+),
+
+-- ==========================================
+-- Data untuk Kelas ID 2 (Web Programming)
+-- ==========================================
+(
+    'Tubes Akhir: Fullstack E-Commerce', 
+    'Rancang dan bangun aplikasi web E-Commerce yang aman dan skalabel. Backend wajib menggunakan Java Spring Boot dengan arsitektur MVC, sedangkan Frontend bebas memilih antara Thymeleaf atau React.js. Fitur wajib mencakup: (1) Autentikasi & Otorisasi User (Admin/Customer) menggunakan Spring Security, (2) Katalog Produk dengan fitur pencarian dan filter, (3) Shopping Cart dan Checkout, serta (4) Integrasi Payment Gateway Dummy. Database harus menggunakan PostgreSQL dengan relasi tabel yang ternormalisasi. Proyek harus di-deploy ke cloud service (seperti Heroku/Render/AWS) untuk penilaian akhir.', 
+    '2024-12-05', 
+    2
+),
+
+-- ==========================================
+-- Data untuk Kelas ID 4 (Artificial Intelligence)
+-- ==========================================
+(
+    'Explorasi Algoritma Pencarian Jalur (A*)', 
+    'Implementasikan algoritma A* (A-Star) untuk menyelesaikan permasalahan pencarian jalur terpendek (Shortest Path Finding) pada peta kota Bandung yang disederhanakan menjadi graf berbobot. Mahasiswa harus mendefinisikan fungsi heuristik yang tepat (misalnya Euclidean Distance atau Manhattan Distance) untuk mengoptimalkan pencarian. Tugas mencakup pembuatan visualisasi grafis yang menunjukkan node yang dikunjungi (visited nodes) dan jalur final yang ditemukan. Bandingkan efisiensi algoritma A* yang dibuat dengan algoritma Dijkstra standar dalam hal waktu komputasi dan jumlah node yang diekspansi.', 
+    '2024-11-01', 
+    4
+),
+(
+    'Final Project: Klasifikasi Citra Medis', 
+    'Kembangkan model Deep Learning menggunakan Convolutional Neural Network (CNN) untuk mengklasifikasikan citra rontgen paru-paru menjadi tiga kategori: Normal, Viral Pneumonia, dan COVID-19. Dataset disediakan di e-learning dalam format JPG. Tahapan pengerjaan meliputi: (1) Preprocessing data (resize, normalisasi, augmentasi), (2) Perancangan arsitektur CNN (layer konvolusi, pooling, dense), (3) Pelatihan model dengan validasi silang (cross-validation), dan (4) Evaluasi performa menggunakan confusion matrix, akurasi, presisi, dan recall. Laporan akhir berupa paper format IEEE.', 
+    '2024-12-10', 
+    4
+);
+
+
+INSERT INTO Jadwal (Deadline, idTubes) VALUES 
+('2024-10-25 23:59:00', 1), -- idJadwal 1
+('2024-11-10 23:59:00', 1), -- idJadwal 2
+('2024-11-30 23:59:00', 1); -- idJadwal 3
+
+
+INSERT INTO Kegiatan (Nama_Kegiatan, idJadwal) VALUES 
+('Presentasi Proposal (Bab 1)', 1), -- idKegiatan 1 (Link ke Jadwal 1)
+('Progress Report 50%', 2),        -- idKegiatan 2 (Link ke Jadwal 2)
+('Demo Aplikasi Final & Laporan', 3); -- idKegiatan 3 (Link ke Jadwal 3)
+
+INSERT INTO Kelompok (Nama_Kelompok, Jumlah_Anggota, idTubes) VALUES 
+('1', 3, 1), -- Kelompok 1 untuk Tubes Scheduling (idKelompok 1)
+('2', 2, 1); -- Kelompok 2 untuk Tubes Scheduling (idKelompok 2)
+
+INSERT INTO Anggota_Kelompok (idKelompok, NPM) VALUES 
+(1, '61823011'), 
+(1, '61823012'), 
+(1, '61823013'), 
+(2, '61823014'), 
+(2, '61823015');
+
+
+INSERT INTO Nilai_Kelompok (Nilai, Keterangan, idKelompok, idKegiatan) VALUES 
+(85.00, 'Presentasi lancar, namun slide kurang visual.', 1, 1);
+
+INSERT INTO Nilai_Mahasiswa (Nilai, Keterangan, idNilaiKelompok, NPM) VALUES 
+(85.00, 'Sesuai nilai kelompok', 1, '61823011'), -- Nilai buat Bryan
+(85.00, 'Sesuai nilai kelompok', 1, '61823012'),
+(80.00, 'Kurang aktif saat sesi tanya jawab', 1, '61823013');
+
+INSERT INTO Nilai_Kelompok (Nilai, Keterangan, idKelompok, idKegiatan) VALUES 
+(90.00, 'Progress sangat baik, fitur utama sudah jalan.', 1, 2);
+
+INSERT INTO Nilai_Mahasiswa (Nilai, Keterangan, idNilaiKelompok, NPM) VALUES 
+(90.00, 'Codingan rapi', 2, '61823011');
+
 
 select * from Dosen;
 select * from Pengajaran_Kelas;

@@ -37,4 +37,8 @@ public class Kelas {
     @OneToMany(mappedBy = "kelas", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<PengambilanKelas> pengambilanKelasList;
+
+    @OneToMany(mappedBy = "kelas", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<TugasBesar> tugasBesarList;
 }
