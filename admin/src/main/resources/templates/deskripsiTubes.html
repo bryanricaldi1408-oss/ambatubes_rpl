@@ -67,7 +67,7 @@
                     <span class="btn-icon">📄</span> Unduh Rubrik
                 </button>
                 
-                <a th:href="@{/mahasiswa/kelompok}" style="text-decoration: none;">
+                <a th:href="@{/mahasiswa/tubes/{id}/kelompok(id=${tubesActive.idTubes})}" style="text-decoration: none;">
                     <button class="action-btn" id="kelompok" type="button">
                         <span class="btn-icon">👥</span> Kelompok
                     </button>

@@ -1,79 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Ambil elemen-elemen penting
-    const showButtons = document.querySelectorAll('.show-btn');
+    
     const modalOverlay = document.getElementById('anggota-panel');
-    const closeBtn = document.querySelector('#anggota-panel .close-btn');
-    const modalTitle = document.querySelector('#anggota-panel .modal-title');
-    const anggotaTableBody = document.querySelector('#anggota-panel .anggota-table tbody');
-
-    // Contoh data anggota yang akan ditampilkan (dalam kasus nyata, ini diambil dari server)
-    const dataAnggota = {
-        'A': { count: '5/5', list: [
-            { nama: 'Diki Chandra', npm: '6182301004' },
-            { nama: 'Siti Rahmawati', npm: '6182301005' },
-            // ... Tambahkan anggota lain
-        ]},
-        'B': { count: '3/5', list: [
-            { nama: 'Robert Saputra', npm: '6182301001' },
-            { nama: 'Bryan Ricaldi', npm: '6182301002' },
-            { nama: 'Ethan', npm: '6182301003' }
-        ]},
-        'C': { count: '4/5', list: [
-            { nama: 'Fajar Nugraha', npm: '6182301006' },
-            // ...
-        ]},
-        'D': { count: '5/5', list: [
-            { nama: 'Dewi Lestari', npm: '6182301007' },
-            // ...
-        ]}
-    };
-
-    // 2. Fungsi untuk MENAMPILKAN MODAL
+    const closeBtn = document.querySelector('.close-btn');
+    const modalGroupName = document.getElementById('modal-group-name');
+    const modalMemberCount = document.getElementById('modal-member-count'); // Span untuk angka 3/5
+    const modalTbody = document.getElementById('modal-tbody');
+    const showButtons = document.querySelectorAll('.show-btn');
+    
     showButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const row = e.target.closest('tr');
-            
-            const groupID = row.querySelector('td:nth-child(2)').textContent;
-            
-            const groupData = dataAnggota[groupID];
+        button.addEventListener('click', function() {
+            // Ambil data
+            const idKelompok = this.getAttribute('data-id');
+            const namaKelompok = this.getAttribute('data-nama');
+            const maxKapasitas = this.getAttribute('data-max'); // Ambil kapasitas max saja
 
-            if (groupData) {
-                // Update Judul Modal: Anggota Kelompok B 3/5
-                modalTitle.innerHTML = `Anggota Kelompok ${groupID} <span class="member-count">${groupData.count}</span>`;
-                
-                // Isi Tabel Anggota
-                anggotaTableBody.innerHTML = ''; // Kosongkan tabel sebelumnya
-                groupData.list.forEach((anggota, index) => {
-                    const newRow = anggotaTableBody.insertRow();
-                    // Terapkan class untuk styling selang-seling (even/odd)
-                    if (index % 2 !== 0) {
-                        newRow.classList.add('odd-row'); 
+            // Set Judul Awal
+            modalGroupName.textContent = namaKelompok;
+            modalMemberCount.textContent = ".../" + maxKapasitas; // Placeholder loading
+            
+            // Tampilkan Loading
+            modalTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:20px;">Memuat data...</td></tr>';
+            modalOverlay.classList.add('active');
+
+            // FETCH API
+            fetch(`/mahasiswa/api/kelompok/${idKelompok}/anggota`)
+                .then(response => response.json())
+                .then(data => {
+                    modalTbody.innerHTML = ''; 
+
+                    // --- PERBAIKAN UTAMA: UPDATE JUMLAH REAL-TIME ---
+                    // Hitung jumlah data yang didapat dari server
+                    const currentCount = data.length; 
+                    modalMemberCount.textContent = `${currentCount}/${maxKapasitas}`; // Contoh: 3/5
+
+                    if (currentCount === 0) {
+                        modalTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:20px; color:#666;">Belum ada anggota.</td></tr>';
+                    } else {
+                        data.forEach((mhs, index) => {
+                            const row = modalTbody.insertRow();
+                            
+                            const cellNama = row.insertCell();
+                            cellNama.textContent = mhs.nama;
+
+                            const cellNpm = row.insertCell();
+                            cellNpm.textContent = mhs.npm;
+                        });
                     }
-                    
-                    const nameCell = newRow.insertCell();
-                    nameCell.textContent = anggota.nama;
-
-                    const npmCell = newRow.insertCell();
-                    npmCell.textContent = anggota.npm;
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    modalTbody.innerHTML = '<tr><td colspan="2" style="color:red; text-align:center;">Gagal memuat data.</td></tr>';
                 });
-
-                // Tampilkan Modal
-                modalOverlay.classList.add('active');
-            }
         });
     });
 
-    // 3. Fungsi untuk MENYEMBUNYIKAN MODAL (Tombol X)
-    closeBtn.addEventListener('click', () => {
-        modalOverlay.classList.remove('active');
-    });
+    if(closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+    }
 
-    // 4. Fungsi untuk MENYEMBUNYIKAN MODAL (Klik di luar pop-up)
-    modalOverlay.addEventListener('click', (e) => {
-        // Cek jika target klik adalah overlay itu sendiri (bukan konten modal)
-        if (e.target.classList.contains('modal-overlay')) {
+    window.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
             modalOverlay.classList.remove('active');
         }
     });
-
 });

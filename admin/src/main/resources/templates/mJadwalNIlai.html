@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal & Nilai - AMBaTuBes</title>
     <link rel="stylesheet" href="/css/mJadwalNilai.css">
-    </head>
+    
+    <script type="text/javascript" src="/js/mJadwalNilai.js" defer></script>
+</head>
 <body>
 
 <header class="top-navbar">
@@ -58,8 +60,7 @@
                     
                     <td>
                         <button class="detail-btn" 
-                                th:data-ket="${data.keterangan != null ? data.keterangan : 'Tidak ada keterangan tambahan.'}"
-                                onclick="openModal(this)">
+                                th:data-ket="${data.keterangan != null ? data.keterangan : 'Tidak ada keterangan tambahan.'}">
                             Lihat Detail
                         </button>
                     </td>
@@ -77,14 +78,13 @@
     <div class="modal-content">
         <div class="modal-header">
             <h3 class="modal-title">Keterangan / Feedback</h3>
-            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <button class="close-btn">&times;</button>
         </div>
         <div class="modal-body">
             <p id="modal-text">...</p>
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

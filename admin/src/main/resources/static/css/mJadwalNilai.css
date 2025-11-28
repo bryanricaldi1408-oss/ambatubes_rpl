@@ -1,4 +1,4 @@
-/* ================= VARIABLES & FONTS (SAMA PERSIS) ================= */
+/* ================= VARIABLES & FONTS ================= */
 @font-face {
     font-family: 'ubuntuBold';
     src: url("/fonts/Ubuntu/Ubuntu-Bold.ttf");
@@ -24,7 +24,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ================= HEADER (MATCH EXAMPLE, NOT WIDER) ================= */
+/* ================= HEADER ================= */
 header {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     height: 70px;
@@ -39,15 +39,13 @@ header {
     z-index: 100;
 }
 
-/* supaya konten tidak ketutup header */
 body {
     background-color: var(--bg-body);
     font-family: 'nunito', sans-serif;
     color: var(--text-dark);
-    padding-top: 80px; /* Space for fixed header */
+    padding-top: 80px; 
     min-height: 100vh;
 }
-
 
 .header-content {
     width: 100%;
@@ -101,7 +99,7 @@ body {
     text-underline-offset: 4px;
 }
 
-/* USER CONTROLS – sama seperti sebelumnya */
+/* USER CONTROLS */
 .user-controls {
     display: flex;
     align-items: center;
@@ -159,7 +157,7 @@ main {
 .jadwal-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 16px; /* SAMA */
+    font-size: 16px; 
     font-family: 'nunito';
 }
 
@@ -170,10 +168,8 @@ main {
 
 .jadwal-table th {
     padding: 15px;
-    text-align: left;
     text-align: center;
 }
-
 
 .jadwal-table td {
     padding: 15px;
@@ -209,33 +205,30 @@ main {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-
 /* =========================================
-   8. POP-UP KETERANGAN (MODAL)
+   POP-UP KETERANGAN (MODAL)
    ========================================= */
 
-/* Overlay - Latar belakang gelap dan menutupi seluruh layar */
+/* Overlay - Default Sembunyi */
 .modal-overlay {
-    /* Semula menggunakan 'display: none;' */
     display: none; 
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Warna overlay gelap */
+    background-color: rgba(0, 0, 0, 0.5); 
     z-index: 1000;
-    display: flex; /* Untuk memposisikan konten di tengah */
-    justify-content: center;
-    align-items: center;
-    opacity: 0; /* Sembunyikan dengan opacity */
+    justify-content: center; /* Flex props disiapkan disini */
+    align-items: center;     /* Flex props disiapkan disini */
+    opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* Class untuk MENAMPILKAN modal (ditambahkan/dihapus oleh JS) */
+/* Class Active: Tampilkan dengan Flex */
 .modal-overlay.active {
-    display: flex;
+    display: flex; /* Override display: none */
     opacity: 1;
     visibility: visible;
 }
@@ -247,9 +240,8 @@ main {
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 500px; /* Lebar maksimal sesuai contoh gambar */
+    max-width: 500px;
     
-    /* Animasi saat muncul */
     transform: translateY(-20px);
     transition: transform 0.3s ease;
 }

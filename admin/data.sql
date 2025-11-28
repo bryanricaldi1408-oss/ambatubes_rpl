@@ -1,19 +1,19 @@
-drop table if exists admins;
 DROP TABLE IF EXISTS Nilai_Mahasiswa CASCADE;
 DROP TABLE IF EXISTS Nilai_Kelompok CASCADE;
-DROP TABLE IF EXISTS Anggota_Kelompok CASCADE; -- Junction Mahasiswa-Kelompok
-DROP TABLE IF EXISTS Kelompok CASCADE;
+DROP TABLE IF EXISTS Anggota_Kelompok CASCADE;
 DROP TABLE IF EXISTS Kegiatan CASCADE;
+DROP TABLE IF EXISTS Kelompok CASCADE;
 DROP TABLE IF EXISTS Jadwal CASCADE;
+DROP TABLE IF EXISTS Pengambilan_Kelas CASCADE;
+DROP TABLE IF EXISTS Pengajaran_Kelas CASCADE;
 DROP TABLE IF EXISTS Tugas_Besar CASCADE;
-DROP TABLE IF EXISTS Pengambilan_Kelas CASCADE; -- Junction Mahasiswa-Kelas
-DROP TABLE IF EXISTS Pengajaran_Kelas CASCADE; -- Junction Dosen-Kelas
 DROP TABLE IF EXISTS Kelas CASCADE;
+DROP TABLE IF EXISTS DosenCredentials CASCADE;
+DROP TABLE IF EXISTS MahasiswaCredentials CASCADE;
 DROP TABLE IF EXISTS Mata_Kuliah CASCADE;
 DROP TABLE IF EXISTS Dosen CASCADE;
 DROP TABLE IF EXISTS Mahasiswa CASCADE;
-DROP TABLE IF EXISTS DosenCredentials CASCADE;
-DROP TABLE IF EXISTS MahasiswaCredentials CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
 
 
 -- Create table for admins
@@ -165,6 +165,9 @@ CREATE TABLE Nilai_Mahasiswa (
 
 
 -- Insert dummy data
+
+TRUNCATE TABLE Nilai_Mahasiswa, Nilai_Kelompok, Anggota_Kelompok, Kelompok, Kegiatan, Jadwal, Tugas_Besar, Pengambilan_Kelas, Pengajaran_Kelas, Kelas, Mata_Kuliah, Dosen, Mahasiswa, DosenCredentials, MahasiswaCredentials, admins RESTART IDENTITY CASCADE;
+
 INSERT INTO admins (email, password) VALUES 
 ('admin@ambatubes.com', 'admin123'),
 ('a@gmail.com', 'aaa'),
@@ -289,15 +292,14 @@ INSERT INTO Kegiatan (Nama_Kegiatan, idJadwal) VALUES
 ('Demo Aplikasi Final & Laporan', 3); -- idKegiatan 3 (Link ke Jadwal 3)
 
 INSERT INTO Kelompok (Nama_Kelompok, Jumlah_Anggota, idTubes) VALUES 
-('1', 3, 1), -- Kelompok 1 untuk Tubes Scheduling (idKelompok 1)
-('2', 2, 1); -- Kelompok 2 untuk Tubes Scheduling (idKelompok 2)
+('A', 5, 1), -- ID: 1
+('B', 3, 1)
+
 
 INSERT INTO Anggota_Kelompok (idKelompok, NPM) VALUES 
-(1, '61823011'), 
-(1, '61823012'), 
-(1, '61823013'), 
-(2, '61823014'), 
-(2, '61823015');
+(1, '61823012'), -- Filipo
+(1, '61823013'), -- Andi
+(1, '61823014'); -- Budi
 
 
 INSERT INTO Nilai_Kelompok (Nilai, Keterangan, idKelompok, idKegiatan) VALUES 
