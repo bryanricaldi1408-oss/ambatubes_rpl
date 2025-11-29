@@ -67,7 +67,7 @@
                 <h1 class="page-title">Buat Kelompok</h1>
             </div>
 
-            <form class="detail-form-card" id="kelompokForm">
+            <form class="detail-form-card">
                 <div class="form-group">
                     <label for="jumlahGrup">Jumlah Grup :</label>
                     <input type="text" id="jumlahGrup" name="jumlahGrup" required>
@@ -89,57 +89,7 @@
                 </div>
 
             </form>
-
-            <div id="tabelContainer" style="display: none;">
-                <div class="table-title-container">
-                    <h2 class="table-title">Kelompok</h2>
-                </div>
-                <div class="table-card">
-                    <table class="kelompok-table" id="kelompokTable">
-                        <thead>
-                            <tr>
-                                <th>Kelompok</th>
-                                <th>Jumlah Anggota</th>
-                                <th>Anggota</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <!-- Data kelompok akan diisi oleh JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="action-container">
-                    <button type="button" class="selesai-btn" id="selesaiBtn">Selesai</button>
-                </div>
-            </div>
         </div>
     </main>
-    <div class="popup-overlay" id="editPopup">
-        <div class="popup-content">
-            <div class="popup-header">
-                <h2 class="popup-title">Edit Anggota Kelompok <span id="popupGroupName"></span></h2>
-                <button class="close-btn" id="closePopup">&times;</button>
-            </div>
-            <div class="popup-body">
-                <table class="members-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>NPM</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="popupTableBody">
-                        <!-- Data anggota akan diisi oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="popup-footer">
-                <button class="tambah-anggota-btn" id="tambahAnggotaBtn">Tambahkan Anggota</button>
-                <button class="simpan-btn" id="simpanPerubahanBtn">Simpan Perubahan</button>
-            </div>
-        </div>
-    </div>
 </body>
 </html>

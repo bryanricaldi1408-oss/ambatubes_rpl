@@ -448,9 +448,10 @@ main {
 }
 
 .deleteIcon {
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 28px;
     filter: brightness(0) invert(1); /* Ubah ke putih */
+    margin-top: -5px;
 }
 
 .class-details {

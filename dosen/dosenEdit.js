@@ -38,16 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // --- 3. LOGIKA TOMBOL 'UPLOAD FILE(S)' ---
-    // Jika user klik tombol ini, langsung pindah ke halaman upload
-    if (btnUploadDirect) {
-        btnUploadDirect.addEventListener("click", function () {
-            // Cek apakah user sudah mengisi nama tugas setidaknya sedikit? (Opsional)
-            // Jika ingin bebas langsung pindah:
-            window.location.href = "uploadJadwal.html";
-        });
-    }
-
     // --- 4. LOGIKA TOMBOL LOGOUT ---
     if (btnLogout) {
         btnLogout.addEventListener("click", function () {
@@ -73,6 +63,16 @@ document.addEventListener("DOMContentLoaded", function () {
             } else if (index === 1) {
                 window.location.href = "uploadJadwal.html";
             }
+            else if (index === 2) {
+                window.location.href = "uploadRubrik.html";
+            }
+            else if (index === 3) {
+                window.location.href = "dosenBuatKelompok.html";
+            }
+            else if(index === 4){
+                window.location.href = "dosenPenilaian.html";
+            }
+            
             // Tambahkan else if untuk step selanjutnya jika halaman sudah ada
         });
     });

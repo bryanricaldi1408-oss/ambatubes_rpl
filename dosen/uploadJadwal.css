@@ -269,6 +269,7 @@ header {
 }
 
 /* Tombol Biru Besar (Dropzone) */
+
 .blue-dropzone {
     display: flex;
     align-items: center;
@@ -281,6 +282,7 @@ header {
     transition: transform 0.2s, background-color 0.2s;
     position: relative;
     overflow: hidden;
+    flex-direction: column;
 }
 
 .blue-dropzone:hover {
@@ -321,6 +323,17 @@ header {
     background-color: var(--primary-dark);
     transform: translateY(-2px);
 }
+
+.file-name-display {
+    text-align: center;
+    padding: 10px;
+    color: white;
+    font-size: 16px;
+    word-break: break-word;
+    max-width: 90%;
+    font-family: 'nunitoBold', sans-serif;
+}
+
 
 /* Responsif HP */
 @media (max-width: 768px) {
