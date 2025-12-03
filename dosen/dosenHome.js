@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     pastCheckbox.addEventListener('change', filterClasses);
 
     // Initialize filters on page load
-    filterClasses();
+    //filterClasses();
     });
 
     // Add event listeners to all edit icons     
