@@ -16,7 +16,15 @@
                 <nav class="breadcrumb">
                     <a href="/mahasiswa/home">Dashboard</a>
                     <span class="divider">/</span>
-                    <a href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
+                    
+                    <!-- PERBAIKAN 1: Tambahkan th: di depan href -->
+                    <a th:href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
+                    
+                    <span class="divider">/</span>
+                    
+                    <!-- PERBAIKAN 2: Tambahkan th: dan perbaiki path URL ke /tubes/deskripsi/... -->
+                    <a th:href="@{/mahasiswa/tubes/deskripsi/{id}(id=${tubesActive.idTubes})}">Deskripsi</a>
+                    
                     <span class="divider">/</span>
                     <span class="current">Kelompok</span>
                 </nav>

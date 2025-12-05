@@ -150,15 +150,21 @@ public class MahasiswaController {
         String npm = (String) session.getAttribute("userNpm");
         Mahasiswa mahasiswa = (Mahasiswa) session.getAttribute("mahasiswa");
 
+        // === PERBAIKAN: AMBIL DATA TUBES UNTUK BREADCRUMB ===
+        TugasBesar tubes = tugasBesarRepository.findById(idTubes).orElse(null);
+        if (tubes == null) {
+            return "redirect:/mahasiswa/home";
+        }
+        // ====================================================
+
         // Ambil semua kelompok yang tersedia untuk Tugas Besar ini
         List<Kelompok> listKelompokDB = kelompokRepository.findByIdTubes(idTubes);
         List<KelompokDisplayDto> displayList = new ArrayList<>();
 
-        // Cek user saat ini sedang berada di kelompok mana (untuk auto-checked radio button)
+        // Cek user saat ini sedang berada di kelompok mana
         Optional<AnggotaKelompok> currentGroup = anggotaKelompokRepository.findByNpmAndIdTubes(npm, idTubes);
         Integer userGroupId = currentGroup.map(AnggotaKelompok::getIdKelompok).orElse(-1);
 
-        // Convert Entity ke DTO agar mudah dipakai di HTML
         for (Kelompok k : listKelompokDB) {
             int count = anggotaKelompokRepository.countAnggotaByKelompok(k.getIdKelompok());
             boolean isSelected = k.getIdKelompok().equals(userGroupId);
@@ -167,13 +173,16 @@ public class MahasiswaController {
                 k.getIdKelompok(),
                 k.getNamaKelompok(),
                 count,
-                k.getJumlahAnggota(), // Kapasitas Maksimal
+                k.getJumlahAnggota(),
                 isSelected
             ));
         }
 
         model.addAttribute("listKelompok", displayList);
         model.addAttribute("idTubes", idTubes);
+        
+        // === KIRIM DATA KE HTML ===
+        model.addAttribute("tubesActive", tubes); // Agar breadcrumb tidak error
         model.addAttribute("mahasiswa", mahasiswa);
 
         return "kelompok";
