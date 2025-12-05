@@ -79,11 +79,6 @@
                     <input type="text" id="jumlahAnggota" name="jumlahAnggota" required>
                 </div>
 
-                <div class="form-group">
-                    <input type="checkbox" id="auto-create-group" name="auto-create-group" value="true">
-                    <label for="auto-create-group">Auto create group</label>
-                </div>
-
                 <div class="form-actions">
                     <button type="submit" class="buat-kelompok-btn">Buat Kelompok</button>
                 </div>
@@ -121,7 +116,7 @@
                 <h2 class="popup-title">Edit Anggota Kelompok <span id="popupGroupName"></span></h2>
                 <button class="close-btn" id="closePopup">&times;</button>
             </div>
-            <div class="popup-body">
+            <!-- <div class="popup-body">
                 <table class="members-table">
                     <thead>
                         <tr>
@@ -131,9 +126,26 @@
                         </tr>
                     </thead>
                     <tbody id="popupTableBody">
-                        <!-- Data anggota akan diisi oleh JavaScript -->
+                         Data anggota akan diisi oleh JavaScript 
                     </tbody>
                 </table>
+            </div> -->
+
+            <div class="popup-body">
+                <table class="members-table">
+                    <thead>
+                        </thead>
+                    <tbody id="popupTableBody">
+                        </tbody>
+                </table>
+                
+                <div class="search-member-container" id="searchMemberContainer" style="margin-top: 20px;">
+                    <h3 style="font-family: 'nunitoBold'; font-size: 16px; margin-bottom: 10px; color: var(--primary-color);">Tambahkan Anggota Baru:</h3>
+                    <input type="text" id="memberSearchInput" placeholder="Cari Nama atau NPM..." class="new-member-name" style="width: 100%;" />
+                    
+                    <div id="searchResults" class="search-results-list">
+                        </div>
+                </div>
             </div>
             <div class="popup-footer">
                 <button class="tambah-anggota-btn" id="tambahAnggotaBtn">Tambahkan Anggota</button>

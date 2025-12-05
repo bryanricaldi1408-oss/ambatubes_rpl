@@ -75,7 +75,6 @@
                                 <th>Awal</th>
                                 <th>Akhir</th>
                                 <th>Input Nilai</th>
-                                <th>Catatan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -86,9 +85,6 @@
                                 <td>
                                     <button class="input-nilai-btn">Input Nilai</button>
                                 </td>
-                                <td>
-                                    <button class="lihat-catatan-btn">Lihat Catatan</button>
-                                </td>
                             </tr>
                             <tr>
                                 <td>Presentasi</td>
@@ -96,9 +92,6 @@
                                 <td>14 Jan 2024</td>
                                 <td>
                                     <button class="input-nilai-btn disabled" disabled>Input Nilai</button>
-                                </td>
-                                <td>
-                                    <button class="lihat-catatan-btn disabled" disabled>Lihat Catatan</button>
                                 </td>
                             </tr>
                             <tr>
@@ -108,9 +101,6 @@
                                 <td>
                                     <button class="input-nilai-btn disabled" disabled>Input Nilai</button>
                                 </td>
-                                <td>
-                                    <button class="lihat-catatan-btn disabled" disabled>Lihat Catatan</button>
-                                </td>
                             </tr>
                             <tr>
                                 <td>Laporan Final</td>
@@ -118,9 +108,6 @@
                                 <td>28 Jan 2024</td>
                                 <td>
                                     <button class="input-nilai-btn disabled" disabled>Input Nilai</button>
-                                </td>
-                                <td>
-                                    <button class="lihat-catatan-btn disabled" disabled>Lihat Catatan</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -155,7 +142,7 @@
                                 <td class="nilai-cell">-</td>
                                 <td class="nilai-akhir">-</td>
                                 <td>
-                                    <button class="detail-nilai-btn">Detail Nilai</button>
+                                    <button class="detail-nilai-btn" data-kelompok="A">Detail Nilai</button>
                                 </td>
                             </tr>
                             <tr>
@@ -166,7 +153,7 @@
                                 <td class="nilai-cell">-</td>
                                 <td class="nilai-akhir">-</td>
                                 <td>
-                                    <button class="detail-nilai-btn">Detail Nilai</button>
+                                    <button class="detail-nilai-btn" data-kelompok="B">Detail Nilai</button>
                                 </td>
                             </tr>
                             <tr>
@@ -177,7 +164,7 @@
                                 <td class="nilai-cell">-</td>
                                 <td class="nilai-akhir">-</td>
                                 <td>
-                                    <button class="detail-nilai-btn">Detail Nilai</button>
+                                    <button class="detail-nilai-btn" data-kelompok="C">Detail Nilai</button>
                                 </td>
                             </tr>
                             <tr>
@@ -188,7 +175,7 @@
                                 <td class="nilai-cell">-</td>
                                 <td class="nilai-akhir">-</td>
                                 <td>
-                                    <button class="detail-nilai-btn">Detail Nilai</button>
+                                    <button class="detail-nilai-btn" data-kelompok="D">Detail Nilai</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -239,10 +226,6 @@
                         <label for="inputNilaiKelompok">Nilai Kelompok:</label>
                         <input type="number" id="inputNilaiKelompok" class="form-input" min="0" max="100" placeholder="0-100">
                     </div>
-                    <div class="form-group">
-                        <label for="catatanNilaiKelompok">Catatan:</label>
-                        <textarea id="catatanNilaiKelompok" class="form-textarea" placeholder="Tambahkan catatan untuk nilai kelompok..." rows="3"></textarea>
-                    </div>
                 </div>
 
                 <!-- Form Input Nilai Perorangan -->
@@ -280,49 +263,32 @@
         </div>
     </div>
 
-    <!-- Popup Lihat Catatan -->
-    <div class="popup-overlay" id="lihatCatatanPopup">
+    <!-- Popup Detail Nilai Kelompok -->
+    <div class="popup-overlay" id="detailNilaiPopup">
         <div class="popup-content">
             <div class="popup-header">
-                <h2 class="popup-title">Catatan Nilai - <span id="popupCatatanKegiatan"></span></h2>
-                <button class="close-btn" id="closeCatatanPopup">&times;</button>
+                <h2 class="popup-title">Detail Nilai - <span id="popupKelompokNama"></span></h2>
+                <button class="close-btn" id="closeDetailPopup">&times;</button>
             </div>
+            
             <div class="popup-body">
-                <!-- Pilihan Tipe Catatan -->
-                <div class="tipe-catatan-section">
-                    <label class="tipe-catatan-label">Tampilkan Catatan:</label>
-                    <div class="tipe-catatan-options">
-                        <label class="radio-option">
-                            <input type="radio" name="tipeCatatan" value="kelompok" checked>
-                            <span class="radio-custom"></span>
-                            Catatan Kelompok
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="tipeCatatan" value="perorangan">
-                            <span class="radio-custom"></span>
-                            Catatan Perorangan
-                        </label>
+                <!-- Filter Kegiatan -->
+                <div class="tipe-catatan-section"> 
+                    <div class="form-group">
+                        <label for="filterKegiatanDetail">Filter Kegiatan:</label>
+                        <select id="filterKegiatanDetail" class="form-select">
+                            <!-- Options akan diisi oleh JavaScript -->
+                        </select>
                     </div>
                 </div>
 
-                <!-- Daftar Catatan Kelompok -->
-                <div class="catatan-list" id="catatanKelompokList">
+                <div class="detail-nilai-list" id="detailNilaiList">
                     <!-- Data akan diisi oleh JavaScript -->
-                </div>
-
-                <!-- Daftar Catatan Perorangan -->
-                <div class="catatan-list" id="catatanPeroranganList" style="display: none;">
-                    <!-- Data akan diisi oleh JavaScript -->
-                </div>
-
-                <!-- Tidak Ada Catatan -->
-                <div class="no-catatan" id="noCatatanMessage" style="display: none;">
-                    <div class="no-catatan-icon">📝</div>
-                    <p class="no-catatan-text">Belum ada catatan untuk kegiatan ini</p>
                 </div>
             </div>
+            
             <div class="popup-footer">
-                <button class="tutup-btn" id="tutupCatatanBtn">Tutup</button>
+                <button class="tutup-btn" id="tutupDetailBtn">Tutup</button>
             </div>
         </div>
     </div>

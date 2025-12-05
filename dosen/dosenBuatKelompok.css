@@ -913,3 +913,15 @@ label[for="auto-create-group"] {
         width: 100%;
     }
 }
+
+.search-results-list {
+    max-height: 200px; 
+    overflow-y: auto; 
+    margin-top: 10px; 
+}
+.search-results-list.has-results {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: var(--shadow-soft);
+}
