@@ -280,7 +280,7 @@ main {
 }
 
 /* Common Button Styling */
-.save-btn, .cancel-btn, #initialBackBtn {
+.save-btn, .cancel-btn, .download-btn, #initialBackBtn {
     border: none;
     border-radius: 50px;
     cursor: pointer;
@@ -316,6 +316,16 @@ main {
 
 .cancel-btn:hover {
     background-color: #d0d0d0;
+}
+
+.download-btn {
+    background-color: #6cca46;
+    color: #1f1f1f;
+    min-width: 100px;
+}
+
+.download-btn:hover {
+    background-color: #7ac15f;
 }
 
 /* AFTER UPLOAD STATE STYLING */
@@ -372,4 +382,5 @@ main {
     .action-buttons {
         flex-direction: column;
     }
+
 }
