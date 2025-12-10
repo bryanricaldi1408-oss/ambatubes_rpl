@@ -487,6 +487,22 @@ main {
     font-weight: bold;
 }
 
+.no-data {
+    text-align: center;
+    padding: 40px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 600px;
+    border: 2px dashed #dee2e6;
+}
+
+.no-data p {
+    color: #6c757d;
+    font-size: 18px;
+    margin: 0;
+}
+
 /* =========================================
    7. RESPONSIVE DESIGN
    ========================================= */

@@ -2,41 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>AMBaTuBes Dashboard Dosen</title>
-    
     <link rel="stylesheet" th:href="@{/css/dosenHome.css}"> 
     <script type="text/javascript" th:src="@{/js/dosenHome.js}" defer></script>
 </head>
 <body>
     <header class="top-navbar">
         <div class="header-content">
-            
-            <!-- KIRI: Brand + Breadcrumb -->
             <div class="brand">
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
-                
                 <nav class="breadcrumb">
                     <a class="current" th:href="@{/dosen/home}">Dashboard</a>
                 </nav>
             </div>
-            
-            <!-- KANAN: User + Logout -->
             <div class="user-controls">
                 <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
                 <button class="logout-btn" onclick="location.href='/logout'">
                     <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
             </div>
-            
         </div>
     </header>
 
     <main>
         <div class="controls">
             <button class="filter-btn" id="filterBtn">
-                <span>
-                    <img id="filterIcon" th:src="@{/icons/filter.png}">
-                </span>
+                <span><img id="filterIcon" th:src="@{/icons/filter.png}"></span>
                 <span>Filter</span>
             </button>
             <div class="search-bar">
@@ -49,12 +40,8 @@
 
         <div class="filter-panel" id="filterPanel">
             <div class="filter-options">
-                <label>
-                    <input type="checkbox" id="inProgress"> In-Progress
-                </label>
-                <label>
-                    <input type="checkbox" id="past"> Past
-                </label>
+                <label><input type="checkbox" id="inProgress"> In-Progress</label>
+                <label><input type="checkbox" id="past"> Past</label>
             </div>
             <select id="semesterSelect">
                 <option>Semua Semester</option>
@@ -65,8 +52,9 @@
         </div>
 
         <div class="class-grid">
-            <!-- Class Card 1 -->
-            <div class="class-card" id="1">
+            <!-- DATA DINAMIS DARI DATABASE -->
+            <div class="class-card" th:each="kelas : ${kelasList}" 
+                 th:attr="id=${kelas.idKelas}">
                 <div class="class-header">
                     <span class="edit-icon">
                         <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
@@ -76,155 +64,18 @@
                     </span>
                 </div>
                 <div class="class-details">
-                    <h3>Algoritma Pemrograman</h3>
-                    <p>Kelas A</p>
-                    <p>Ganjil 2025/2026</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
+                    <h3 th:text="${kelas.mataKuliah?.namaMk}">Mata Kuliah</h3>
+                    <p th:text="'Kelas ' + ${kelas.namaKelas}">Kelas</p>
+                    <p th:text="${kelas.semester}">Semester</p>
+                    <p th:text="${dosen.nama}">Dosen</p>
                 </div>
             </div>
-
-            <!-- Class Card 2 -->
-            <div class="class-card" id="2">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Struktur Data</h3>
-                    <p>Kelas B</p>
-                    <p>Genap 2024/2025</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
-
-            <!-- Class Card 3 -->
-            <div class="class-card" id="3">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Basis Data</h3>
-                    <p>Kelas C</p>
-                    <p>Pendek 2025/2026</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
-
-            <!-- Class Card 4 -->
-            <div class="class-card" id="4">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Jaringan Komputer</h3>
-                    <p>Kelas D</p>
-                    <p>Ganjil 2025/2026</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
-
-            <!-- Class Card 5 -->
-            <div class="class-card" id="5">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Pemrograman Web</h3>
-                    <p>Kelas E</p>
-                    <p>Genap 2024/2025</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
-
-            <!-- Class Card 6 -->
-            <div class="class-card" id="6">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Kecerdasan Buatan</h3>
-                    <p>Kelas F</p>
-                    <p>Ganjil 2023/2024</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
-
-            <!-- Class Card 7 -->
-            <div class="class-card" id="7">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Sistem Operasi</h3>
-                    <p>Kelas G</p>
-                    <p>Genap 2023/2024</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
-
-            <!-- Class Card 8 -->
-            <div class="class-card" id="8">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Rekayasa Perangkat Lunak</h3>
-                    <p>Kelas H</p>
-                    <p>Pendek 2024/2025</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
-            </div>
-
-            <!-- Class Card 9 -->
-            <div class="class-card" id="9">
-                <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
-                </div>
-                <div class="class-details">
-                    <h3>Grafika Komputer</h3>
-                    <p>Kelas I</p>
-                    <p>Ganjil 2024/2025</p>
-                    <p th:text="${dosen.nama}">Nama Dosen</p>
-                </div>
+            
+            <!-- JIKA TIDAK ADA DATA -->
+            <div th:if="${kelasList == null or kelasList.empty}">
+                <p style="text-align: center; padding: 40px; color: #999;">
+                    Tidak ada kelas yang diajar.
+                </p>
             </div>
         </div>
     </main>
