@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deskripsi Tugas Besar - AMBaTuBes</title>
-    <!-- Pastikan path CSS sesuai folder static Anda -->
-    <link rel="stylesheet" th:href="@{/css/deskripsiTubes.css}">
-    <script type="text/javascript" th:src="@{/js/deskripsiTubes.js}" defer></script>
+    <link rel="stylesheet" href="/css/deskripsiTubes.css">
+    <script type="text/javascript" src="/js/deskripsiTubes.js" defer></script>
 </head>
 <body>
 
@@ -16,10 +15,9 @@
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
                 <nav class="breadcrumb">
-                    <a th:href="@{/mahasiswa/home}">Dashboard</a>
+                    <a href="/mahasiswa/home">Dashboard</a>
                     <span class="divider">/</span>
                     
-                    <!-- Link Balik ke Dashboard Kelas (Menggunakan idKelas) -->
                     <a th:href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
                     
                     <span class="divider">/</span>
@@ -28,14 +26,12 @@
             </div>
             
             <div class="user-controls">
-                <!-- Initials User -->
                 <div class="user-initials" 
                      th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
                      PP
                 </div>
-                <!-- Logout Action -->
                 <button class="logout-btn" onclick="window.location.href='/logout'">
-                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
+                    <img src="/icons/exit.png" alt="Logout" class="icon-img">
                 </button>
             </div>
         </div>
@@ -44,19 +40,15 @@
     <main>
         <div class="detail-card">
             <div class="card-header">
-                <!-- JUDUL TUGAS DINAMIS -->
                 <h1 th:text="${tubesActive.namaTugas}">Nama Tugas Besar</h1>
                 <div class="status-badge">Aktif</div>
             </div>
 
             <div class="card-body">
-                <!-- DESKRIPSI DINAMIS -->
-                <!-- white-space: pre-line menjaga format paragraf/enter dari database -->
                 <p style="white-space: pre-line;" th:text="${tubesActive.deskripsi}">
-                   Deskripsi tugas akan dimuat di sini...
+                   Deskripsi tugas akan muncul di sini...
                 </p>
                 
-                <!-- Tanggal Dibuat -->
                 <p style="margin-top: 20px; font-size: 0.9em; color: #666;" 
                    th:text="'Tanggal Dibuat: ' + ${tubesActive.tanggalDibuat}">
                 </p>
@@ -64,8 +56,6 @@
 
             <div class="card-actions">
                 
-                <!-- TOMBOL JADWAL & NILAI -->
-                <!-- Mengarah ke: /mahasiswa/tubes/jadwal-nilai/{idTubes} -->
                 <a th:href="@{/mahasiswa/tubes/jadwal-nilai/{id}(id=${tubesActive.idTubes})}" 
                    style="text-decoration: none;">
                     <button class="action-btn" id="jadwal" type="button">
@@ -73,23 +63,17 @@
                     </button>
                 </a>
 
-                <!-- TOMBOL UNDUH RUBRIK (Dummy) -->
-                <button class="action-btn" id="rubrik" type="button">
+                <button class="action-btn" id="rubrik">
                     <span class="btn-icon">📄</span> Unduh Rubrik
                 </button>
                 
-                <!-- TOMBOL KELOMPOK (Fixed Link) -->
-                <!-- Mengarah ke: /mahasiswa/tubes/{idTubes}/kelompok -->
-                <a th:href="@{/mahasiswa/tubes/{id}/kelompok(id=${tubesActive.idTubes})}" 
-                   style="text-decoration: none;">
+                <a th:href="@{/mahasiswa/tubes/{id}/kelompok(id=${tubesActive.idTubes})}" style="text-decoration: none;">
                     <button class="action-btn" id="kelompok" type="button">
                         <span class="btn-icon">👥</span> Kelompok
                     </button>
                 </a>
-
             </div>
         </div>
     </main>
-
 </body>
 </html>

@@ -292,7 +292,7 @@ INSERT INTO Kegiatan (Nama_Kegiatan, idJadwal) VALUES
 
 INSERT INTO Kelompok (Nama_Kelompok, Jumlah_Anggota, idTubes) VALUES 
 ('A', 5, 1), -- ID: 1
-('B', 3, 1)
+('B', 3, 1);
 
 
 INSERT INTO Anggota_Kelompok (idKelompok, NPM) VALUES 
