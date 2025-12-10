@@ -36,10 +36,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Client-side filtering untuk UX yang lebih baik
-    const classCards = document.querySelectorAll('.class-card');
+    // Tambahkan styling untuk clickable cards
+    const classCards = document.querySelectorAll('.class-card.clickable-card');
     
-    if (classCards.length > 0) {
+    classCards.forEach(card => {
+        // Tambahkan cursor pointer
+        card.style.cursor = 'pointer';
+        
+        // Tambahkan efek hover
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+            this.style.boxShadow = '0 20px 40px rgba(1, 105, 190, 0.2)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'var(--shadow-soft)';
+        });
+        
+        // Tambahkan tooltip text
+        card.setAttribute('title', 'Klik untuk melihat tugas besar');
+    });
+    
+    // Client-side filtering untuk UX yang lebih baik
+    const allClassCards = document.querySelectorAll('.class-card');
+    
+    if (allClassCards.length > 0) {
         const searchInput = document.getElementById('searchInput');
         const inProgressCheckbox = document.getElementById('inProgress');
         const pastCheckbox = document.getElementById('past');
@@ -54,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             let visibleCount = 0;
             
-            classCards.forEach(card => {
+            allClassCards.forEach(card => {
                 const cardSemester = card.getAttribute('data-semester') || '';
                 const cardText = card.textContent.toLowerCase();
                 

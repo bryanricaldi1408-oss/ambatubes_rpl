@@ -74,15 +74,11 @@
         <div class="class-grid">
             <!-- DATA DINAMIS DARI DATABASE -->
             <div th:each="kelas : ${kelasList}" 
-                 class="class-card"
-                 th:attr="data-semester=${kelas.semester}">
+                 class="class-card clickable-card"
+                 th:data-id-kelas="${kelas.idKelas}"
+                 th:onclick="|redirectToTubes(${kelas.idKelas})|">
                 <div class="class-header">
-                    <span class="edit-icon">
-                        <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
-                    </span>
-                    <span class="delete-icon">
-                        <img class="deleteIcon" th:src="@{/icons/delete.png}" alt="Delete">
-                    </span>
+                    
                 </div>
                 <div class="class-details">
                     <h3 th:text="${kelas.mataKuliah?.namaMk ?: 'Mata Kuliah'}">Mata Kuliah</h3>
@@ -104,5 +100,30 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // Fungsi untuk redirect ke halaman tubes
+        function redirectToTubes(kelasId) {
+            if (kelasId) {
+                window.location.href = '/dosen/tubes?kelasId=' + kelasId;
+            }
+        }
+        
+        // Fungsi untuk edit class
+        function editClass(kelasId) {
+            if (confirm('Apakah Anda ingin mengedit kelas ini?')) {
+                console.log('Edit kelas dengan ID:', kelasId);
+                // window.location.href = '/dosen/edit-kelas?id=' + kelasId;
+            }
+        }
+        
+        // Fungsi untuk delete class
+        function deleteClass(kelasId) {
+            if (confirm('Apakah Anda yakin ingin menghapus kelas ini?')) {
+                console.log('Hapus kelas dengan ID:', kelasId);
+                // Implementasi delete logic di sini
+            }
+        }
+    </script>
 </body>
 </html>

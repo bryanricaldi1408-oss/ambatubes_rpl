@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMBaTuBes - Dashboard Tugas</title>
-    <link rel="stylesheet" href="dosenEdit.css"> 
-    <script type="text/javascript" src="dosenEdit.js" defer></script>
+    <title>AMBaTuBes - Buat Tugas Besar</title>
+    <link rel="stylesheet" th:href="@{/css/dosenEdit.css}"> 
+    <script type="text/javascript" th:src="@{/js/dosenEdit.js}" defer></script>
 </head>
 <body>
     <header class="top-navbar">
@@ -16,19 +16,19 @@
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
                 <nav class="breadcrumb">
-                    <a href="dosenHome.html">Dashboard</a>
+                    <a th:href="@{/dosen/home}">Dashboard</a>
                     <span class="divider">/</span>
-                    <a href="dosenTubes.html">Tubes</a>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelas.idKelas})}">Tugas Besar</a>
                     <span class="divider">/</span>
-                    <span class="current">Edit</span>
+                    <span class="current">Buat Tugas</span>
                 </nav>
             </div>
             
             <!-- KANAN: User + Logout -->
             <div class="user-controls">
-                <div class="user-initials">PP</div>
-                <button class="logout-btn">
-                    <img src="icons/exit.png" alt="Logout" class="icon-img">
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
+                <button class="logout-btn" onclick="location.href='/logout'">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
             </div>
             
@@ -59,27 +59,87 @@
             </div>
         </div>
     </div>
+    
     <main>
         <div class="content">
-            <form class="detail-form-card">
+            <!-- Info Kelas -->
+            <div class="class-info-card" style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #0169be;">
+                <h4 style="margin-bottom: 8px; color: #333;">Kelas: <span th:text="${kelas.namaKelas}"></span></h4>
+                <p style="margin-bottom: 5px; color: #666;">Mata Kuliah: <span th:text="${kelas.mataKuliah?.namaMk}"></span></p>
+                <p style="color: #666;">Semester: <span th:text="${kelas.semester}"></span></p>
+            </div>
+            
+            <form class="detail-form-card" th:action="@{/dosen/save-tugas}" method="post">
+                <!-- Hidden input untuk kelasId -->
+                <input type="hidden" name="kelasId" th:value="${kelas.idKelas}">
                 
                 <div class="form-group">
-                    <label for="namaTugas">Nama<span class="required-icon">*</span> :</label>
-                    <input type="text" id="namaTugas" name="namaTugas" required>
+                    <label for="namaTugas">Nama Tugas<span class="required-icon">*</span> :</label>
+                    <input type="text" id="namaTugas" name="namaTugas" required 
+                           placeholder="Contoh: Tugas Besar 1 - Implementasi Algoritma">
                 </div>
                 
                 <div class="form-group large-textarea">
                     <label for="deskripsi">Deskripsi :</label>
-                    <textarea id="deskripsi" name="deskripsi" rows="5"></textarea>
+                    <textarea id="deskripsi" name="deskripsi" rows="5"
+                              placeholder="Deskripsi detail tentang tugas besar..."></textarea>
                 </div>
                 
                 <div class="form-actions">
-                    <button type="button" class="upload-file-btn">Upload File(s)</button>
-                    <button type="submit" class="save-btn">Save</button>
+                    <button type="button" class="upload-file-btn" onclick="handleUploadFile()">
+                        Upload File(s)
+                    </button>
+                    <button type="submit" class="save-btn">
+                        Simpan & Lanjutkan
+                    </button>
                 </div>
                 
             </form>
         </div>
     </main>
+    
+    <script th:inline="javascript">
+        // Fungsi untuk handle upload file
+        function handleUploadFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = '.pdf,.doc,.docx,.txt,.zip';
+            
+            input.onchange = function(e) {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    alert('Berhasil memilih ' + files.length + ' file(s)');
+                    // Di sini bisa ditambahkan logic untuk upload file
+                }
+            };
+            
+            input.click();
+        }
+        
+        // Setup progress bar clickable
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.step');
+            const kelasId = /*[[${kelas.idKelas}]]*/ null;
+            
+            steps.forEach((step, index) => {
+                step.addEventListener('click', () => {
+                    if (kelasId) {
+                        if (index === 0) {
+                            window.location.href = '/dosen/edit?kelasId=' + kelasId;
+                        } else if (index === 1) {
+                            window.location.href = '/dosen/upload-jadwal?kelasId=' + kelasId;
+                        } else if (index === 2) {
+                            window.location.href = '/dosen/upload-rubrik?kelasId=' + kelasId;
+                        } else if (index === 3) {
+                            window.location.href = '/dosen/buat-kelompok?kelasId=' + kelasId;
+                        } else if (index === 4) {
+                            window.location.href = '/dosen/penilaian?kelasId=' + kelasId;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

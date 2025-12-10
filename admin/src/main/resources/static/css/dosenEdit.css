@@ -2,32 +2,27 @@
    RESET & GLOBAL STYLES
    ========================================= */
 :root {
-    /* --- PERBAIKAN VARIABEL DI SINI --- */
-    --primary-color: #0169be;      /* Sebelumnya --primary, diubah agar cocok dgn pemakaian */
+    /* --- VARIABEL WARNA --- */
+    --primary-color: #0169be;
     --primary-dark: #004e92;
     --bg-body: #f4f7f9;
-    --bg-gray: #f2f2f2;            /* Ditambahkan karena dipanggil di body */
-    --bg-white: #ffffff;           /* Ditambahkan agar cocok dgn var(--bg-white) */
-    --white: #ffffff;
-    
-    --text-main: #333333;          /* Ditambahkan untuk label form */
+    --bg-white: #ffffff;
+    --text-main: #333333;
     --text-dark: #333333;
-    --text-secondary: #666666;     /* Ditambahkan untuk deskripsi step */
-    
-    --step-line: #dcdcdc;          /* Ditambahkan: Warna garis abu-abu progress bar */
-    
+    --text-secondary: #666666;
+    --step-line: #dcdcdc;
     --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
     --shadow-soft: 0 4px 8px rgba(0,0,0,0.05);
 }
 
-/* FONT FACES (Pastikan path file font benar) */
-@font-face { font-family: ubuntuBold; src: url("fonts/Ubuntu/Ubuntu-Bold.ttf"); }
-@font-face { font-family: montserratBold; src: url("fonts/Montserrat/static/Montserrat-Bold.ttf"); }
-@font-face { font-family: nunito; src: url("fonts/Nunito/static/Nunito-Regular.ttf"); }
-@font-face { font-family: nunitoBold; src: url("fonts/Nunito/static/Nunito-Bold.ttf"); }
-@font-face { font-family: nunitoExtraBold; src: url("fonts/Nunito/static/Nunito-ExtraBold.ttf"); }
-@font-face { font-family: nunitoSemiBold; src: url("fonts/Nunito/static/Nunito-SemiBold.ttf"); }
-@font-face { font-family: nunitoExtraLight; src: url("fonts/Nunito/static/Nunito-ExtraLight.ttf"); }
+/* FONT FACES */
+@font-face { font-family: ubuntuBold; src: url("/fonts/Ubuntu/Ubuntu-Bold.ttf"); }
+@font-face { font-family: montserratBold; src: url("/fonts/Montserrat/static/Montserrat-Bold.ttf"); }
+@font-face { font-family: nunito; src: url("/fonts/Nunito/static/Nunito-Regular.ttf"); }
+@font-face { font-family: nunitoBold; src: url("/fonts/Nunito/static/Nunito-Bold.ttf"); }
+@font-face { font-family: nunitoExtraBold; src: url("/fonts/Nunito/static/Nunito-ExtraBold.ttf"); }
+@font-face { font-family: nunitoSemiBold; src: url("/fonts/Nunito/static/Nunito-SemiBold.ttf"); }
+@font-face { font-family: nunitoExtraLight; src: url("/fonts/Nunito/static/Nunito-ExtraLight.ttf"); }
 
 * {
     margin: 0;
@@ -36,8 +31,8 @@
 }
 
 body {
-    font-family: 'nunito', 'Segoe UI', sans-serif; /* Prioritaskan font nunito */
-    background-color: var(--bg-body); /* Menggunakan bg-body agar biru muda */
+    font-family: 'nunito', 'Segoe UI', sans-serif;
+    background-color: var(--bg-body);
     color: var(--text-dark);
     padding-top: 80px; 
     min-height: 100vh;
@@ -135,7 +130,7 @@ header {
     background: none;
     border: none;
     cursor: pointer;
-    filter: brightness(0) invert(1); /* Putihkan icon */
+    filter: brightness(0) invert(1);
     opacity: 0.8;
     transition: transform 0.2s, opacity 0.2s;
 }
@@ -154,13 +149,12 @@ header {
    PROGRESS BAR HORIZONTAL
    ========================================= */
 
-/* Wrapper Putih Panjang di atas */
 .horizontal-progress-wrap {
     background-color: var(--bg-white);
     padding: 20px 40px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     width: 100%;
-    margin-bottom: 30px; /* Jarak ke konten bawah */
+    margin-bottom: 30px;
 }
 
 .progress-bar-container {
@@ -168,7 +162,7 @@ header {
     margin: 0 auto;
     display: flex; 
     justify-content: space-between;
-    align-items: flex-start; /* Ubah ke flex-start agar teks sejajar atas */
+    align-items: flex-start;
     padding: 10px 0;
 }
 
@@ -188,12 +182,12 @@ header {
 .step:not(:last-child)::before {
     content: '';
     position: absolute;
-    height: 3px; /* Garis sedikit lebih tebal */
+    height: 3px;
     background-color: var(--step-line);
-    top: 20px; /* Posisi tengah lingkaran (40px / 2) */
+    top: 20px;
     left: 50%; 
-    width: 100%; /* Lebar penuh ke kanan */
-    z-index: -1; /* Di belakang lingkaran */
+    width: 100%;
+    z-index: -1;
 }
 
 .step-num {
@@ -205,12 +199,9 @@ header {
     justify-content: center;
     font-family: 'ubuntuBold', sans-serif;
     font-size: 18px;
-    
-    /* Warna default (sebelum aktif) */
     color: var(--text-secondary);
     background-color: var(--bg-white);
     border: 3px solid var(--step-line);
-    
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -223,13 +214,12 @@ header {
     margin-top: 10px;
 }
 
-/* ---- STATE: ACTIVE ---- */
-
+/* STATE: ACTIVE */
 .step.active .step-num {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
-    color: var(--white);
-    box-shadow: 0 0 0 4px rgba(1, 105, 190, 0.2); /* Efek glow */
+    color: var(--bg-white);
+    box-shadow: 0 0 0 4px rgba(1, 105, 190, 0.2);
 }
 
 .step.active .step-desc {
@@ -237,9 +227,21 @@ header {
     font-weight: 800;
 }
 
+/* STATE: DISABLED */
+.step.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.step.disabled:hover .step-num,
+.step.disabled:hover .step-desc {
+    color: var(--text-secondary) !important;
+    background-color: var(--bg-white) !important;
+    border-color: var(--step-line) !important;
+}
 
 /* =========================================
-   CONTENT & FORM (Detail Tugas)
+   CONTENT & FORM
    ========================================= */
 
 .content {
@@ -248,11 +250,35 @@ header {
     padding: 0 20px;
 }
 
+/* Class Info Card */
+.class-info-card {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.class-info-card h4 {
+    font-family: 'nunitoBold';
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.class-info-card p {
+    font-family: 'nunito';
+    color: #666;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
 .detail-form-card {
     background-color: var(--bg-white);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: var(--shadow-card); /* Shadow lebih halus */
+    box-shadow: var(--shadow-card);
     border: 1px solid rgba(0,0,0,0.03);
 }
 
@@ -267,113 +293,122 @@ header {
     font-size: 16px;
     color: var(--text-main);
     margin-bottom: 8px;
+    display: flex;
+    align-items: center;
 }
 
-.required-icon{
-    color: red;
+.required-icon {
+    color: #e53e3e;
+    margin-left: 4px;
 }
 
 .form-group input[type="text"] {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    padding: 14px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
     font-size: 16px;
     width: 100%; 
-    background-color: #fcfcfc;
+    background-color: #f8fafc;
     transition: all 0.3s;
+    font-family: 'nunito';
 }
 
 .form-group input[type="text"]:focus {
     outline: none;
     border-color: var(--primary-color);
-    background-color: var(--white);
-    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
+    background-color: var(--bg-white);
+    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.15);
 }
 
-/* Tooltip style warning (optional fix) */
-.form-group {
-    position: relative;
+.form-group input[type="text"]::placeholder {
+    color: #94a3b8;
 }
 
+/* Textarea Styling */
 .form-group.large-textarea textarea {
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
     font-size: 16px;
     width: 100%; 
-    min-height: 150px;
+    min-height: 180px;
     resize: vertical;
-    font-family: 'nunito', sans-serif;
-    background-color: #fcfcfc;
+    font-family: 'nunito';
+    background-color: #f8fafc;
     transition: all 0.3s;
+    line-height: 1.6;
 }
 
 .form-group.large-textarea textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    background-color: var(--white);
-    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
+    background-color: var(--bg-white);
+    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.15);
 }
 
-/* Tombol Aksi */
+.form-group.large-textarea textarea::placeholder {
+    color: #94a3b8;
+}
+
+/* =========================================
+   FORM ACTIONS BUTTONS
+   ========================================= */
+
 .form-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-/* Label "Upload File(s)" */
-.form-actions span {
-    font-family: 'nunitoBold';
-    margin-right: auto; /* Agar teks di kiri, tombol di kanan */
-    display: none; /* Sembunyikan jika tidak ada di desain, sesuaikan kebutuhan */
-}
-
-/* Kalau mau ada tulisan "Upload File(s)" teks biasa di kiri tombol save: */
-.upload-text-label {
-    font-family: 'nunitoBold', sans-serif;
-    color: var(--text-main);
-    margin-right: 15px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
 }
 
 .upload-file-btn {
-    /* Style disesuaikan jika ingin tombol 'Save' saja seperti gambar */
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-family: 'nunitoBold', sans-serif;
-    background-color: transparent;
-    border: 2px solid #ddd;
-    color: var(--text-secondary);
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: 'nunitoBold';
+    font-size: 15px;
+    background-color: #f1f5f9;
+    border: 2px solid #cbd5e1;
+    color: #475569;
     cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-file-btn:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.upload-file-btn:active {
+    transform: translateY(0);
 }
 
 .save-btn {
-    padding: 12px 35px;
+    padding: 14px 40px;
     border: none;
-    border-radius: 8px;
-    font-family: 'nunitoBold', sans-serif;
+    border-radius: 10px;
+    font-family: 'nunitoBold';
     font-size: 16px;
     cursor: pointer;
-    background-color: #0169be;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
-}
-
-/* Agar tombol Save mirip gambar (Putih shadow, text hitam/abu) */
-/* Atau jika ingin biru seperti tema: */
-.save-btn.primary {
-    background-color: var(--bg-white); 
-    color: var(--text-dark);
-    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(1, 105, 190, 0.2);
 }
 
 .save-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(1, 105, 190, 0.3);
+}
+
+.save-btn:active {
+    transform: translateY(-1px);
 }
 
 /* =========================================
@@ -382,10 +417,45 @@ header {
 
 @media (max-width: 992px) {
     .horizontal-progress-wrap {
-        padding: 15px;
+        padding: 15px 20px;
     }
+    
     .progress-bar-container {
-        padding: 0;
+        padding: 5px 0;
+    }
+    
+    .step-desc {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 0 20px;
+        height: 60px;
+    }
+    
+    body {
+        padding-top: 70px;
+    }
+    
+    .logo-text {
+        font-size: 20px;
+    }
+    
+    .detail-form-card {
+        padding: 25px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .upload-file-btn,
+    .save-btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -394,15 +464,29 @@ header {
         font-size: 11px;
     }
     
+    .step-num {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .step:not(:last-child)::before {
+        top: 17px;
+        height: 2px;
+    }
+    
+    .class-info-card {
+        padding: 15px;
+    }
+    
     .detail-form-card {
         padding: 20px;
+        border-radius: 15px;
     }
     
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .save-btn {
-        width: 100%;
+    .form-group input[type="text"],
+    .form-group.large-textarea textarea {
+        padding: 12px;
+        font-size: 15px;
     }
 }
