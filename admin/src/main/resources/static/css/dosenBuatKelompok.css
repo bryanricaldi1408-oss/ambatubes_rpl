@@ -1,0 +1,927 @@
+/* =========================================
+   RESET & GLOBAL STYLES
+   ========================================= */
+:root {
+    /* --- PERBAIKAN VARIABEL DI SINI --- */
+    --primary-color: #0169be;      /* Sebelumnya --primary, diubah agar cocok dgn pemakaian */
+    --primary-dark: #004e92;
+    --bg-body: #f4f7f9;
+    --bg-gray: #f2f2f2;            /* Ditambahkan karena dipanggil di body */
+    --bg-white: #ffffff;           /* Ditambahkan agar cocok dgn var(--bg-white) */
+    --white: #ffffff;
+    
+    --text-main: #333333;          /* Ditambahkan untuk label form */
+    --text-dark: #333333;
+    --text-secondary: #666666;     /* Ditambahkan untuk deskripsi step */
+    
+    --step-line: #dcdcdc;          /* Ditambahkan: Warna garis abu-abu progress bar */
+    
+    --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
+    --shadow-soft: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+/* FONT FACES (Pastikan path file font benar) */
+@font-face { font-family: ubuntuBold; src: url("fonts/Ubuntu/Ubuntu-Bold.ttf"); }
+@font-face { font-family: montserratBold; src: url("fonts/Montserrat/static/Montserrat-Bold.ttf"); }
+@font-face { font-family: nunito; src: url("fonts/Nunito/static/Nunito-Regular.ttf"); }
+@font-face { font-family: nunitoBold; src: url("fonts/Nunito/static/Nunito-Bold.ttf"); }
+@font-face { font-family: nunitoExtraBold; src: url("fonts/Nunito/static/Nunito-ExtraBold.ttf"); }
+@font-face { font-family: nunitoSemiBold; src: url("fonts/Nunito/static/Nunito-SemiBold.ttf"); }
+@font-face { font-family: nunitoExtraLight; src: url("fonts/Nunito/static/Nunito-ExtraLight.ttf"); }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'nunito', 'Segoe UI', sans-serif; /* Prioritaskan font nunito */
+    background-color: var(--bg-body); /* Menggunakan bg-body agar biru muda */
+    color: var(--text-dark);
+    padding-top: 80px; 
+    min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.logo-text {
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.separator {
+    font-size: 20px;
+    opacity: 0.5;
+    margin-right: 15px;
+}
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    font-family: 'nunitoBold';
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: white;
+}
+
+.breadcrumb .divider {
+    margin: 0 8px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumb .current {
+    color: white;
+    text-underline-offset: 4px;
+}
+
+/* User Controls */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-initials {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    filter: brightness(0) invert(1); /* Putihkan icon */
+    opacity: 0.8;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.logout-btn:hover {
+    transform: translateX(3px);
+    opacity: 1;
+}
+
+.icon-img {
+    width: 24px;
+    height: 24px;
+}
+/* =========================================
+   PROGRESS BAR HORIZONTAL
+   ========================================= */
+
+/* Wrapper Putih Panjang di atas */
+.horizontal-progress-wrap {
+    background-color: var(--bg-white);
+    padding: 20px 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    margin-bottom: 30px; /* Jarak ke konten bawah */
+}
+
+.progress-bar-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex; 
+    justify-content: space-between;
+    align-items: flex-start; /* Ubah ke flex-start agar teks sejajar atas */
+    padding: 10px 0;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    padding: 0 5px;
+    z-index: 1;
+}
+
+/* Garis penghubung antar step */
+.step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    height: 3px; /* Garis sedikit lebih tebal */
+    background-color: var(--step-line);
+    top: 20px; /* Posisi tengah lingkaran (40px / 2) */
+    left: 50%; 
+    width: 100%; /* Lebar penuh ke kanan */
+    z-index: -1; /* Di belakang lingkaran */
+}
+
+.step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 18px;
+    
+    /* Warna default (sebelum aktif) */
+    color: var(--text-secondary);
+    background-color: var(--bg-white);
+    border: 3px solid var(--step-line);
+    
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.step-desc {
+    font-family: 'nunitoBold', sans-serif;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* ---- STATE: ACTIVE ---- */
+
+.step.active .step-num {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--white);
+    box-shadow: 0 0 0 4px rgba(1, 105, 190, 0.2); /* Efek glow */
+}
+
+.step.active .step-desc {
+    color: var(--primary-color);
+    font-weight: 800;
+}
+
+
+/* =========================================
+   CONTENT & FORM (Detail Tugas)
+   ========================================= */
+
+.content {
+    max-width: 800px; 
+    margin: 0 auto 50px auto; 
+    padding: 0 20px;
+}
+
+.detail-form-card {
+    background-color: var(--bg-white);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-card); /* Shadow lebih halus */
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.form-group {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.form-group label {
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 16px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    width: 150px;
+}
+
+.form-group input[type="text"] {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fcfcfc;
+    transition: all 0.3s;
+    flex-grow: 1;
+}
+
+.form-group input[type="checkbox"]{
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    background-color: #fcfcfc;
+    transition: all 0.3s;
+    margin-left: 150px;
+    margin-right: 10px;
+}
+
+label[for="auto-create-group"] {
+    /* Gaya CSS khusus untuk label ini */
+    font-weight: bold;
+    padding-top: 5px;
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--white);
+    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
+}
+
+/* Tooltip style warning (optional fix) */
+.form-group {
+    position: relative;
+}
+
+/* Tombol Aksi */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Label "Upload File(s)" */
+.form-actions span {
+    font-family: 'nunitoBold';
+    margin-right: auto; /* Agar teks di kiri, tombol di kanan */
+    display: none; /* Sembunyikan jika tidak ada di desain, sesuaikan kebutuhan */
+}
+
+.buat-kelompok-btn {
+    padding: 12px 35px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #0169be;
+    color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+/* Agar tombol Save mirip gambar (Putih shadow, text hitam/abu) */
+/* Atau jika ingin biru seperti tema: */
+.buat-kelompok-btn.primary {
+    background-color: var(--bg-white); 
+    color: var(--text-dark);
+    font-weight: bold;
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+
+.page-title {
+    font-family: 'nunitoExtraBold', sans-serif;
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.page-title-container{
+    display: flex;
+    justify-content: center;
+}
+
+/* =========================================
+   STYLING UNTUK TABEL KELOMPOK
+   ========================================= */
+
+.table-title-container {
+    margin: 40px 0 20px 0;
+    text-align: center;
+}
+
+.table-title {
+    font-family: 'nunitoExtraBold', sans-serif;
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.table-card {
+    background-color: var(--bg-white);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+
+.kelompok-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'nunito', sans-serif;
+}
+
+.kelompok-table th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 1.1rem;
+}
+
+.kelompok-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 1rem;
+}
+
+.kelompok-table td:first-child {
+    text-align: center;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    width: 20%;
+}
+
+/* Kolom kedua (Jumlah Anggota) rata tengah */
+.kelompok-table td:nth-child(2) {
+    text-align: center;
+    font-family: 'nunito', sans-serif;
+    color: var(--text-secondary);
+    width: 30%;
+}
+
+/* Kolom ketiga (Anggota/Edit) rata tengah */
+.kelompok-table td:last-child {
+    text-align: center;
+    width: 30%;
+}
+
+.kelompok-table tr:last-child td {
+    border-bottom: none;
+}
+
+.kelompok-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.kelompok-nama {
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    width: 20%;
+}
+
+.jumlah-anggota {
+    font-family: 'nunito', sans-serif;
+    color: var(--text-secondary);
+    width: 30%;
+}
+
+.edit-kelompok-btn {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.edit-kelompok-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Tombol Selesai */
+.action-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.selesai-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 50px;
+    border-radius: 50px;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(1, 105, 190, 0.3);
+    transition: all 0.3s ease;
+}
+
+.selesai-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Checkbox Styling */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.checkbox-group label {
+    cursor: pointer;
+    font-family: 'nunito', sans-serif;
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+    .table-card {
+        padding: 15px;
+    }
+    
+    .kelompok-table th,
+    .kelompok-table td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+    }
+    
+    .edit-kelompok-btn {
+        padding: 6px 15px;
+        font-size: 0.8rem;
+    }
+    
+    .selesai-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+/* =========================================
+   POPUP EDIT ANGGOTA KELOMPOK
+   ========================================= */
+/* =========================================
+   POPUP EDIT ANGGOTA KELOMPOK - CENTER POSITION
+   ========================================= */
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.popup-content {
+    background-color: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 85vh;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(0);
+    animation: popupAppear 0.3s ease-out;
+}
+
+@keyframes popupAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.popup-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    font-family: 'nunitoBold', sans-serif;
+    color: white;
+}
+
+.close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.popup-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex-grow: 1;
+    background-color: #fafafa;
+}
+
+.members-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+    font-family: 'nunito', sans-serif;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.members-table th, .members-table td {
+    border: 1px solid #e0e0e0;
+    padding: 14px 16px;
+    text-align: left;
+}
+
+.members-table th {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    font-family: 'nunitoBold', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.members-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.members-table tr:hover {
+    background-color: #f1f3f4;
+}
+
+.members-table td {
+    font-size: 14px;
+    color: #333;
+}
+
+.hapus-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'nunitoSemiBold', sans-serif;
+    transition: all 0.3s ease;
+    min-width: 70px;
+}
+
+.hapus-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.popup-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    gap: 15px;
+}
+
+.tambah-anggota-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'nunitoBold', sans-serif;
+    transition: all 0.3s ease;
+    min-width: 160px;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.tambah-anggota-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.simpan-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'nunitoBold', sans-serif;
+    transition: all 0.3s ease;
+    min-width: 160px;
+    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+.simpan-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}
+
+/* Input styles untuk tambah anggota */
+.new-member-name,
+.new-member-npm {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'nunito', sans-serif;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.new-member-name:focus,
+.new-member-npm:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
+}
+
+/* Style untuk row input baru */
+.members-table tr.input-row td {
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+}
+
+.members-table tr.input-row .simpan-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    margin-right: 8px;
+    min-width: auto;
+}
+
+.members-table tr.input-row .hapus-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-width: auto;
+}
+
+/* Responsif untuk popup */
+@media (max-width: 768px) {
+    .popup-overlay {
+        padding: 15px;
+    }
+    
+    .popup-content {
+        max-height: 90vh;
+        max-width: 95%;
+    }
+    
+    .popup-header {
+        padding: 16px 20px;
+    }
+    
+    .popup-body {
+        padding: 16px;
+    }
+    
+    .popup-footer {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 20px;
+    }
+    
+    .tambah-anggota-btn,
+    .simpan-btn {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .members-table {
+        font-size: 13px;
+    }
+    
+    .members-table th, 
+    .members-table td {
+        padding: 10px 12px;
+    }
+    
+    .members-table th {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .popup-title {
+        font-size: 18px;
+    }
+    
+    .members-table {
+        font-size: 12px;
+    }
+    
+    .members-table th, 
+    .members-table td {
+        padding: 8px 10px;
+    }
+    
+    .hapus-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+        min-width: 60px;
+    }
+}
+
+/* Scrollbar styling untuk popup body */
+.popup-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.popup-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.popup-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.popup-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Responsif untuk popup */
+@media (max-width: 768px) {
+    .popup-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .popup-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .tambah-anggota-btn,
+    .simpan-btn {
+        width: 100%;
+    }
+    
+    .members-table {
+        font-size: 14px;
+    }
+    
+    .members-table th, 
+    .members-table td {
+        padding: 8px 10px;
+    }
+}
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+@media (max-width: 992px) {
+    .horizontal-progress-wrap {
+        padding: 15px;
+    }
+    .progress-bar-container {
+        padding: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .step-desc {
+        font-size: 11px;
+    }
+    
+    .detail-form-card {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .save-btn {
+        width: 100%;
+    }
+}
+
+.search-results-list {
+    max-height: 200px; 
+    overflow-y: auto; 
+    margin-top: 10px; 
+}
+.search-results-list.has-results {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: var(--shadow-soft);
+}

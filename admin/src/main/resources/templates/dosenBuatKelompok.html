@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Dashboard Tugas</title>
+    <link rel="stylesheet" href="dosenBuatKelompok.css"> 
+    <script type="text/javascript" src="dosenBuatKelompok.js" defer></script>
+</head>
+<body>
+    <header class="top-navbar">
+    <div class="header-content">
+
+        <!-- KIRI: Brand + Breadcrumb -->
+        <div class="brand">
+            <span class="logo-text">AMBaTuBes</span>
+            <span class="separator">|</span>
+
+            <nav class="breadcrumb">
+                <a href="dosenHome.html">Dashboard</a>
+                <span class="divider">/</span>
+                <a href="dosenTubes.html">Tubes</a>
+                <span class="divider">/</span>
+                <span class="current">Edit</span>
+                
+            </nav>
+        </div>
+
+        <!-- KANAN: User + Logout -->
+        <div class="user-controls">
+            <div class="user-initials">PP</div>
+            <button class="logout-btn">
+                <img src="icons/exit.png" alt="Logout" class="icon-img">
+            </button>
+        </div>
+
+    </div>
+</header>
+
+    <div class="horizontal-progress-wrap">
+        <div class="progress-bar-container horizontal">
+            <div class="step">
+                <span class="step-num">1</span>
+                <span class="step-desc">Detail Tugas</span>
+            </div>
+            <div class="step">
+                <span class="step-num">2</span>
+                <span class="step-desc">Upload Jadwal</span>
+            </div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <span class="step-desc">Upload Rubrik</span>
+            </div>
+            <div class="step active">
+                <span class="step-num">4</span>
+                <span class="step-desc">Buat Kelompok</span>
+            </div>
+            <div class="step disabled">
+                <span class="step-num">5</span>
+                <span class="step-desc">Penilaian</span>
+            </div>
+        </div>
+    </div>
+    <main>
+        <div class="content">
+            <div class="page-title-container">
+                <h1 class="page-title">Buat Kelompok</h1>
+            </div>
+
+            <form class="detail-form-card" id="kelompokForm">
+                <div class="form-group">
+                    <label for="jumlahGrup">Jumlah Grup :</label>
+                    <input type="text" id="jumlahGrup" name="jumlahGrup" required>
+                    
+                </div>
+                
+                <div class="form-group">
+                    <label for="jumlahAnggota">Jumlah Anggota :</label>
+                    <input type="text" id="jumlahAnggota" name="jumlahAnggota" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="buat-kelompok-btn">Buat Kelompok</button>
+                </div>
+
+            </form>
+
+            <div id="tabelContainer" style="display: none;">
+                <div class="table-title-container">
+                    <h2 class="table-title">Kelompok</h2>
+                </div>
+                <div class="table-card">
+                    <table class="kelompok-table" id="kelompokTable">
+                        <thead>
+                            <tr>
+                                <th>Kelompok</th>
+                                <th>Jumlah Anggota</th>
+                                <th>Anggota</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data kelompok akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="action-container">
+                    <button type="button" class="selesai-btn" id="selesaiBtn">Selesai</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="popup-overlay" id="editPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2 class="popup-title">Edit Anggota Kelompok <span id="popupGroupName"></span></h2>
+                <button class="close-btn" id="closePopup">&times;</button>
+            </div>
+            <!-- <div class="popup-body">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>NPM</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popupTableBody">
+                         Data anggota akan diisi oleh JavaScript 
+                    </tbody>
+                </table>
+            </div> -->
+
+            <div class="popup-body">
+                <table class="members-table">
+                    <thead>
+                        </thead>
+                    <tbody id="popupTableBody">
+                        </tbody>
+                </table>
+                
+                <div class="search-member-container" id="searchMemberContainer" style="margin-top: 20px;">
+                    <h3 style="font-family: 'nunitoBold'; font-size: 16px; margin-bottom: 10px; color: var(--primary-color);">Tambahkan Anggota Baru:</h3>
+                    <input type="text" id="memberSearchInput" placeholder="Cari Nama atau NPM..." class="new-member-name" style="width: 100%;" />
+                    
+                    <div id="searchResults" class="search-results-list">
+                        </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="tambah-anggota-btn" id="tambahAnggotaBtn">Tambahkan Anggota</button>
+                <button class="simpan-btn" id="simpanPerubahanBtn">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

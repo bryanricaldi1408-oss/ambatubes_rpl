@@ -1,0 +1,372 @@
+/* =========================================
+   RESET & GLOBAL STYLES
+   ========================================= */
+:root {
+    --primary: #0169be;
+    --primary-dark: #004e92;
+    --bg-body: #f4f7f9;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+@font-face {
+  font-family: ubuntuBold;
+  src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+}
+
+@font-face {
+  font-family: montserratBold;
+  src: url("fonts/Montserrat/static/Montserrat-Bold.ttf");
+}
+
+@font-face {
+  font-family: nunito;
+  src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+}
+
+
+@font-face {
+  font-family: nunitoBold;
+  src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+}
+
+@font-face {
+  font-family: nunitoExtraBold;
+  src: url("fonts/Nunito/static/Nunito-ExtraBold.ttf");
+}
+
+@font-face {
+  font-family: nunitoSemiBold;
+  src: url("fonts/Nunito/static/Nunito-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: nunitoExtraLight;
+  src: url("fonts/Nunito/static/Nunito-ExtraLight.ttf");
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-gray);
+    color: var(--text-dark);
+}
+
+/* =========================================
+   HEADER / NAVBAR
+   ========================================= */
+
+header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+/* supaya konten tidak ketutup header */
+body {
+    background-color: var(--bg-body);
+    font-family: 'nunito', sans-serif;
+    color: var(--text-dark);
+    padding-top: 80px; /* Space for fixed header */
+    min-height: 100vh;
+}
+
+
+.header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.logo-text {
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.separator {
+    font-size: 20px;
+    opacity: 0.5;
+    margin-right: 15px;
+}
+
+.breadcrumb {
+    font-family: 'nunitoBold';
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: white;
+}
+
+.breadcrumb .divider {
+    margin: 0 8px;
+    color: rgba(255,255,255,0.5);
+}
+
+.current {
+    color: white;
+    text-underline-offset: 4px;
+}
+
+/* USER CONTROLS – sama seperti sebelumnya */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-initials {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+}
+
+.icon-img {
+    width: 24px;
+    height: 24px;
+}
+
+/* =========================================
+   MAIN CONTENT
+   ========================================= */
+.main-content {
+    padding: 30px 50px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* -----------------------------------------
+   SECTION A: PROFIL & INFO KULIAH
+   ----------------------------------------- */
+.lecturer-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.lecturer-profile .profile-icon svg {
+    width: 45px;
+    height: 45px;
+    stroke: #000; /* Warna icon hitam */
+}
+
+.lecturer-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Kartu Putih Panjang (Pill) */
+.course-card-pill {
+    background-color: var(--white);
+    padding: 30px 40px;
+    border-radius: 40px; /* Membuat sudut sangat bulat seperti kapsul */
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.course-code {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.course-meta {
+    display: flex;
+    gap: 30px; /* Jarak antar item (Kelas, Sem, Tahun) */
+    font-size: 1rem;
+    color: #555;
+}
+
+/* -----------------------------------------
+   SECTION B: TUGAS BESAR (KARTU BIRU)
+   ----------------------------------------- */
+.tasks-section .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.cards-container {
+    display: flex;
+    gap: 30px; /* Jarak antar kartu */
+    flex-wrap: wrap; /* Agar turun ke bawah jika layar kecil */
+}
+
+/* Styling Kartu Tugas */
+.task-card {
+    background-color: var(--white);
+    border-radius: 25px; /* Sudut membulat kartu */
+    overflow: hidden; /* Agar header biru mengikuti border-radius */
+    width: 300px; /* Lebar tetap atau bisa pakai flex-basis */
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+}
+
+.task-card:hover {
+    transform: translateY(-5px); /* Efek naik sedikit saat di-hover */
+}
+
+.card-header {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 20px;
+    height: 80px; /* Tinggi area biru */
+    display: flex;
+    align-items: center;
+}
+
+.card-header h4 {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-body {
+    padding: 20px;
+    min-height: 120px; /* Tinggi area putih */
+}
+
+.card-body p {
+    font-size: 0.9rem;
+    color: #333;
+}
+/* =========================================
+   ADD NEW TASK (DASHED BOX) STYLES
+   ========================================= */
+
+.tasks-section {
+    margin-top: 20px;
+}
+
+/* Container agar tombol ada di posisi yang rapi */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.add-card-dashed {
+    /* Ukuran Kotak */
+    width: 300px;      /* Samakan dengan .task-card jika ada */
+    height: 200px;     /* Tinggi kotak */
+    
+    /* Styling Border Putus-putus */
+    background-color: transparent;
+    border: 3px dashed #333; /* Warna garis hitam/gelap */
+    border-radius: 30px;     /* Kelengkungan sudut */
+    
+    /* Posisi Icon di Tengah */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Interaksi */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    color: #333; /* Warna icon */
+}
+
+/* Efek saat mouse diarahkan (Hover) */
+.add-card-dashed:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Sedikit abu-abu */
+    border-color: var(--primary); /* Berubah jadi biru */
+    color: var(--primary);        /* Icon jadi biru */
+    transform: scale(1.02);       /* Sedikit membesar */
+}
+
+/* Efek saat diklik (Active) */
+.add-card-dashed:active {
+    transform: scale(0.98);
+}
+/* =========================================
+   RESPONSIVE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    .top-navbar {
+        padding: 15px;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+
+    .course-card-pill {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .course-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .cards-container {
+        justify-content: center;
+    }
+
+    .task-card {
+        width: 100%; /* Kartu lebar penuh di HP */
+    }
+
+}
+
+.page-title{
+    font-family:montserratBold;
+    font-size: 18px;
+    
+}
+.page-title a{
+    text-decoration: none;
+    color: white;
+}

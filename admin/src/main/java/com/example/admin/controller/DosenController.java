@@ -1,6 +1,7 @@
 package com.example.admin.controller;
 
 import com.example.admin.entity.Dosen;
+import com.example.admin.entity.Kelas;
 import com.example.admin.service.DosenService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class DosenController {
             log.warn("Unauthorized access to dosen home");
             return "redirect:/login";
         }
+        List<Kelas> kelasList = dosenService.getKelasByDosenNik(dosen.getNik());
         
         model.addAttribute("dosen", dosen);
         log.info("Dosen {} accessed dashboard", dosen.getNama());

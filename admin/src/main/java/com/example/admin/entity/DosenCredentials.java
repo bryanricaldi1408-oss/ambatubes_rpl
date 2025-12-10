@@ -6,19 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "DosenCredentials")
+@Table(name = "dosencredentials")
 @Data 
 @NoArgsConstructor 
 @AllArgsConstructor
 public class DosenCredentials {
     
     @Id
-    @Column(name = "NIK", length = 20)
+    @Column(name = "nik", length = 20)
     private String nik;
     
-    @Column(name = "Email", length = 100)
+    @Column(name = "email", length = 100)
     private String email;
     
-    @Column(name = "Password", length = 20)
+    @Column(name = "password", length = 20)
     private String password;
 }
