@@ -63,46 +63,49 @@ body {
 }
 
 /* =========================================
-   3. HEADER STYLES
+   3. HEADER STYLES 
    ========================================= */
 
 header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    height: 70px;
+    width: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 70px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    box-shadow: var(--shadow-header);
-    background-color: #0169be;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; 
     align-items: center;
     padding: 0 30px;
-    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
 }
 
+/* Left Section Container */
 #left {
     display: flex;
     align-items: center;
-    gap: 15px;
     color: white;
 }
 
+/* Brand Name */
 .header-left {
     font-family: 'ubuntuBold', sans-serif;
     font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
+    margin-right: 15px; 
+    letter-spacing: normal;
 }
 
-
+/* Breadcrumb Area */
 .header-center {
     font-family: 'nunitoBold', sans-serif;
-    font-size: 18px;
-    opacity: 0.9;
+    font-size: 16px;
+    opacity: 1; 
     position: relative;
-    padding-left: 20px;
+    padding-left: 20px; 
+    color: white;
+    display: flex;
+    align-items: center;
 }
 
 .header-center::before {
@@ -112,61 +115,73 @@ header {
     opacity: 0.5;
     font-size: 20px;
     top: 50%;
-    transform: translateY(-50%) rotate(15deg);
+    transform: translateY(-55%); 
+    margin-right: 15px;
+    font-family: sans-serif;
+}
+
+/* Dashboard Link */
+#toHome {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    margin-right: 8px; 
+    transition: color 0.2s;
+}
+
+#toHome:hover {
+    color: white;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px; 
 }
 
+/* Profile Picture Circle */
 .user-icon {
     width: 40px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.2); 
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255,255,255,0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    font-family: 'nunitoBold', sans-serif;
-    font-size: 14px;
     color: white;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 14px; 
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.4); 
     cursor: default;
-    transition: background 0.3s;
 }
 
 .user-icon:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.2); 
 }
 
+/* Logout Button */
 .logout-icon {
-    width: 35px;
-    height: 35px;
+    width: auto; 
+    height: auto;
     background: none;
+    border: none;
+    cursor: pointer;
+    filter: brightness(0) invert(1); 
+    opacity: 0.8;
+    transition: transform 0.2s, opacity 0.2s;
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.2s;
 }
 
 .logout-icon:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(3px);
+    opacity: 1;
+    background: none; 
 }
 
 #exitIcon {
     width: 24px;
     height: 24px;
-    filter: brightness(0) invert(1);
-    transition: transform 0.2s;
-}
-
-.logout-icon:hover #exitIcon {
-    transform: translateX(3px);
 }
 
 /* =========================================
