@@ -504,6 +504,181 @@ main {
 }
 
 /* =========================================
+   8. EMPTY STATE STYLING
+   ========================================= */
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e8f1f9 100%);
+    border-radius: var(--radius-card);
+    border: 2px dashed #cbd5e1;
+    margin: 20px 0;
+}
+
+.empty-state h3 {
+    font-family: 'nunitoBold';
+    font-size: 24px;
+    color: #475569;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-family: 'nunito';
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.empty-state button {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-btn);
+    font-family: 'nunitoBold';
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.empty-state button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(1, 105, 190, 0.3);
+}
+
+/* Filter buttons styling */
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.apply-btn {
+    background: var(--primary-gradient) !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-family: 'nunitoBold' !important;
+    flex: 1;
+    transition: all 0.3s ease !important;
+}
+
+.apply-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(1, 105, 190, 0.3) !important;
+}
+
+.clear-btn {
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+    padding: 10px 20px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-family: 'nunitoBold' !important;
+    flex: 1;
+    transition: all 0.3s ease !important;
+}
+
+.clear-btn:hover {
+    background: #e2e8f0 !important;
+    transform: translateY(-2px);
+}
+/* =========================================
+   8. EMPTY STATE STYLING
+   ========================================= */
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e8f1f9 100%);
+    border-radius: var(--radius-card);
+    border: 2px dashed #cbd5e1;
+    margin: 20px 0;
+}
+
+.empty-state h3 {
+    font-family: 'nunitoBold';
+    font-size: 24px;
+    color: #475569;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-family: 'nunito';
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+/* Filter buttons styling */
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.apply-btn {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    font-family: 'nunitoBold';
+    font-size: 14px;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+
+.apply-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(1, 105, 190, 0.3);
+}
+
+.clear-btn {
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 12px 24px;
+    border: 1px solid #cbd5e1;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    font-family: 'nunitoBold';
+    font-size: 14px;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+
+.clear-btn:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+/* Style untuk form select */
+.form-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'nunitoBold';
+    font-size: 14px;
+    color: var(--text-main);
+    background-color: #f9f9f9;
+    cursor: pointer;
+    outline: none;
+}
+
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(1, 105, 190, 0.1);
+}
+
+/* =========================================
    7. RESPONSIVE DESIGN
    ========================================= */
 

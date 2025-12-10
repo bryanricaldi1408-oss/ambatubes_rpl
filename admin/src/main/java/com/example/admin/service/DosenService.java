@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,6 +68,22 @@ public class DosenService {
             log.error("Error getting kelas by dosen NIK: {}", e.getMessage());
             return List.of(); // Return empty list jika error
         }
+    }
+
+    public List<Kelas> searchKelas(String nik, String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getKelasByDosenNik(nik);
+        }
+        return pengajaranKelasRepository.searchKelasByDosenAndKeyword(nik, keyword.trim());
+    }
+    
+    // Tambahkan method berikut di DosenService.java jika belum ada
+    public Set<String> getUniqueSemestersByDosenNik(String nik) {
+        List<Kelas> kelasList = getKelasByDosenNik(nik);
+        return kelasList.stream()
+                .map(Kelas::getSemester)
+                .filter(s -> s != null && !s.trim().isEmpty())
+                .collect(Collectors.toSet());
     }
 
     //ADMIN

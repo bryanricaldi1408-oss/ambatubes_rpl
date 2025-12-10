@@ -28,4 +28,13 @@ public interface PengajaranKelasRepository extends JpaRepository<PengajaranKelas
 
      @Query("SELECT pk.kelas FROM PengajaranKelas pk WHERE pk.dosen.nik = :nik")
     List<Kelas> findKelasByDosenNik(@Param("nik") String nik);
+
+    @Query("SELECT pk.kelas FROM PengajaranKelas pk " +
+           "JOIN pk.kelas.mataKuliah mk " +
+           "WHERE pk.dosen.nik = :nik " +
+           "AND (LOWER(pk.kelas.namaKelas) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "OR LOWER(pk.kelas.semester) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "OR LOWER(mk.namaMk) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<Kelas> searchKelasByDosenAndKeyword(@Param("nik") String nik, 
+                                             @Param("keyword") String keyword);
 }

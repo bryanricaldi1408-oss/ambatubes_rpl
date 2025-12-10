@@ -25,36 +25,57 @@
     </header>
 
     <main>
-        <div class="controls">
-            <button class="filter-btn" id="filterBtn">
-                <span><img id="filterIcon" th:src="@{/icons/filter.png}"></span>
-                <span>Filter</span>
-            </button>
-            <div class="search-bar">
-                <button class="search-btn">
-                    <img id="searchIcon" th:src="@{/icons/searchGlass.png}">
+        <!-- Form untuk search dengan GET method -->
+        <form th:action="@{/dosen/home}" method="get" id="searchForm">
+            <div class="controls">
+                <button type="button" class="filter-btn" id="filterBtn">
+                    <span><img id="filterIcon" th:src="@{/icons/filter.png}"></span>
+                    <span>Filter</span>
                 </button>
-                <input type="text" placeholder="Cari kelas...">
+                <div class="search-bar">
+                    <button type="submit" class="search-btn" id="searchButton">
+                        <img id="searchIcon" th:src="@{/icons/searchGlass.png}">
+                    </button>
+                    <input type="text" name="search" th:value="${searchQuery}" 
+                           placeholder="Cari kelas berdasarkan nama kelas atau mata kuliah..." 
+                           id="searchInput">
+                </div>
             </div>
-        </div>
 
-        <div class="filter-panel" id="filterPanel">
-            <div class="filter-options">
-                <label><input type="checkbox" id="inProgress"> In-Progress</label>
-                <label><input type="checkbox" id="past"> Past</label>
+            <!-- Filter Panel -->
+            <div class="filter-panel" id="filterPanel">
+                <div class="filter-options">
+                    <label><input type="checkbox" id="inProgress" name="inProgress" th:checked="${inProgressFilter}"> In-Progress</label>
+                    <label><input type="checkbox" id="past" name="past" th:checked="${pastFilter}"> Past</label>
+                </div>
+                
+                <!-- Semester Select -->
+                <div th:if="${!semesterList.isEmpty()}">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Semester:</label>
+                    <select id="semesterSelect" name="semester" class="form-select">
+                        <option value="">Semua Semester</option>
+                        <option th:each="sem : ${semesterList}" 
+                                th:value="${sem}"
+                                th:text="${sem}"
+                                th:selected="${semesterFilter == sem}">
+                        </option>
+                    </select>
+                </div>
+                
+                <!-- Filter Buttons -->
+                <div class="filter-buttons" style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button type="submit" class="apply-btn">Terapkan Filter</button>
+                    <button type="button" id="clearFilter" class="clear-btn">Reset</button>
+                </div>
             </div>
-            <select id="semesterSelect">
-                <option>Semua Semester</option>
-                <option>Pendek 2025/2026</option>
-                <option>Genap 2024/2025</option>
-                <option>Ganjil 2023/2024</option>
-            </select>
-        </div>
+        </form>
 
+        <!-- Hasil Kelas -->
         <div class="class-grid">
             <!-- DATA DINAMIS DARI DATABASE -->
-            <div class="class-card" th:each="kelas : ${kelasList}" 
-                 th:attr="id=${kelas.idKelas}">
+            <div th:each="kelas : ${kelasList}" 
+                 class="class-card"
+                 th:attr="data-semester=${kelas.semester}">
                 <div class="class-header">
                     <span class="edit-icon">
                         <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
@@ -64,17 +85,21 @@
                     </span>
                 </div>
                 <div class="class-details">
-                    <h3 th:text="${kelas.mataKuliah?.namaMk}">Mata Kuliah</h3>
+                    <h3 th:text="${kelas.mataKuliah?.namaMk ?: 'Mata Kuliah'}">Mata Kuliah</h3>
                     <p th:text="'Kelas ' + ${kelas.namaKelas}">Kelas</p>
                     <p th:text="${kelas.semester}">Semester</p>
-                    <p th:text="${dosen.nama}">Dosen</p>
+                    <p th:text="${dosen.nama}">Dosen Pengajar</p>
                 </div>
             </div>
             
             <!-- JIKA TIDAK ADA DATA -->
-            <div th:if="${kelasList == null or kelasList.empty}">
-                <p style="text-align: center; padding: 40px; color: #999;">
-                    Tidak ada kelas yang diajar.
+            <div th:if="${kelasList == null or kelasList.empty}" class="empty-state">
+                <h3>Tidak ada kelas yang diajar</h3>
+                <p th:if="${searchQuery != null}">
+                    Tidak ditemukan kelas dengan kata kunci "<span th:text="${searchQuery}"></span>"
+                </p>
+                <p th:unless="${searchQuery != null}">
+                    Silakan hubungi admin untuk ditambahkan ke kelas pengajaran
                 </p>
             </div>
         </div>
