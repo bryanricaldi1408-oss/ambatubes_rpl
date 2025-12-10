@@ -15,7 +15,6 @@ DROP TABLE IF EXISTS Dosen CASCADE;
 DROP TABLE IF EXISTS Mahasiswa CASCADE;
 DROP TABLE IF EXISTS admins CASCADE;
 
-
 -- Create table for admins
 CREATE TABLE admins (
     id SERIAL PRIMARY KEY,
