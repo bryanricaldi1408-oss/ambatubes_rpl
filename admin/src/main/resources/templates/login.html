@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambatubes Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+    </style>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <script th:src="@{/js/login.js}" defer></script>
+
+</head>
+<body>
+    <div class="login-card">
+        <div class="text-header">
+            <span class="welcome">Welcome</span>
+            <span class="to">to</span>
+            <h1 class="brand">Ambatubes</h1>
+            <p class="keterangan">aplikasi manajemen bantuan tugas besar</p>
+        </div>
+        
+        <div class="form-container">
+            <form id="loginForm" th:action="@{/login}" method="post">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" autocomplete="off" placeholder="Enter your email here" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password here" required>
+                
+                <button type="submit">Login</button>
+            </form>
+            <div th:if="${param.error}" style="color: red; margin-top: 10px;">
+                Invalid email or password!
+            </div>
+        </div>
+    </div>
+</body>
+</html>

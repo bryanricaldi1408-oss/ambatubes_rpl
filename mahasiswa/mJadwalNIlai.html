@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal & Nilai</title>
+    <link rel="stylesheet" href="mJadwalNilai.css">
+    <script src="mJadwalNilai.js" defer></script>
+</head>
+<body>
+
+<!-- ========== NAVBAR ========== -->
+<header class="top-navbar">
+    <div class="header-content">
+
+        <!-- KIRI: Brand + Breadcrumb -->
+        <div class="brand">
+            <span class="logo-text">AMBaTuBes</span>
+            <span class="separator">|</span>
+
+            <nav class="breadcrumb">
+                <a href="mahasiswaHome.html">Dashboard</a>
+                <span class="divider">/</span>
+                <a href="mTubesDashboard.html">Tubes</a>
+                <span class="divider">/</span>
+                <a href="deskripsiTubes.html">Deskripsi</a>
+                <span class="divider">/</span>
+                <span class="current">Jadwal & Nilai</span>
+            </nav>
+        </div>
+
+        <!-- KANAN: User + Logout -->
+        <div class="user-controls">
+            <div class="user-initials">PP</div>
+            <button class="logout-btn">
+                <img src="icons/exit.png" alt="Logout" class="icon-img">
+            </button>
+        </div>
+
+    </div>
+</header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="content-container">
+
+        <h2 class="section-title">Jadwal & Nilai</h2>
+
+        <div class="table-card">
+            <table class="jadwal-table">
+
+                <thead>
+                    <tr>
+                        <th>Deadline</th>
+                        <th>Kegiatan</th>
+                        <th>Nilai</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Pertemuan ke-1</td>
+                        <td>Presentasi</td>
+                        <td>-</td>
+                        <td>
+                            <button class="detail-btn">Lihat Detail</button>
+                        </td>
+                    </tr>
+
+                    <!-- Tambah row lain jika diperlukan -->
+                </tbody>
+
+            </table>
+        </div>
+
+    </main>
+
+    <div id="keterangan-panel" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Keterangan</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate.
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel autem amet, earum dolorem ipsa, blanditiis tempora accusamus dolorum illum corrupti veritatis enim consequatur voluptatem nemo, animi inventore commodi optio aut?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis expedita, quaerat recusandae consectetur accusantium voluptatibus ea! Eligendi temporibus numquam, molestias, deserunt a, perferendis illum aliquam exercitationem nesciunt iusto totam possimus.
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit quod voluptas minima facere alias, eius vero repudiandae eos dolorem similique illo nihil exercitationem atque aliquam qui. Numquam, tempora tenetur. Ex.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

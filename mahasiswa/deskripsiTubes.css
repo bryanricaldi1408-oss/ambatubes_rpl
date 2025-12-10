@@ -1,0 +1,278 @@
+/* ================= VARIABLES & FONTS ================= */
+@font-face {
+    font-family: 'ubuntuBold';
+    src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+}
+@font-face {
+    font-family: 'nunito';
+    src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+}
+@font-face {
+    font-family: 'nunitoBold';
+    src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+}
+
+:root {
+    --primary: #0169be;
+    --primary-dark: #004e92;
+    --bg-body: #f4f7f9;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    font-family: 'nunito', sans-serif;
+    color: var(--text-dark);
+    padding-top: 80px; /* Space for fixed header */
+    min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.logo-text {
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.separator {
+    font-size: 20px;
+    opacity: 0.5;
+    margin-right: 15px;
+}
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    font-family: 'nunitoBold';
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: white;
+}
+
+.breadcrumb .divider {
+    margin: 0 8px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumb .current {
+    color: white;
+    text-underline-offset: 4px;
+}
+
+/* User Controls */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-initials {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    filter: brightness(0) invert(1); /* Putihkan icon */
+    opacity: 0.8;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.logout-btn:hover {
+    transform: translateX(3px);
+    opacity: 1;
+}
+
+.icon-img {
+    width: 24px;
+    height: 24px;
+}
+
+/* ================= MAIN CARD ================= */
+main {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.detail-card {
+    background: var(--white);
+    width: 100%;
+    max-width: 900px;
+    border-radius: 25px;
+    box-shadow: var(--shadow-card);
+    padding: 50px;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Decorative Top Bar on Card */
+.detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(to right, var(--primary), #4facfe);
+}
+
+/* Card Header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.card-header h1 {
+    font-family: 'ubuntuBold';
+    font-size: 32px;
+    color: var(--primary);
+}
+
+.status-badge {
+    background-color: #e3f2fd;
+    color: var(--primary);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Card Body */
+.card-body {
+    min-height: 200px;
+    margin-bottom: 50px;
+}
+
+.card-body p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.placeholder-text {
+    font-style: italic;
+    color: #999;
+}
+
+/* ================= BUTTON ACTIONS ================= */
+.card-actions {
+    display: flex;
+    justify-content: center; /* Posisi di tengah seperti gambar */
+    gap: 30px; /* Jarak antar tombol */
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px; /* Bentuk Pill/Capsule */
+    font-family: 'nunitoBold';
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(1, 105, 190, 0.2);
+    min-width: 180px; /* Lebar minimum agar seragam */
+    justify-content: center;
+}
+
+.action-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-7px);
+    box-shadow: 0 6px 15px rgba(1, 105, 190, 0.3);
+}
+
+.action-btn:active {
+    transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .user-controls {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+    }
+    .breadcrumb {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    .card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .detail-card {
+        padding: 30px;
+    }
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kelompok</title>
+    <link rel="stylesheet" href="kelompok.css">
+    <script src="kelompok.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                <nav class="breadcrumb">
+                    <a href="mahasiswaHome.html">Dashboard</a>
+                    <span class="divider">/</span>
+                    <a href="mTubesDashboard.html">Tubes</a>
+                    <span class="divider">/</span>
+                    <a href="deskripsiTubes.html">Deskripsi</a>
+                    <span class="divider">/</span>
+                    <span class="current">Kelompok</span>
+                </nav>
+            </div>
+            
+            <div class="user-controls">
+                <div class="user-initials">PP</div>
+                <button class="logout-btn">
+                    <img src="icons/exit.png" alt="Logout" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="content-container">
+        <h1>Kelompok</h1>
+
+        <form class="group-selection-form">
+            <table class="group-table">
+                <thead>
+                    <tr>
+                        <th>Pilihan</th>
+                        <th>Kelompok</th>
+                        <th>Jumlah Anggota</th>
+                        <th>Anggota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-row-item">
+                        <td class="radio-cell">
+                            <input type="radio" id="groupA" name="selectedGroup" value="A">
+                            <label for="groupA" class="custom-radio"></label>
+                        </td>
+                        <td>A</td>
+                        <td>5/5</td>
+                        <td><button type="button" class="show-btn">Show</button></td>
+                    </tr>
+                    <tr class="table-row-item active-selection">
+                        <td class="radio-cell">
+                            <input type="radio" id="groupB" name="selectedGroup" value="B" checked>
+                            <label for="groupB" class="custom-radio"></label>
+                        </td>
+                        <td>B</td>
+                        <td>3/5</td>
+                        <td><button type="button" class="show-btn">Show</button></td>
+                    </tr>
+                    <tr class="table-row-item">
+                        <td class="radio-cell">
+                            <input type="radio" id="groupC" name="selectedGroup" value="C">
+                            <label for="groupC" class="custom-radio"></label>
+                        </td>
+                        <td>C</td>
+                        <td>4/5</td>
+                        <td><button type="button" class="show-btn">Show</button></td>
+                    </tr>
+                    <tr class="table-row-item">
+                        <td class="radio-cell">
+                            <input type="radio" id="groupD" name="selectedGroup" value="D">
+                            <label for="groupD" class="custom-radio"></label>
+                        </td>
+                        <td>D</td>
+                        <td>5/5</td>
+                        <td><button type="button" class="show-btn">Show</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="save-button-container">
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+
+        <div id="anggota-panel" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Anggota Kelompok B <span class="member-count">3/5</span></h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body modal-table-body">
+                <table class="anggota-table">
+                    <thead>
+                        <tr>
+                            <th class="anggota-name">Nama</th>
+                            <th class="anggota-npm">NPM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Robert Saputra</td>
+                            <td>6182301001</td>
+                        </tr>
+                        <tr>
+                            <td>Bryan Ricaldi</td>
+                            <td>6182301002</td>
+                        </tr>
+                        <tr>
+                            <td>Ethan</td>
+                            <td>6182301003</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </main>
+</body>
+</html>

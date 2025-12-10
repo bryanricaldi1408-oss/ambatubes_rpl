@@ -1,0 +1,427 @@
+/* ================= VARIABLES & FONTS ================= */
+@font-face {
+    font-family: 'ubuntuBold';
+    src: url("/fonts/Ubuntu/Ubuntu-Bold.ttf");
+}
+@font-face {
+    font-family: 'nunito';
+    src: url("/fonts/Nunito/static/Nunito-Regular.ttf");
+}
+@font-face {
+    font-family: 'nunitoBold';
+    src: url("/fonts/Nunito/static/Nunito-Bold.ttf");
+}
+
+:root {
+    --primary: #0169be;
+    --primary-dark: #004e92;
+    --bg-body: #f4f7f9;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    font-family: 'nunito', sans-serif;
+    color: var(--text-dark);
+    padding-top: 80px; /* Space for fixed header */
+    min-height: 100vh;
+}
+
+
+/* ================= HEADER ================= */
+header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.logo-text {
+    font-family: 'ubuntuBold', sans-serif;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.separator {
+    font-size: 20px;
+    opacity: 0.5;
+    margin-right: 15px;
+}
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    font-family: 'nunitoBold';
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: white;
+}
+
+.breadcrumb .divider {
+    margin: 0 8px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumb .current {
+    color: white;
+    text-underline-offset: 4px;
+}
+
+/* User Controls */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-initials {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    filter: brightness(0) invert(1); /* Putihkan icon */
+    opacity: 0.8;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.logout-btn:hover {
+    transform: translateX(3px);
+    opacity: 1;
+}
+
+.icon-img {
+    width: 24px;
+    height: 24px;
+}
+
+/* ================= MAIN CONTENT CONTAINER ================= */
+
+.content-container {
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* ================= TABLE STYLING ================= */
+
+.group-table {
+    width: 100%;
+    border-collapse: separate; /* Penting untuk radius border */
+    border-spacing: 0;
+    box-shadow: var(--shadow-card);
+    border-radius: 10px;
+    overflow: hidden; /* Penting agar shadow/radius terlihat rapi */
+    background-color: var(--white);
+}
+
+/* Table Header (Judul Kolom) */
+.group-table thead {
+    background-color: var(--primary);
+    color: var(--white);
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 16px;
+    height: 50px;
+}
+
+.group-table th {
+    padding: 15px;
+    text-align: center;
+    font-weight: normal;
+}
+
+/* Mengatur lebar kolom agar sesuai gambar */
+.group-table th:nth-child(1) { width: 10%; text-align: center; } /* Pilihan */
+.group-table th:nth-child(2) { width: 30%; } /* Kelompok */
+.group-table th:nth-child(3) { width: 30%; } /* Jumlah Anggota */
+.group-table th:nth-child(4) { width: 30%; text-align: center; } /* Anggota */
+
+/* Table Body (Baris Data) */
+.group-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: var(--text-dark);
+    text-align: center;
+}
+
+.group-table tbody tr:last-child td {
+    border-bottom: none; /* Hapus border pada baris terakhir */
+}
+
+/* Styling Baris */
+.table-row-item {
+    background-color: #fcfcfc;
+    transition: background-color 0.2s;
+}
+
+.table-row-item:hover {
+    background-color: #f0f8ff; /* Warna sedikit biru saat hover */
+}
+
+/* Styling Baris yang Dipilih (Active Selection) */
+.table-row-item.active-selection {
+    background-color: #e6f7ff; /* Warna terang untuk menandai pilihan saat ini */
+    font-family: 'nunitoBold', sans-serif;
+}
+
+/* ================= RADIO BUTTON STYLING (Untuk tampilan yang seragam) ================= */
+
+.radio-cell {
+    text-align: center !important;
+}
+
+.radio-cell input[type="radio"] {
+    /* Sembunyikan radio button bawaan */
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.radio-cell label.custom-radio {
+    height: 20px;
+    width: 20px;
+    background-color: var(--white);
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid #ccc;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Lingkaran luar saat radio di-check */
+.radio-cell input[type="radio"]:checked + .custom-radio {
+    border-color: var(--primary);
+}
+
+/* Lingkaran dalam saat radio di-check */
+.radio-cell input[type="radio"]:checked + .custom-radio::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--primary);
+}
+
+/* ================= BUTTONS ================= */
+
+.show-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-family: 'nunitoBold';
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-width: 80px;
+    box-shadow: 0 4px 8px rgba(1, 105, 190, 0.3);
+}
+
+.show-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.save-button-container {
+    display: flex;
+    justify-content: flex-end; /* Posisikan tombol 'Save' di kanan bawah */
+    margin-top: 20px;
+}
+
+.save-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 8px;
+    font-family: 'nunitoBold';
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 4px 8px rgba(1, 105, 190, 0.4);
+}
+
+.save-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* =========================================
+   7. POP-UP ANGGOTA KELOMPOK (MODAL)
+   ========================================= */
+
+/* Overlay - Latar belakang gelap dan menutupi seluruh layar */
+.modal-overlay {
+    display: none; /* Default: Sembunyikan */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Warna overlay gelap */
+    z-index: 2000; /* Pastikan di atas semua elemen */
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    opacity: 0; 
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Class untuk MENAMPILKAN modal (ditambahkan/dihapus oleh JS) */
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Konten Modal */
+.modal-content {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px; /* Lebar untuk pop-up ini */
+    
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+/* Header Modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+}
+
+.modal-title {
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 20px;
+    color: var(--text-dark);
+}
+
+.modal-title .member-count {
+    font-size: 18px;
+    color: var(--text-light);
+    margin-left: 10px;
+}
+
+/* Tombol Tutup (X) */
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--primary);
+}
+
+/* TABLE ANGGOTA DI DALAM MODAL */
+
+.anggota-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.anggota-table thead {
+    background-color: var(--primary);
+    color: var(--white);
+    font-family: 'nunitoBold', sans-serif;
+}
+
+.anggota-table th {
+    padding: 15px 20px;
+    text-align: left;
+}
+
+.anggota-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: var(--white);
+    font-family: 'nunito', sans-serif;
+}
+
+.anggota-table tbody tr:nth-child(even) td {
+    background-color: #f7f7f7; /* Warna abu-abu selang-seling */
+}
+
+.anggota-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Penyesuaian lebar kolom di modal */
+.anggota-table th.anggota-name { width: 60%; }
+.anggota-table th.anggota-npm { width: 40%; text-align: left; }

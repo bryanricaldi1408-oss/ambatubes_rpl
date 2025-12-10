@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes Dashboard</title>
+    <link rel="stylesheet" th:href="@{/adminHome.css}"> 
+    <script type="text/javascript" th:src="@{/adminHome.js}" defer></script>
+</head>
+<body>
+    <header>
+        <div id="left">
+            <div class="header-left">AMBaTuBes</div>
+            <div class="header-center">Dashboard</div>
+        </div>
+        <div class="header-right">
+            <div class="user-icon">PP</div>
+            <div class="logout-icon">
+                <a th:href="@{/}">
+                    <img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="controls">
+            <button class="filter-btn" id="filterBtn">
+                <span><img id="filterIcon" th:src="@{/icons/filter.png}" alt="Filter"></span>
+                <span>Filter</span>
+            </button>
+            <div class="search-bar">
+                <button class="search-btn">
+                    <img id="searchIcon" th:src="@{/icons/searchGlass.png}" alt="Search">
+                </button>
+                <input type="text" placeholder="Search classes...">
+            </div>
+        </div>
+
+        <div class="filter-panel" id="filterPanel">
+            <div class="filter-options">
+                <label>
+                    <input type="checkbox" id="inProgress"> In-Progress
+                </label>
+                <label>
+                    <input type="checkbox" id="past"> Past
+                </label>
+            </div>
+            <select id="semesterSelect">
+                <option value="">All Semesters</option>
+                <option th:each="semester : ${uniqueSemesters}" 
+                        th:text="${semester}" th:value="${semester}">
+                </option>
+            </select>
+        </div>
+
+        <div class="class-grid">
+            <!-- Dynamic Class Cards -->
+            <div th:each="class : ${classes}" class="class-card" th:id="${class.idKelas}">
+                <div class="class-header">
+                    <span></span>
+                    <span class="edit-icon">
+                        <a th:href="@{/editKelas/{classId}(classId=${class.idKelas})}" class="edit-icon">
+                            <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
+                        </a>                    
+                    </span>
+                </div>
+                <div class="class-details">
+                    <h3 th:text="${class.namaMk}">Course Name</h3>
+                    <p th:text="'Kelas ' + ${class.namaKelas}">Kelas A</p>
+                    <p th:text="${class.semester}">Semester</p>
+                    <p th:text="${class.namaDosen}">Dosen Name</p>
+                </div>
+            </div>
+                
+            <!-- Add Class Button -->
+            <a th:href="@{/addClasses}" class="add-class-card">
+                <div class="add-button">+</div>
+            </a>
+        </div>
+    </main>
+</body>
+</html>
