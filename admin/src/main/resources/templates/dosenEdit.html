@@ -10,8 +10,6 @@
 <body>
     <header class="top-navbar">
         <div class="header-content">
-            
-            <!-- KIRI: Brand + Breadcrumb -->
             <div class="brand">
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
@@ -24,14 +22,12 @@
                 </nav>
             </div>
             
-            <!-- KANAN: User + Logout -->
             <div class="user-controls">
                 <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
-                <button class="logout-btn" onclick="location.href='/logout'">
+                <button class="logout-btn">
                     <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
             </div>
-            
         </div>
     </header>
     
@@ -62,7 +58,6 @@
     
     <main>
         <div class="content">
-            <!-- Info Kelas -->
             <div class="class-info-card" style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #0169be;">
                 <h4 style="margin-bottom: 8px; color: #333;">Kelas: <span th:text="${kelas.namaKelas}"></span></h4>
                 <p style="margin-bottom: 5px; color: #666;">Mata Kuliah: <span th:text="${kelas.mataKuliah?.namaMk}"></span></p>
@@ -70,7 +65,6 @@
             </div>
             
             <form class="detail-form-card" th:action="@{/dosen/save-tugas}" method="post">
-                <!-- Hidden input untuk kelasId -->
                 <input type="hidden" name="kelasId" th:value="${kelas.idKelas}">
                 
                 <div class="form-group">
@@ -86,60 +80,12 @@
                 </div>
                 
                 <div class="form-actions">
-                    <button type="button" class="upload-file-btn" onclick="handleUploadFile()">
-                        Upload File(s)
-                    </button>
                     <button type="submit" class="save-btn">
                         Simpan & Lanjutkan
                     </button>
                 </div>
-                
             </form>
         </div>
     </main>
-    
-    <script th:inline="javascript">
-        // Fungsi untuk handle upload file
-        function handleUploadFile() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.multiple = true;
-            input.accept = '.pdf,.doc,.docx,.txt,.zip';
-            
-            input.onchange = function(e) {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    alert('Berhasil memilih ' + files.length + ' file(s)');
-                    // Di sini bisa ditambahkan logic untuk upload file
-                }
-            };
-            
-            input.click();
-        }
-        
-        // Setup progress bar clickable
-        document.addEventListener('DOMContentLoaded', function() {
-            const steps = document.querySelectorAll('.step');
-            const kelasId = /*[[${kelas.idKelas}]]*/ null;
-            
-            steps.forEach((step, index) => {
-                step.addEventListener('click', () => {
-                    if (kelasId) {
-                        if (index === 0) {
-                            window.location.href = '/dosen/edit?kelasId=' + kelasId;
-                        } else if (index === 1) {
-                            window.location.href = '/dosen/upload-jadwal?kelasId=' + kelasId;
-                        } else if (index === 2) {
-                            window.location.href = '/dosen/upload-rubrik?kelasId=' + kelasId;
-                        } else if (index === 3) {
-                            window.location.href = '/dosen/buat-kelompok?kelasId=' + kelasId;
-                        } else if (index === 4) {
-                            window.location.href = '/dosen/penilaian?kelasId=' + kelasId;
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

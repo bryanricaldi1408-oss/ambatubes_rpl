@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="id">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMBaTuBes - Upload Jadwal</title>
-    <link rel="stylesheet" href="uploadJadwal.css"> 
-    <script type="text/javascript" src="uploadJadwal.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/uploadJadwal.css}">
+    <script type="text/javascript" th:src="@{/js/uploadJadwal.js}" defer></script>
 </head>
 <body>
+    <!-- ========== NAVBAR ========== -->
     <header class="top-navbar">
         <div class="header-content">
             
@@ -16,28 +17,29 @@
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
                 <nav class="breadcrumb">
-                    <a href="dosenHome.html">Dashboard</a>
+                    <a th:href="@{/dosen/home}">Dashboard</a>
                     <span class="divider">/</span>
-                    <a href="dosenTubes.html">Tubes</a>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelas.idKelas})}">Tugas Besar</a>
                     <span class="divider">/</span>
-                    <span class="current">Edit</span>
+                    <span class="current">Upload Jadwal</span>
                 </nav>
             </div>
             
             <!-- KANAN: User + Logout -->
             <div class="user-controls">
-                <div class="user-initials">PP</div>
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
                 <button class="logout-btn">
-                    <img src="icons/exit.png" alt="Logout" class="icon-img">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
             </div>
             
         </div>
     </header>
 
+    <!-- ========== PROGRESS BAR ========== -->
     <div class="horizontal-progress-wrap">
         <div class="progress-bar-container horizontal">
-            <div class="step">
+            <div class="step" data-step="1">
                 <span class="step-num">1</span>
                 <span class="step-desc">Detail Tugas</span>
             </div>
@@ -45,15 +47,15 @@
                 <span class="step-num">2</span>
                 <span class="step-desc">Upload Jadwal</span>
             </div>
-            <div class="step">
+            <div class="step" data-step="3">
                 <span class="step-num">3</span>
                 <span class="step-desc">Upload Rubrik</span>
             </div>
-            <div class="step">
+            <div class="step" data-step="4">
                 <span class="step-num">4</span>
                 <span class="step-desc">Buat Kelompok</span>
             </div>
-            <div class="step disabled">
+            <div class="step disabled" data-step="5">
                 <span class="step-num">5</span>
                 <span class="step-desc">Penilaian</span>
             </div>
@@ -61,22 +63,42 @@
     </div>
 
     <main class="main-content">
+        <!-- Error/Success Messages -->
+        <div th:if="${error}" class="error-message">
+            <span th:text="${error}"></span>
+        </div>
+        
+        <div th:if="${success}" class="success-message">
+            <span th:text="${success}"></span>
+        </div>
+        
+        <!-- Info Tugas -->
+        <div class="tugas-info-card">
+            <h4>Tugas: <span th:text="${tugasBesar.namaTugas}"></span></h4>
+            <p>Kelas: <span th:text="${kelas.namaKelas}"></span></p>
+            <p>Mata Kuliah: <span th:text="${kelas.mataKuliah?.namaMk}"></span></p>
+            <p>ID Tugas: <span th:text="${tugasBesar.idTubes}"></span></p>
+        </div>
         
         <h1 class="page-title">Upload Jadwal</h1>
 
         <div class="upload-card">
             <p class="file-info">Supported file: <span class="ext">.xlsx</span></p>
             
-            <form action="#" method="POST" enctype="multipart/form-data">
-                <label class="blue-dropzone">
-                    <input type="file" name="jadwalFile" accept=".xlsx" hidden>
-                    <div class="plus-sign">+</div>
+            <form th:action="@{/dosen/upload-jadwal-file}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                <input type="hidden" name="kelasId" th:value="${kelas.idKelas}">
+                <input type="hidden" name="idTubes" th:value="${tugasBesar.idTubes}">
+                
+                <label class="blue-dropzone" for="jadwalFile">
+                    <input type="file" name="jadwalFile" id="jadwalFile" accept=".xlsx" hidden>
+                    <div class="plus-sign" id="plusSign">+</div>
+                    <div class="file-name-display" id="fileNameDisplay"></div>
                 </label>
             </form>
         </div>
 
         <div class="action-container">
-            <button class="btn-save">Save</button>
+            <button class="btn-save" id="saveBtn">Save</button>
         </div>
 
     </main>
