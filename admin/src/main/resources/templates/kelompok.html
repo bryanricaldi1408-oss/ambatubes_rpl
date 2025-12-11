@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelompok - AMBaTuBes</title>
-    <link rel="stylesheet" href="/css/kelompok.css">
-    <script src="/js/kelompok.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/kelompok.css}">
+    <script th:src="@{/js/kelompok.js}" defer></script>
 </head>
 <body>
     <header>
@@ -14,15 +14,15 @@
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
                 <nav class="breadcrumb">
-                    <a href="/mahasiswa/home">Dashboard</a>
+                    <a th:href="@{/mahasiswa/home}">Dashboard</a>
                     <span class="divider">/</span>
                     
-                    <!-- PERBAIKAN 1: Tambahkan th: di depan href -->
+                    <!-- LINK BALIK KE DASHBOARD TUBES (Pakai idKelas) -->
                     <a th:href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
                     
                     <span class="divider">/</span>
                     
-                    <!-- PERBAIKAN 2: Tambahkan th: dan perbaiki path URL ke /tubes/deskripsi/... -->
+                    <!-- LINK BALIK KE DESKRIPSI (Pakai idTubes) -->
                     <a th:href="@{/mahasiswa/tubes/deskripsi/{id}(id=${tubesActive.idTubes})}">Deskripsi</a>
                     
                     <span class="divider">/</span>
@@ -30,9 +30,12 @@
                 </nav>
             </div>
             <div class="user-controls">
-                <div class="user-initials" th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">PP</div>
+                <div class="user-initials" 
+                     th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
+                     PP
+                </div>
                 <button class="logout-btn" onclick="window.location.href='/logout'">
-                    <img src="/icons/exit.png" alt="Logout" class="icon-img">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
             </div>
         </div>
@@ -41,72 +44,78 @@
     <main class="content-container">
         <h1>Pilih Kelompok</h1>
         
+        <!-- PERHATIKAN ACTION URL INI: Sesuai request Anda -->
+        <!-- Mengarah ke: /mahasiswa/tubes/kelompok/{id}/save -->
         <form class="group-selection-form" method="POST" 
-        th:action="@{/mahasiswa/tubes/{id}/kelompok/save(id=${idTubes})}">
+              th:action="@{/mahasiswa/tubes/kelompok/{id}/save(id=${idTubes})}">
         
-        <table class="group-table">
-            <thead>
-                <tr>
-                    <th>Pilihan</th>
-                    <th>Kelompok</th>
-                    <th>Jumlah Anggota</th>
-                    <th>Anggota</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="kel : ${listKelompok}" class="table-row-item" 
-                th:classappend="${kel.isSelected} ? 'active-selection' : ''">
-                
-                <td class="radio-cell">
-                    <input type="radio" 
-                    th:id="'group-' + ${kel.idKelompok}" 
-                    name="selectedGroup" 
-                    th:value="${kel.idKelompok}"
-                    th:checked="${kel.isSelected}">
-                    <label th:for="'group-' + ${kel.idKelompok}" class="custom-radio"></label>
-                </td>
-                
-                <td th:text="${kel.namaKelompok}">A</td>
-                
-                <td th:text="${kel.jumlahSaatIni + '/' + kel.kapasitasMax}">0/5</td>
-                
-                <td>
-                    <button type="button" class="show-btn"
-                    th:data-id="${kel.idKelompok}"
-                    th:data-nama="${kel.namaKelompok}"
-                    th:data-max="${kel.kapasitasMax}"> <!-- HANYA KIRIM MAX, SISANYA BIAR JS HITUNG -->
-                    Show
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<div class="save-button-container">
-    <button type="submit" class="save-btn">Save</button>
-</div>
-</form>
-
-<div id="anggota-panel" class="modal-overlay">
-    <div class="modal-content large-modal">
-        <div class="modal-header">
-            <h3 class="modal-title">Anggota Kelompok <span id="modal-group-name">-</span> <span class="member-count" id="modal-member-count">0/0</span></h3>
-            <button class="close-btn">&times;</button>
-        </div>
-        <div class="modal-body modal-table-body">
-            <table class="anggota-table">
+            <table class="group-table">
                 <thead>
                     <tr>
-                        <th class="anggota-name">Nama</th>
-                        <th class="anggota-npm">NPM</th>
+                        <th>Pilihan</th>
+                        <th>Kelompok</th>
+                        <th>Jumlah Anggota</th>
+                        <th>Anggota</th>
                     </tr>
                 </thead>
-                <tbody id="modal-tbody">
+                <tbody>
+                    <tr th:each="kel : ${listKelompok}" class="table-row-item" 
+                        th:classappend="${kel.isSelected} ? 'active-selection' : ''">
+                    
+                        <td class="radio-cell">
+                            <input type="radio" 
+                                   th:id="'group-' + ${kel.idKelompok}" 
+                                   name="selectedGroup" 
+                                   th:value="${kel.idKelompok}"
+                                   th:checked="${kel.isSelected}">
+                            <label th:for="'group-' + ${kel.idKelompok}" class="custom-radio"></label>
+                        </td>
+                        
+                        <td th:text="${kel.namaKelompok}">A</td>
+                        
+                        <!-- Menampilkan Jumlah/Max -->
+                        <td th:text="${kel.jumlahSaatIni + '/' + kel.kapasitasMax}">0/5</td>
+                        
+                        <td>
+                            <!-- Tombol Show Modal -->
+                            <button type="button" class="show-btn"
+                                    th:data-id="${kel.idKelompok}"
+                                    th:data-nama="${kel.namaKelompok}"
+                                    th:data-max="${kel.kapasitasMax}">
+                                Show
+                            </button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
+
+            <div class="save-button-container">
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+
+        <!-- Modal Popup -->
+        <div id="anggota-panel" class="modal-overlay">
+            <div class="modal-content large-modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Anggota Kelompok <span id="modal-group-name">-</span> <span class="member-count" id="modal-member-count">0/0</span></h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body modal-table-body">
+                    <table class="anggota-table">
+                        <thead>
+                            <tr>
+                                <th class="anggota-name">Nama</th>
+                                <th class="anggota-npm">NPM</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-tbody">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-</main>
+    </main>
 </body>
 </html>

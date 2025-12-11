@@ -4,13 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMBaTuBes Dashboard</title>
-    <!-- DI COMMENT BUAT TESTING UI TANPA NGE GRADLE RUN
     <link rel="stylesheet" th:href="@{/adminHome.css}"> 
     <script type="text/javascript" th:src="@{/adminHome.js}" defer></script>
-    -->
-    <link rel="stylesheet" href="../static/adminHome.css"> 
-    <script type="text/javascript" src="../static/adminHome.js" defer></script>
-
 </head>
 <body>
     <header>
@@ -20,7 +15,11 @@
         </div>
         <div class="header-right">
             <div class="user-icon">PP</div>
-            <div class="logout-icon"><img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout"></div>
+            <div class="logout-icon">
+                <a th:href="@{/}">
+                    <img id="exitIcon" th:src="@{/icons/exit.png}" alt="Logout">
+                </a>
+            </div>
         </div>
     </header>
 
@@ -62,7 +61,7 @@
                     <span></span>
                     <span class="edit-icon">
                         <a th:href="@{/editKelas/{classId}(classId=${class.idKelas})}" class="edit-icon">
-                            <img class="editIcon" src="../static/icons/edit.png" alt="Edit">
+                            <img class="editIcon" th:src="@{/icons/edit.png}" alt="Edit">
                         </a>                    
                     </span>
                 </div>
@@ -75,9 +74,9 @@
             </div>
                 
             <!-- Add Class Button -->
-            <div class="add-class-card">
-                <div id="upload" class="add-button">+</div>
-            </div>
+            <a th:href="@{/addClasses}" class="add-class-card">
+                <div class="add-button">+</div>
+            </a>
         </div>
     </main>
 </body>

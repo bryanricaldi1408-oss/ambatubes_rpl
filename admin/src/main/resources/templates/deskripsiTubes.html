@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deskripsi Tugas Besar - AMBaTuBes</title>
-    <!-- Pastikan path CSS sesuai folder static Anda -->
+    <!-- Pastikan path CSS sesuai dengan struktur folder static Anda -->
     <link rel="stylesheet" th:href="@{/css/deskripsiTubes.css}">
     <script type="text/javascript" th:src="@{/js/deskripsiTubes.js}" defer></script>
 </head>
@@ -19,7 +19,7 @@
                     <a th:href="@{/mahasiswa/home}">Dashboard</a>
                     <span class="divider">/</span>
                     
-                    <!-- Link Balik ke Dashboard Kelas (Menggunakan idKelas) -->
+                    <!-- Link Balik ke Dashboard Kelas (Menggunakan idKelas dari database) -->
                     <a th:href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
                     
                     <span class="divider">/</span>
@@ -28,12 +28,12 @@
             </div>
             
             <div class="user-controls">
-                <!-- Initials User -->
+                <!-- Initials User dari Session -->
                 <div class="user-initials" 
                      th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
                      PP
                 </div>
-                <!-- Logout Action -->
+                <!-- Tombol Logout -->
                 <button class="logout-btn" onclick="window.location.href='/logout'">
                     <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
@@ -51,12 +51,12 @@
 
             <div class="card-body">
                 <!-- DESKRIPSI DINAMIS -->
-                <!-- white-space: pre-line menjaga format paragraf/enter dari database -->
+                <!-- Menggunakan th:text dengan style white-space: pre-line agar enter terbaca -->
                 <p style="white-space: pre-line;" th:text="${tubesActive.deskripsi}">
                    Deskripsi tugas akan dimuat di sini...
                 </p>
                 
-                <!-- Tanggal Dibuat -->
+                <!-- Info Tanggal Dibuat -->
                 <p style="margin-top: 20px; font-size: 0.9em; color: #666;" 
                    th:text="'Tanggal Dibuat: ' + ${tubesActive.tanggalDibuat}">
                 </p>
@@ -64,8 +64,8 @@
 
             <div class="card-actions">
                 
-                <!-- TOMBOL JADWAL & NILAI -->
-                <!-- Mengarah ke: /mahasiswa/tubes/jadwal-nilai/{idTubes} -->
+                <!-- 1. TOMBOL JADWAL & NILAI -->
+                <!-- Link: /mahasiswa/tubes/jadwal-nilai/{id} -->
                 <a th:href="@{/mahasiswa/tubes/jadwal-nilai/{id}(id=${tubesActive.idTubes})}" 
                    style="text-decoration: none;">
                     <button class="action-btn" id="jadwal" type="button">
@@ -73,14 +73,14 @@
                     </button>
                 </a>
 
-                <!-- TOMBOL UNDUH RUBRIK (Dummy) -->
+                <!-- 2. TOMBOL UNDUH RUBRIK (Masih Dummy) -->
                 <button class="action-btn" id="rubrik" type="button">
                     <span class="btn-icon">📄</span> Unduh Rubrik
                 </button>
                 
-                <!-- TOMBOL KELOMPOK (Fixed Link) -->
-                <!-- Mengarah ke: /mahasiswa/tubes/{idTubes}/kelompok -->
-                <a th:href="@{/mahasiswa/tubes/{id}/kelompok(id=${tubesActive.idTubes})}" 
+                <!-- 3. TOMBOL KELOMPOK (SUDAH DISINKRONISASI) -->
+                <!-- Link Baru: /mahasiswa/tubes/kelompok/{id} -->
+                <a th:href="@{/mahasiswa/tubes/kelompok/{id}(id=${tubesActive.idTubes})}" 
                    style="text-decoration: none;">
                     <button class="action-btn" id="kelompok" type="button">
                         <span class="btn-icon">👥</span> Kelompok
