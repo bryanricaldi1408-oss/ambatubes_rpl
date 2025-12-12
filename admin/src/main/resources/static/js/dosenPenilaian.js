@@ -101,19 +101,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Daftar kegiatan sesuai tabel Deadline
-    const kegiatanList = [
-        'Pertemuan ke-1',
-        'Presentasi',
-        'Demo Aplikasi',
-        'Laporan Final'
-    ];
+    // Daftar kegiatan sesuai tabel Deadline (dibaca dari DOM agar dinamis)
+    let kegiatanList = Array.from(document.querySelectorAll('.deadline-table tbody tr')).map(r => r.querySelector('td:first-child').textContent.trim());
 
     // --- 2. HANDLE TOMBOL INPUT NILAI ---
     inputNilaiBtns.forEach(btn => {
         btn.addEventListener("click", function() {
             const kegiatan = this.closest("tr").querySelector("td:first-child").textContent;
+            const idKegiatan = this.getAttribute('data-idkegiatan');
             document.getElementById("popupKegiatan").textContent = kegiatan;
+            // store idKegiatan on popup for later
+            inputNilaiPopup.setAttribute('data-idkegiatan', idKegiatan);
             openInputNilaiPopup();
         });
     });
@@ -246,44 +244,60 @@ document.addEventListener("DOMContentLoaded", function () {
             const mahasiswaName = document.getElementById("mahasiswaSelect").selectedOptions[0].textContent.split('(')[0].trim();
             const nilai = document.getElementById("inputNilaiPerorangan").value;
             const catatan = document.getElementById("catatanNilaiPerorangan").value;
-            
-            // Format tanggal sekarang
-            const now = new Date();
-            const tanggal = `${now.getDate().toString().padStart(2, '0')} ${getMonthName(now.getMonth())} ${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            
-            // Simpan ke dataNilai
-            if (!dataNilai[kegiatan]) {
-                dataNilai[kegiatan] = { perorangan: [] };
-            }
-            
-            // Cek apakah mahasiswa sudah punya nilai untuk kegiatan ini
-            const existingIndex = dataNilai[kegiatan].perorangan.findIndex(
-                nilaiItem => nilaiItem.npm === mahasiswaNpm && nilaiItem.kelompok === kelompok
-            );
-            
-            if (existingIndex !== -1) {
-                // Update nilai yang sudah ada
-                dataNilai[kegiatan].perorangan[existingIndex] = {
-                    npm: mahasiswaNpm,
-                    name: mahasiswaName,
-                    kelompok: kelompok,
-                    nilai: parseInt(nilai),
-                    catatan: catatan,
-                    tanggal: tanggal
-                };
-                alert(`Nilai individu berhasil diperbarui!\nMahasiswa: ${mahasiswaName}\nKelompok: ${kelompok}\nKegiatan: ${kegiatan}\nNilai: ${nilai}`);
-            } else {
-                // Tambah nilai baru
-                dataNilai[kegiatan].perorangan.push({
-                    npm: mahasiswaNpm,
-                    name: mahasiswaName,
-                    kelompok: kelompok,
-                    nilai: parseInt(nilai),
-                    catatan: catatan,
-                    tanggal: tanggal
-                });
-                alert(`Nilai individu berhasil disimpan!\nMahasiswa: ${mahasiswaName}\nKelompok: ${kelompok}\nKegiatan: ${kegiatan}\nNilai: ${nilai}`);
-            }
+
+            // Get kegiatan id from popup dataset
+            const idKegiatan = inputNilaiPopup.getAttribute('data-idkegiatan');
+
+            // Build payload for server
+            const payload = [{
+                npm: mahasiswaNpm,
+                kelompok: kelompok,
+                idKegiatan: parseInt(idKegiatan),
+                nilai: parseFloat(nilai),
+                keterangan: catatan
+            }];
+
+            // Send to server
+            const urlParams = new URLSearchParams(window.location.search);
+            const kelasId = urlParams.get('kelasId');
+            const idTubes = urlParams.get('idTubes');
+
+            const body = { kelasId: parseInt(kelasId), idTubes: parseInt(idTubes), nilaiData: payload };
+
+            fetch('/dosen/simpan-nilai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+
+                    // Update local data structure so UI reflects the change immediately
+                    if (!dataNilai[kegiatan]) dataNilai[kegiatan] = { perorangan: [] };
+                    const existingIndex = dataNilai[kegiatan].perorangan.findIndex(
+                        x => x.npm === mahasiswaNpm && x.kelompok === kelompok
+                    );
+                    const now = new Date();
+                    const tanggal = `${now.getDate().toString().padStart(2, '0')} ${getMonthName(now.getMonth())} ${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+                    const newEntry = { npm: mahasiswaNpm, name: mahasiswaName, kelompok, nilai: parseInt(nilai), catatan: catatan, tanggal };
+                    if (existingIndex !== -1) {
+                        dataNilai[kegiatan].perorangan[existingIndex] = newEntry;
+                    } else {
+                        dataNilai[kegiatan].perorangan.push(newEntry);
+                    }
+
+                    updateTabelNilai();
+                } else {
+                    alert('Gagal: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan saat menyimpan nilai');
+            });
         } else {
             alert("Input nilai kelompok sudah dinonaktifkan. Silakan gunakan input nilai perorangan.");
             return;
@@ -528,7 +542,8 @@ function tampilkanDetailNilai(kelompok, filterKegiatan) {
         btnLogout.addEventListener("click", function () {
             const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
             if (confirmLogout) {
-                window.location.href = "index.html";
+                localStorage.clear();
+                window.location.href = "/logout";
             }
         });
     }

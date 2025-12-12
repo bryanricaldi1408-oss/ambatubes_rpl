@@ -19,9 +19,9 @@
                 <span class="separator">|</span>
 
                 <nav class="breadcrumb">
-                    <a href="dosenHome.html">Dashboard</a>
+                    <a th:href="@{/dosen/home}">Dashboard</a>
                     <span class="divider">/</span>
-                    <a href="dosenTubes.html">Tubes</a>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelasId})}">Tubes</a>
                     <span class="divider">/</span>
                     <span class="current">Edit</span>
 
@@ -57,7 +57,7 @@
                 <span class="step-num">4</span>
                 <span class="step-desc">Buat Kelompok</span>
             </div>
-            <div class="step disabled">
+            <div class="step" th:classappend="${#lists.isEmpty(kelompokList)} ? ' disabled' : ''">
                 <span class="step-num">5</span>
                 <span class="step-desc">Penilaian</span>
             </div>

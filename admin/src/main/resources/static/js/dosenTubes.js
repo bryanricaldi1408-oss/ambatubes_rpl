@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
             if (confirmLogout) {
+                localStorage.clear();
                 window.location.href = '/logout';
             }
         });

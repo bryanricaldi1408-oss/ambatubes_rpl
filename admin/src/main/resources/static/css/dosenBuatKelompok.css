@@ -95,6 +95,8 @@ header {
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     transition: color 0.2s;
+    position: relative;
+    z-index: 200;
 }
 
 .breadcrumb a:hover {
@@ -109,6 +111,7 @@ header {
 .breadcrumb .current {
     color: white;
     text-underline-offset: 4px;
+    text-decoration: none;
 }
 
 /* User Controls */
@@ -160,6 +163,8 @@ header {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     width: 100%;
     margin-bottom: 30px; /* Jarak ke konten bawah */
+    position: relative; /* pastikan tidak menutupi header */
+    z-index: 1;
 }
 
 .progress-bar-container {
@@ -181,6 +186,17 @@ header {
     cursor: pointer;
     padding: 0 5px;
     z-index: 1;
+    text-decoration: none; /* remove underline for anchor steps */
+}
+
+/* Extra safeguard: ensure no underline appears on anchor steps */
+.progress-bar-container .step,
+.progress-bar-container .step:link,
+.progress-bar-container .step:visited,
+.progress-bar-container .step:hover,
+.progress-bar-container .step:active,
+.progress-bar-container .step * {
+    text-decoration: none !important;
 }
 
 /* Garis penghubung antar step */
@@ -234,6 +250,13 @@ header {
 .step.active .step-desc {
     color: var(--primary-color);
     font-weight: 800;
+}
+
+/* Disabled step: tampilkan redup dan non-interaktif */
+.step.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 

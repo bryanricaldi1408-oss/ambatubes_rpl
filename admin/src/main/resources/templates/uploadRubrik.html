@@ -50,7 +50,7 @@
                 <span class="step-num">4</span>
                 <span class="step-desc">Buat Kelompok</span>
             </div>
-            <div class="step disabled" data-step="5">
+            <div class="step" th:classappend="${#lists.isEmpty(kelompokList)} ? ' disabled' : ''" data-step="5">
                 <span class="step-num">5</span>
                 <span class="step-desc">Penilaian</span>
             </div>
@@ -68,10 +68,9 @@
 
         <!-- Info Tugas -->
         <div class="tugas-info-card">
-            <h4>Tugas: <span th:text="${tugasBesar.namaTugas}"></span></h4>
+            <h4 th:text="${tugasBesar.namaTugas}">Tugas Besar</h4>
             <p>Kelas: <span th:text="${kelas.namaKelas}"></span></p>
             <p>Mata Kuliah: <span th:text="${kelas.mataKuliah?.namaMk}"></span></p>
-            <p>ID Tugas: <span th:text="${tugasBesar.idTubes}"></span></p>
         </div>
         
         <h1 class="page-title">Upload Rubrik</h1>

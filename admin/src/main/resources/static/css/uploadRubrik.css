@@ -169,6 +169,17 @@ header {
     cursor: pointer;
     padding: 0 5px;
     z-index: 1;
+    text-decoration: none; /* remove underline for anchor steps */
+}
+
+/* Extra safeguard: ensure no underline appears on anchor steps */
+.progress-bar-container .step,
+.progress-bar-container .step:link,
+.progress-bar-container .step:visited,
+.progress-bar-container .step:hover,
+.progress-bar-container .step:active,
+.progress-bar-container .step * {
+    text-decoration: none !important;
 }
 
 .step:not(:last-child)::before {
@@ -219,6 +230,18 @@ header {
     font-weight: 800;
 }
 
+/* Disabled step: tampilkan lebih redup dan non-interaktif */
+.step.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+}
+.step.disabled:hover .step-num {
+    background-color: var(--bg-white) !important;
+    border-color: var(--step-line) !important;
+    color: var(--text-secondary) !important;
+}
+
 
 /* =========================================
    4. CONTENT: UPLOAD JADWAL (Estetik)
@@ -236,6 +259,34 @@ header {
     font-size: 2rem;
     color: var(--text-dark);
     margin-bottom: 20px;
+}
+
+/* Info Tugas (match uploadJadwal styling) */
+.tugas-info-card {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tugas-info-card h4 {
+    font-family: 'nunitoBold';
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.tugas-info-card p {
+    font-family: 'nunito';
+    color: #666;
+    margin-bottom: 5px;
+    font-size: 14px;
 }
 
 /* Kartu Putih Besar */

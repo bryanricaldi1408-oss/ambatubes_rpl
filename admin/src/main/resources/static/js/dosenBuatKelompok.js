@@ -435,10 +435,38 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- 7. HANDLE TOMBOL SELESAI ---
     if (selesaiBtn) {
         selesaiBtn.addEventListener("click", function() {
-            if (confirm("Apakah Anda yakin kelompok sudah selesai dibuat?")) {
-                // Redirect ke halaman penilaian
-                window.location.href = "dosenPenilaian.html";
+            if (!confirm("Apakah Anda yakin kelompok sudah selesai dibuat?")) return;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const kelasId = urlParams.get('kelasId');
+            const idTubes = urlParams.get('idTubes');
+
+            if (!kelasId || !idTubes) {
+                alert('Parameter idTubes/kelasId hilang');
+                return;
             }
+
+            const formData = new FormData();
+            formData.append('kelasId', kelasId);
+            formData.append('idTubes', idTubes);
+
+            fetch('/dosen/selesai-kelompok', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = data.redirect;
+                } else {
+                    alert('Gagal: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan saat menyelesaikan kelompok');
+            });
         });
     }
 
@@ -447,6 +475,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btnLogout.addEventListener("click", function () {
             const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
             if (confirmLogout) {
+                localStorage.clear();
                 window.location.href = "/logout";
             }
         });

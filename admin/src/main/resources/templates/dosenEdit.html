@@ -49,7 +49,7 @@
                 <span class="step-num">4</span>
                 <span class="step-desc">Buat Kelompok</span>
             </div>
-            <div class="step disabled">
+            <div class="step" th:classappend="${#lists.isEmpty(kelompokList)} ? ' disabled' : ''">
                 <span class="step-num">5</span>
                 <span class="step-desc">Penilaian</span>
             </div>

@@ -57,10 +57,10 @@ public class ExcelParseJadwalService {
                 
                 // Save to database
                 Jadwal savedJadwal = saveJadwal(deadline, idTubes);
-                saveKegiatan(namaKegiatan, savedJadwal.getIdJadwal());
-                
-                // Add to parsed data DTO
-                parsedData.add(new JadwalNilaiDto(deadline, namaKegiatan, null, null));
+                Kegiatan savedKegiatan = saveKegiatan(namaKegiatan, savedJadwal.getIdJadwal());
+
+                // Add to parsed data DTO (include idKegiatan)
+                parsedData.add(new JadwalNilaiDto(savedKegiatan.getIdKegiatan(), deadline, namaKegiatan, null, null));
             }
             
             workbook.close();
@@ -145,6 +145,7 @@ public class ExcelParseJadwalService {
             List<Kegiatan> kegiatanList = kegiatanRepository.findByIdJadwal(jadwal.getIdJadwal());
             for (Kegiatan kegiatan : kegiatanList) {
                 result.add(new JadwalNilaiDto(
+                    kegiatan.getIdKegiatan(),
                     jadwal.getDeadline(),
                     kegiatan.getNamaKegiatan(),
                     null,

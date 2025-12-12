@@ -39,4 +39,8 @@ public class KelompokService {
         
         return kelompokRepository.saveAll(newGroups);
     }
+
+    public List<Kelompok> getByTubesId(Integer idTubes) {
+        return kelompokRepository.findByIdTubes(idTubes);
+    }
 }

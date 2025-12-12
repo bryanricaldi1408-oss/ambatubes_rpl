@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btnLogout.addEventListener("click", function () {
             const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
             if (confirmLogout) {
+                localStorage.clear();
                 window.location.href = "/logout";
             }
         });
@@ -24,6 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const steps = document.querySelectorAll(".step[data-step]");
     steps.forEach((step) => {
         step.addEventListener("click", function() {
+            // Ignore clicks on disabled steps
+            if (this.classList.contains('disabled')) return;
             const stepNumber = this.getAttribute('data-step');
             
             if (!kelasId) {

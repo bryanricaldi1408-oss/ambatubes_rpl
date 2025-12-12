@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMBaTuBes - Penilaian</title>
-    <link rel="stylesheet" href="dosenPenilaian.css">
-    <script type="text/javascript" src="dosenPenilaian.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/dosenPenilaian.css}">
+    <script type="text/javascript" th:src="@{/js/dosenPenilaian.js}" defer></script>
 </head>
 <body>
     <header class="top-navbar">
@@ -14,9 +14,9 @@
                 <span class="logo-text">AMBaTuBes</span>
                 <span class="separator">|</span>
                 <nav class="breadcrumb">
-                    <a href="dosenHome.html">Dashboard</a>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelasId})}">Dashboard</a>
                     <span class="divider">/</span>
-                    <a href="dosenTubes.html">Tubes</a>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelasId})}">Tubes</a>
                     <span class="divider">/</span>
                     <span class="current">Penilaian</span>
                 </nav>
@@ -78,36 +78,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Pertemuan ke-1</td>
-                                <td>01 Jan 2024</td>
-                                <td>07 Jan 2024</td>
+                            <tr th:each="jadwal : ${jadwalList}">
+                                <td th:text="${jadwal.namaKegiatan}">Kegiatan</td>
+                                <td th:text="${#dates.format(jadwal.deadline, 'dd MMM yyyy')}">Awal</td>
+                                <td th:text="${#dates.format(jadwal.deadline, 'dd MMM yyyy')}">Akhir</td>
                                 <td>
-                                    <button class="input-nilai-btn">Input Nilai</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Presentasi</td>
-                                <td>08 Jan 2024</td>
-                                <td>14 Jan 2024</td>
-                                <td>
-                                    <button class="input-nilai-btn disabled" disabled>Input Nilai</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Demo Aplikasi</td>
-                                <td>15 Jan 2024</td>
-                                <td>21 Jan 2024</td>
-                                <td>
-                                    <button class="input-nilai-btn disabled" disabled>Input Nilai</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Laporan Final</td>
-                                <td>22 Jan 2024</td>
-                                <td>28 Jan 2024</td>
-                                <td>
-                                    <button class="input-nilai-btn disabled" disabled>Input Nilai</button>
+                                    <button class="input-nilai-btn" type="button" th:attr="data-idkegiatan=${jadwal.idKegiatan}">Input Nilai</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -134,15 +110,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="kelompok-nama">Kelompok A</td>
-                                <td class="nilai-cell">85</td>
+                            <tr th:each="k : ${kelompokList}">
+                                <td class="kelompok-nama" th:text="${'Kelompok ' + k.namaKelompok}">Kelompok</td>
+                                <td class="nilai-cell">-</td>
                                 <td class="nilai-cell">-</td>
                                 <td class="nilai-cell">-</td>
                                 <td class="nilai-cell">-</td>
                                 <td class="nilai-akhir">-</td>
                                 <td>
-                                    <button class="detail-nilai-btn" data-kelompok="A">Detail Nilai</button>
+                                    <button class="detail-nilai-btn" type="button" th:attr="data-kelompok=${k.namaKelompok}">Detail Nilai</button>
                                 </td>
                             </tr>
                             <tr>

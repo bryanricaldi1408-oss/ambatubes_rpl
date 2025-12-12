@@ -38,6 +38,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // --- 4. LOAD PREVIOUSLY UPLOADED RUBRIK NAME (persist across navigation) ---
+    function loadSavedRubrikName() {
+        if (!idTubes) return;
+        const nameKey = `rubrikFileName:${idTubes}`;
+        const pathKey = `rubrikFilePath:${idTubes}`;
+        const savedName = localStorage.getItem(nameKey);
+        const savedPath = localStorage.getItem(pathKey);
+        if (savedName) {
+            if (fileNameDisplay) {
+                if (savedPath) {
+                    fileNameDisplay.innerHTML = `<a href="${savedPath}" target="_blank" download>${savedName}</a>`;
+                } else {
+                    fileNameDisplay.textContent = savedName;
+                }
+                fileNameDisplay.style.display = 'block';
+            }
+            if (plusSign) plusSign.style.display = 'none';
+            if (saveBtn) saveBtn.disabled = false;
+        }
+    }
+
+    // Load on startup
+    loadSavedRubrikName();
+
     // --- 4. LOGIKA TOMBOL SAVE ---
     if (saveBtn && uploadForm) {
         saveBtn.addEventListener('click', async function(e) {
@@ -59,6 +83,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     const data = await response.json();
                     if (data.success) {
                         alert(data.message || 'Rubrik berhasil diupload!');
+                        // Persist uploaded filename and path so it remains visible after navigation
+                        try {
+                            const fileName = data.fileName || ((fileInput && fileInput.files && fileInput.files[0]) ? fileInput.files[0].name : null);
+                            const filePath = data.filePath || null;
+                            if (fileName && idTubes) {
+                                localStorage.setItem(`rubrikFileName:${idTubes}`, fileName);
+                            }
+                            if (filePath && idTubes) {
+                                localStorage.setItem(`rubrikFilePath:${idTubes}`, filePath);
+                            }
+                        } catch (e) {
+                            console.warn('Could not persist file info', e);
+                        }
                         if (data.redirect) {
                             window.location.href = data.redirect;
                         } else {
@@ -85,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnLogout) {
         btnLogout.addEventListener("click", function () {
             if (confirm("Apakah Anda yakin ingin keluar?")) {
+                localStorage.clear();
                 window.location.href = "/logout";
             }
         });

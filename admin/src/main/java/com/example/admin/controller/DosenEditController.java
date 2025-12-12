@@ -38,6 +38,7 @@ public class DosenEditController {
     private final TugasBesarService tugasBesarService;
     private final ExcelParseJadwalService ExcelParseJadwalService;
     private final com.example.admin.service.KelompokService kelompokService;
+    private final com.example.admin.service.PenilaianService penilaianService;
 
     // ==================== STEP 1: DAFTAR TUGAS ====================
     @GetMapping("/tubes")
@@ -178,6 +179,9 @@ public class DosenEditController {
             model.addAttribute("tugasBesar", tugasBesar);
             model.addAttribute("idTubes", idTubes);
             model.addAttribute("kelasId", kelasId);
+            // For enabling/disabling penilaian step
+            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
+            model.addAttribute("kelompokList", kelompokList);
             
             return "uploadJadwal"; // template: uploadJadwal.html
             
@@ -378,6 +382,9 @@ public class DosenEditController {
             model.addAttribute("tugasBesar", tugasBesar);
             model.addAttribute("idTubes", idTubes);
             model.addAttribute("kelasId", kelasId);
+            // For enabling/disabling penilaian step
+            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
+            model.addAttribute("kelompokList", kelompokList);
             
             return "uploadRubrik"; // template: uploadRubrik.html
             
@@ -541,14 +548,17 @@ public class DosenEditController {
             TugasBesar tugasBesar = tugasBesarService.getTugasById(idTubes);
             
             // Ambil data kelompok untuk tugas ini
-            // List<Kelompok> kelompokList = kelompokService.getByTugasId(idTubes);
-            
+            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
+            // Ambil data jadwal/kegiatan untuk tugas ini
+            List<com.example.admin.dto.JadwalNilaiDto> jadwalList = ExcelParseJadwalService.getParsedDataForTubes(idTubes);
+
             model.addAttribute("dosen", dosen);
             model.addAttribute("kelas", kelas);
             model.addAttribute("tugasBesar", tugasBesar);
             model.addAttribute("idTubes", idTubes);
             model.addAttribute("kelasId", kelasId);
-            // model.addAttribute("kelompokList", kelompokList);
+            model.addAttribute("kelompokList", kelompokList);
+            model.addAttribute("jadwalList", jadwalList);
             
             return "penilaian"; // template: penilaian.html
             
@@ -560,9 +570,7 @@ public class DosenEditController {
     
     @PostMapping("/simpan-nilai")
     @ResponseBody
-    public Map<String, Object> simpanNilai(@RequestParam Integer kelasId,
-                                        @RequestParam Integer idTubes,
-                                        @RequestParam String nilaiData,
+    public Map<String, Object> simpanNilai(@RequestBody Map<String, Object> payload,
                                         HttpSession session) {
         
         Map<String, Object> response = new HashMap<>();
@@ -576,15 +584,72 @@ public class DosenEditController {
         }
         
         try {
-            // TODO: Parse JSON nilaiData dan simpan ke database
-            // penilaianService.simpanNilai(idTubes, nilaiData);
-            
+            // Extract idTubes / kelasId and nilaiData from JSON body
+            Integer idTubes = null;
+            Integer kelasId = null;
+
+            if (payload.get("idTubes") instanceof Number) {
+                idTubes = ((Number) payload.get("idTubes")).intValue();
+            }
+            if (payload.get("kelasId") instanceof Number) {
+                kelasId = ((Number) payload.get("kelasId")).intValue();
+            }
+
+            Object nilaiObj = payload.get("nilaiData");
+            List<java.util.Map<String, Object>> list = new ArrayList<>();
+            if (nilaiObj instanceof List) {
+                list = (List<java.util.Map<String, Object>>) nilaiObj;
+            }
+
+            if (idTubes == null) {
+                response.put("success", false);
+                response.put("message", "idTubes is required");
+                return response;
+            }
+
+            penilaianService.simpanNilai(idTubes, list);
+
             response.put("success", true);
             response.put("message", "Nilai berhasil disimpan!");
-            response.put("redirect", "/dosen/tubes?kelasId=" + kelasId);
-            
+            response.put("redirect", "/dosen/tubes?kelasId=" + (kelasId == null ? "" : kelasId));
+
             return response;
-            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+            return response;
+        }
+    }
+
+    @PostMapping("/selesai-kelompok")
+    @ResponseBody
+    public Map<String, Object> selesaiKelompok(@RequestParam Integer kelasId,
+                                               @RequestParam Integer idTubes,
+                                               HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Dosen dosen = (Dosen) session.getAttribute("dosen");
+        if (dosen == null) {
+            response.put("success", false);
+            response.put("message", "Session expired");
+            response.put("redirect", "/login");
+            return response;
+        }
+
+        try {
+            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
+            if (kelompokList == null || kelompokList.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Belum ada kelompok. Silakan buat kelompok terlebih dahulu.");
+                return response;
+            }
+
+            response.put("success", true);
+            response.put("message", "Kelompok dinyatakan selesai. Penilaian aktif.");
+            response.put("redirect", "/dosen/penilaian?kelasId=" + kelasId + "&idTubes=" + idTubes);
+            return response;
+
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
