@@ -9,9 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const fileNameDisplay = document.getElementById('fileNameDisplay');
     const uploadForm = document.getElementById('uploadForm');
     
-    // --- 2. AMBIL PARAMETER DARI THYMELEAF ---
-    const kelasId = /*[[${kelas.idKelas}]]*/ null;
-    const idTubes = /*[[${tugasBesar.idTubes}]]*/ null;
+    // --- 2. AMBIL PARAMETER DARI URL ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const kelasId = urlParams.get('kelasId');
+    const idTubes = urlParams.get('idTubes');
     
     // --- 3. HANDLE FILE UPLOAD ---
     if (dropzone && fileInput) {
@@ -162,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Navigasi berdasarkan step
             if (stepNumber === '1') {
-                window.location.href = '/dosen/edit?kelasId=' + kelasId;
+                window.location.href = '/dosen/edit?kelasId=' + kelasId + '&idTubes=' + idTubes;
             } else if (stepNumber === '3') {
                 window.location.href = '/dosen/upload-rubrik?kelasId=' + kelasId + '&idTubes=' + idTubes;
             } else if (stepNumber === '4') {
@@ -179,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         if (stepNumber === 1) {
-            window.location.href = '/dosen/edit?kelasId=' + kelasId;
+            window.location.href = '/dosen/edit?kelasId=' + kelasId + '&idTubes=' + idTubes;
         } else if (stepNumber === 3) {
             window.location.href = '/dosen/upload-rubrik?kelasId=' + kelasId + '&idTubes=' + idTubes;
         } else if (stepNumber === 4) {
