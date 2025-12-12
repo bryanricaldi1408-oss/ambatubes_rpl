@@ -4,25 +4,25 @@
 
 @font-face {
     font-family: 'ubuntuBold';
-    src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+    src: url("../fonts/Ubuntu/Ubuntu-Bold.ttf");
     font-display: swap; 
 }
 
 @font-face {
     font-family: 'montserratBold';
-    src: url("fonts/Montserrat/static/Montserrat-Bold.ttf");
+    src: url("../fonts/Montserrat/static/Montserrat-Bold.ttf");
     font-display: swap;
 }
 
 @font-face {
     font-family: 'nunito';
-    src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+    src: url("../fonts/Nunito/static/Nunito-Regular.ttf");
     font-display: swap;
 }
 
 @font-face {
     font-family: 'nunitoBold';
-    src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+    src: url("../fonts/Nunito/static/Nunito-Bold.ttf");
     font-display: swap;
 }
 
