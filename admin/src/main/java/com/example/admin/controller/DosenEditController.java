@@ -1,18 +1,24 @@
 package com.example.admin.controller;
 
+import com.example.admin.dto.JadwalNilaiDto;
 import com.example.admin.entity.Dosen;
 import com.example.admin.entity.Kelas;
 import com.example.admin.entity.TugasBesar;
 import com.example.admin.service.DosenService;
 import com.example.admin.service.KelasService;
+import com.example.admin.service.RubrikService;
 import com.example.admin.service.TugasBesarService;
+import com.example.admin.service.ExcelParseJadwalService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,9 +32,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class DosenEditController {
     
     private final DosenService dosenService;
+    private final RubrikService rubrikService;
     private final KelasService kelasService;
     private final TugasBesarService tugasBesarService;
-    
+    private final ExcelParseJadwalService ExcelParseJadwalService;
+
     // ==================== STEP 1: DAFTAR TUGAS ====================
     @GetMapping("/tubes")
     public String listTugas(@RequestParam Integer kelasId,
@@ -214,19 +222,132 @@ public class DosenEditController {
                 return response;
             }
             
-            // TODO: Simpan file ke storage/database
-            // String filePath = fileService.saveJadwalFile(jadwalFile, idTubes);
-            // tugasBesarService.updateJadwalPath(idTubes, filePath);
+            // Parse and save Excel data
+            List<JadwalNilaiDto> parsedData = ExcelParseJadwalService.parseAndSaveExcel(jadwalFile, idTubes);
+            
+            // Store in session for potential page refresh
+            session.setAttribute("parsedJadwalData_" + idTubes, parsedData);
+            
+            // Format dates for display
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            List<Map<String, Object>> formattedData = parsedData.stream()
+                .map(dto -> {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("deadline", dto.getDeadline().format(formatter));
+                    row.put("namaKegiatan", dto.getNamaKegiatan());
+                    row.put("nilai", "-");
+                    row.put("keterangan", "-");
+                    return row;
+                })
+                .collect(Collectors.toList());
             
             response.put("success", true);
-            response.put("message", "Jadwal berhasil diupload!");
-            response.put("redirect", "/dosen/upload-rubrik?kelasId=" + kelasId + "&idTubes=" + idTubes);
+            response.put("message", "Jadwal berhasil diupload! " + parsedData.size() + " entri diproses.");
+            response.put("data", formattedData);
+            response.put("dataCount", parsedData.size());
             
             return response;
             
         } catch (Exception e) {
+            e.printStackTrace(); // For debugging
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
+            return response;
+        }
+    }
+
+    @PostMapping("/delete-jadwal")
+    @ResponseBody
+    public Map<String, Object> deleteJadwal(@RequestParam Integer idTubes, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Dosen dosen = (Dosen) session.getAttribute("dosen");
+        
+        if (dosen == null) {
+            response.put("success", false);
+            response.put("message", "Session expired");
+            response.put("redirect", "/login");
+            return response;
+        }
+        
+        try {
+            // Delete the data from database
+            ExcelParseJadwalService.deleteExistingData(idTubes);
+            
+            // Remove from session
+            session.removeAttribute("parsedJadwalData_" + idTubes);
+            
+            response.put("success", true);
+            response.put("message", "Jadwal berhasil dihapus");
+            return response;
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+            return response;
+        }
+    }
+
+    @GetMapping("/check-existing-jadwal")
+    @ResponseBody
+    public Map<String, Object> checkExistingJadwal(@RequestParam Integer idTubes, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Dosen dosen = (Dosen) session.getAttribute("dosen");
+        
+        if (dosen == null) {
+            response.put("hasData", false);
+            return response;
+        }
+        
+        try {
+            // Check if there's data in session first
+            String sessionKey = "parsedJadwalData_" + idTubes;
+            List<JadwalNilaiDto> sessionData = (List<JadwalNilaiDto>) session.getAttribute(sessionKey);
+            
+            if (sessionData != null && !sessionData.isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                List<Map<String, Object>> formattedData = sessionData.stream()
+                    .map(dto -> {
+                        Map<String, Object> row = new HashMap<>();
+                        row.put("deadline", dto.getDeadline().format(formatter));
+                        row.put("namaKegiatan", dto.getNamaKegiatan());
+                        row.put("nilai", "-");
+                        row.put("keterangan", "-");
+                        return row;
+                    })
+                    .collect(Collectors.toList());
+                
+                response.put("hasData", true);
+                response.put("data", formattedData);
+                response.put("dataCount", sessionData.size());
+                return response;
+            }
+            
+            // If no session data, check database
+            List<JadwalNilaiDto> dbData = ExcelParseJadwalService.getParsedDataForTubes(idTubes);
+            if (!dbData.isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                List<Map<String, Object>> formattedData = dbData.stream()
+                    .map(dto -> {
+                        Map<String, Object> row = new HashMap<>();
+                        row.put("deadline", dto.getDeadline().format(formatter));
+                        row.put("namaKegiatan", dto.getNamaKegiatan());
+                        row.put("nilai", "-");
+                        row.put("keterangan", "-");
+                        return row;
+                    })
+                    .collect(Collectors.toList());
+                
+                response.put("hasData", true);
+                response.put("data", formattedData);
+                response.put("dataCount", dbData.size());
+                return response;
+            }
+            
+            response.put("hasData", false);
+            return response;
+            
+        } catch (Exception e) {
+            response.put("hasData", false);
+            response.put("error", e.getMessage());
             return response;
         }
     }
@@ -264,9 +385,9 @@ public class DosenEditController {
     @PostMapping("/upload-rubrik-file")
     @ResponseBody
     public Map<String, Object> uploadRubrikFile(@RequestParam Integer kelasId,
-                                            @RequestParam Integer idTubes,
-                                            @RequestParam MultipartFile rubrikFile,
-                                            HttpSession session) {
+                                              @RequestParam Integer idTubes,
+                                              @RequestParam MultipartFile rubrikFile,
+                                              HttpSession session) {
         
         Map<String, Object> response = new HashMap<>();
         Dosen dosen = (Dosen) session.getAttribute("dosen");
@@ -279,42 +400,40 @@ public class DosenEditController {
         }
         
         try {
-            // Validasi file
+            // Basic validations
             if (rubrikFile.isEmpty()) {
                 response.put("success", false);
                 response.put("message", "File tidak boleh kosong");
                 return response;
             }
             
-            // Validasi ekstensi
             String fileName = rubrikFile.getOriginalFilename();
-            if (fileName != null && 
-                !fileName.toLowerCase().endsWith(".pdf") && 
-                !fileName.toLowerCase().endsWith(".docx") &&
-                !fileName.toLowerCase().endsWith(".doc")) {
+            if (fileName == null || !fileName.toLowerCase().endsWith(".pdf")) {
                 response.put("success", false);
-                response.put("message", "Hanya file PDF/DOC/DOCX yang diperbolehkan");
+                response.put("message", "Hanya file PDF yang diperbolehkan");
                 return response;
             }
             
-            // Validasi ukuran (max 5MB)
-            if (rubrikFile.getSize() > 5 * 1024 * 1024) {
+            if (rubrikFile.getSize() > 10 * 1024 * 1024) { // 10MB
                 response.put("success", false);
-                response.put("message", "Ukuran file maksimal 5MB");
+                response.put("message", "Ukuran file maksimal 10MB");
                 return response;
             }
             
-            // TODO: Simpan file rubrik
-            // String filePath = fileService.saveRubrikFile(rubrikFile, idTubes);
-            // tugasBesarService.updateRubrikPath(idTubes, filePath);
+            // Store file - FIXED: Use instance method
+            String filePath = rubrikService.storeFile(rubrikFile, idTubes);
+            
+            // Store file path in session for potential use
+            session.setAttribute("rubrikFilePath_" + idTubes, filePath);
             
             response.put("success", true);
             response.put("message", "Rubrik berhasil diupload!");
-            response.put("redirect", "/dosen/buat-kelompok?kelasId=" + kelasId + "&idTubes=" + idTubes);
+            response.put("filePath", filePath);
             
             return response;
             
         } catch (Exception e) {
+            e.printStackTrace(); // Add this for debugging
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
             return response;
