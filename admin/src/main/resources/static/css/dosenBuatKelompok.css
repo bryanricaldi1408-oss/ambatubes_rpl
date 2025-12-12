@@ -21,13 +21,13 @@
 }
 
 /* FONT FACES (Pastikan path file font benar) */
-@font-face { font-family: ubuntuBold; src: url("fonts/Ubuntu/Ubuntu-Bold.ttf"); }
-@font-face { font-family: montserratBold; src: url("fonts/Montserrat/static/Montserrat-Bold.ttf"); }
-@font-face { font-family: nunito; src: url("fonts/Nunito/static/Nunito-Regular.ttf"); }
-@font-face { font-family: nunitoBold; src: url("fonts/Nunito/static/Nunito-Bold.ttf"); }
-@font-face { font-family: nunitoExtraBold; src: url("fonts/Nunito/static/Nunito-ExtraBold.ttf"); }
-@font-face { font-family: nunitoSemiBold; src: url("fonts/Nunito/static/Nunito-SemiBold.ttf"); }
-@font-face { font-family: nunitoExtraLight; src: url("fonts/Nunito/static/Nunito-ExtraLight.ttf"); }
+@font-face { font-family: ubuntuBold; src: url("../fonts/Ubuntu/Ubuntu-Bold.ttf"); }
+@font-face { font-family: montserratBold; src: url("../fonts/Montserrat/static/Montserrat-Bold.ttf"); }
+@font-face { font-family: nunito; src: url("../fonts/Nunito/static/Nunito-Regular.ttf"); }
+@font-face { font-family: nunitoBold; src: url("../fonts/Nunito/static/Nunito-Bold.ttf"); }
+@font-face { font-family: nunitoExtraBold; src: url("../fonts/Nunito/static/Nunito-ExtraBold.ttf"); }
+@font-face { font-family: nunitoSemiBold; src: url("../fonts/Nunito/static/Nunito-SemiBold.ttf"); }
+@font-face { font-family: nunitoExtraLight; src: url("../fonts/Nunito/static/Nunito-ExtraLight.ttf"); }
 
 * {
     margin: 0;
