@@ -16,11 +16,12 @@
                 <nav class="breadcrumb">
                     <a href="/mahasiswa/home">Dashboard</a>
                     <span class="divider">/</span>
-                    <a href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
+                    <a th:href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
+                    <span class="divider">/</span>
+                    <a th:href="@{/mahasiswa/tubes/deskripsi/{id}(id=${idTubes})}">Deskripsi</a>
                     <span class="divider">/</span>
                     <span class="current">Kelompok</span>
-                </nav>
-            </div>
+                </nav>            </div>
             <div class="user-controls">
                 <div class="user-initials" th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">PP</div>
                 <button class="logout-btn" onclick="window.location.href='/logout'">
