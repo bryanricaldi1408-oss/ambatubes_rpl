@@ -50,7 +50,17 @@ document.addEventListener("DOMContentLoaded", function () {
         kelompokForm.addEventListener("submit", function (e) {
             e.preventDefault();
             
-            // Ambil nilai dari form (TANPA autoCreate)
+            // Ambil URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const kelasId = urlParams.get('kelasId');
+            const idTubes = urlParams.get('idTubes');
+            
+            if (!kelasId || !idTubes) {
+                alert("Error: Data parameter hilang (kelasId/idTubes)");
+                return;
+            }
+
+            // Ambil nilai dari form
             const jumlahGrup = parseInt(document.getElementById("jumlahGrup").value);
             const jumlahAnggota = parseInt(document.getElementById("jumlahAnggota").value);
             
@@ -64,51 +74,64 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Jumlah grup dan anggota harus lebih dari 0!");
                 return;
             }
-            
-            // Buat tabel kelompok (TANPA autoCreate parameter)
-            buatTabelKelompok(jumlahGrup, jumlahAnggota);
-            
-            // Tampilkan tabel container
-            tabelContainer.style.display = "block";
-            
-            // Scroll ke tabel
-            tabelContainer.scrollIntoView({ behavior: 'smooth' });
+
+            // Panggil API Backend
+            const formData = new FormData();
+            formData.append('kelasId', kelasId);
+            formData.append('idTubes', idTubes);
+            formData.append('jumlahGrup', jumlahGrup);
+            formData.append('jumlahAnggota', jumlahAnggota);
+
+            // Tampilkan loading state (opsional)
+            const btnSubmit = kelompokForm.querySelector('button[type="submit"]');
+            const originalText = btnSubmit.textContent;
+            btnSubmit.textContent = "Processing...";
+            btnSubmit.disabled = true;
+
+            fetch('/dosen/generate-kelompok', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    
+                    // Render tabel dengan data dari server
+                    renderTabelKelompok(data.groups);
+                    
+                    // Tampilkan tabel container
+                    tabelContainer.style.display = "block";
+                    tabelContainer.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert("Gagal: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Terjadi kesalahan sistem saat generate kelompok.");
+            })
+            .finally(() => {
+                btnSubmit.textContent = originalText;
+                btnSubmit.disabled = false;
+            });
         });
     }
 
     // --- 3. FUNGSI UNTUK MEMBUAT TABEL KELOMPOK (TANPA autoCreate) ---
-    function buatTabelKelompok(jumlahGrup, maxAnggota) {
+    // --- 3. FUNGSI UNTUK MERENDER TABEL KELOMPOK DARI DATA SERVER ---
+    function renderTabelKelompok(groupsData) {
         // Kosongkan tabel sebelumnya
         tableBody.innerHTML = "";
         
-        // Buat data kelompok (contoh data)
-        const kelompokData = [];
-        const kelompokHuruf = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-        
-        for (let i = 0; i < jumlahGrup; i++) {
-            const namaKelompok = `Kelompok ${kelompokHuruf[i]}`;
-            
-            // Gunakan data contoh jika tersedia, atau array kosong (TIDAK ada autoCreate)
-            const anggota = kelompokDataContoh[namaKelompok] ? 
-                kelompokDataContoh[namaKelompok].map(member => member.name) : 
-                []; // Selalu array kosong karena tidak ada autoCreate
-            
-            kelompokData.push({
-                nama: namaKelompok,
-                jumlahAnggota: anggota.length,
-                maxAnggota: maxAnggota,
-                anggota: anggota
-            });
-        }
-        
         // Isi tabel dengan data
-        kelompokData.forEach((kelompok, index) => {
+        groupsData.forEach((kelompok, index) => {
             const row = document.createElement("tr");
             
             // Kolom Nama Kelompok
             const tdNama = document.createElement("td");
             tdNama.className = "kelompok-nama";
-            tdNama.textContent = kelompok.nama;
+            tdNama.textContent = kelompok.nama; // Ex: "Kelompok A"
             
             // Kolom Jumlah Anggota
             const tdJumlah = document.createElement("td");
@@ -117,7 +140,13 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Kolom Anggota
             const tdAnggota = document.createElement("td");
-            tdAnggota.textContent = kelompok.anggota.join(", ");
+            // Cek jika anggota kosong
+            if (kelompok.anggota && kelompok.anggota.length > 0) {
+                 tdAnggota.textContent = kelompok.anggota.map(m => m.name).join(", ");
+            } else {
+                 tdAnggota.textContent = "-";
+            }
+           
             
             // Kolom Aksi (Edit)
             const tdAksi = document.createElement("td");
@@ -125,7 +154,10 @@ document.addEventListener("DOMContentLoaded", function () {
             editBtn.className = "edit-kelompok-btn";
             editBtn.textContent = "Edit";
             editBtn.addEventListener("click", function() {
-                openEditPopup(kelompok.nama);
+                // Perlu update logic edit popup agar sesuai dengan data real
+                // Untuk sementara warning dulu
+                // openEditPopup(kelompok.nama);
+                alert("Fitur edit detail kelompok akan diimplementasikan terpisah/nanti."); 
             });
             tdAksi.appendChild(editBtn);
             

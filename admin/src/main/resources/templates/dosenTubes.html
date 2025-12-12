@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,8 @@
         <section class="info-section">
             <div class="lecturer-profile">
                 <div class="profile-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
@@ -46,14 +48,15 @@
             </div>
 
             <div class="course-card-pill">
-                <h3 class="course-code" 
+                <h3 class="course-code"
                     th:text="${kelas.mataKuliah?.kodeMk + ' ' + kelas.mataKuliah?.namaMk ?: 'Mata Kuliah'}">
                     AIF 23020100 Algortima Pemrograman
                 </h3>
                 <div class="course-meta">
                     <span class="meta-item" th:text="'Kelas ' + ${kelas.namaKelas}">Kelas A</span>
                     <span class="meta-item" th:text="${kelas.semester}">Sem. Ganjil</span>
-                    <span class="meta-item" th:text="${#strings.substring(kelas.semester, #strings.length(kelas.semester)-9)}">2024/2025</span>
+                    <span class="meta-item"
+                        th:text="${#strings.substring(kelas.semester, #strings.length(kelas.semester)-9)}">2024/2025</span>
                 </div>
             </div>
         </section>
@@ -62,8 +65,27 @@
             <h3 class="section-title">Tugas Besar</h3>
             <div class="cards-container">
                 <!-- Kartu tugas besar akan ditampilkan di sini -->
+                <!-- Loop existing tasks -->
+                <a th:each="tubes : ${listTubes}" th:href="@{/dosen/edit(kelasId=${kelasId}, idTubes=${tubes.idTubes})}"
+                    style="text-decoration: none; color: inherit;">
+
+                    <article class="task-card">
+                        <div class="card-header">
+                            <h4 th:text="${tubes.namaTugas}">Tugas Besar 1</h4>
+                        </div>
+                        <div class="card-body">
+                            <p th:text="${#strings.abbreviate(tubes.deskripsi, 100)}">Deskripsi singkat...</p>
+                            <br>
+                            <small style="color: #666;"
+                                th:text="${#temporals.format(tubes.tanggalDibuat, 'dd MMM yyyy')}">12 Des 2025</small>
+                        </div>
+                    </article>
+                </a>
+
+                <!-- Add Button -->
                 <button class="add-card-dashed" onclick="redirectToEdit()">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
@@ -76,7 +98,7 @@
         // Ambil kelasId dari URL
         const urlParams = new URLSearchParams(window.location.search);
         const kelasId = urlParams.get('kelasId');
-        
+
         // Fungsi untuk redirect ke halaman edit dengan parameter kelasId
         function redirectToEdit() {
             if (kelasId) {
@@ -87,4 +109,5 @@
         }
     </script>
 </body>
+
 </html>

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface KelompokRepository extends JpaRepository<Kelompok, Integer> {
     List<Kelompok> findByIdTubes(Integer idTubes);
+    void deleteByIdTubes(Integer idTubes);
 }

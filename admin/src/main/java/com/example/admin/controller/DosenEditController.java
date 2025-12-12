@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,7 @@ public class DosenEditController {
     private final KelasService kelasService;
     private final TugasBesarService tugasBesarService;
     private final ExcelParseJadwalService ExcelParseJadwalService;
+    private final com.example.admin.service.KelompokService kelompokService;
 
     // ==================== STEP 1: DAFTAR TUGAS ====================
     @GetMapping("/tubes")
@@ -50,9 +52,12 @@ public class DosenEditController {
         
         try {
             Kelas kelas = kelasService.findById(kelasId);
+            List<TugasBesar> listTubes = tugasBesarService.getAllTugasByKelas(kelasId);
+
             model.addAttribute("dosen", dosen);
             model.addAttribute("kelas", kelas);
-            model.addAttribute("kelasId", kelasId); // Tambah ini
+            model.addAttribute("kelasId", kelasId);
+            model.addAttribute("listTubes", listTubes); // Add this line
             
             return "dosenTubes";  // Render dosenTubes.html
             
@@ -474,11 +479,12 @@ public class DosenEditController {
         }
     }
     
-    @PostMapping("/simpan-kelompok")
+    @PostMapping("/generate-kelompok")
     @ResponseBody
-    public Map<String, Object> simpanKelompok(@RequestParam Integer kelasId,
+    public Map<String, Object> generateKelompok(@RequestParam Integer kelasId,
                                             @RequestParam Integer idTubes,
-                                            @RequestParam String kelompokData,
+                                            @RequestParam Integer jumlahGrup,
+                                            @RequestParam Integer jumlahAnggota,
                                             HttpSession session) {
         
         Map<String, Object> response = new HashMap<>();
@@ -492,12 +498,22 @@ public class DosenEditController {
         }
         
         try {
-            // TODO: Parse JSON kelompokData dan simpan ke database
-            // kelompokService.simpanKelompok(idTubes, kelompokData);
+            // Generate kelompok using service
+            List<com.example.admin.entity.Kelompok> groups = kelompokService.generateKelompok(idTubes, jumlahGrup, jumlahAnggota);
             
+            // Format response matching frontend expectation
+            List<Map<String, Object>> groupsData = groups.stream().map(g -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("nama", "Kelompok " + g.getNamaKelompok());
+                map.put("jumlahAnggota", 0); // Baru dibuat, pasti 0
+                map.put("maxAnggota", g.getJumlahAnggota());
+                map.put("anggota", new ArrayList<>());
+                return map;
+            }).collect(Collectors.toList());
+
             response.put("success", true);
-            response.put("message", "Kelompok berhasil disimpan!");
-            response.put("redirect", "/dosen/penilaian?kelasId=" + kelasId + "&idTubes=" + idTubes);
+            response.put("message", "Kelompok berhasil digenerate!");
+            response.put("groups", groupsData);
             
             return response;
             
