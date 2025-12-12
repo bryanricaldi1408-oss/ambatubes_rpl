@@ -466,7 +466,7 @@ public class DosenEditController {
             model.addAttribute("kelasId", kelasId);
             // model.addAttribute("mahasiswaList", mahasiswaList);
             
-            return "buatKelompok"; // template: buatKelompok.html
+            return "dosenBuatKelompok"; // template: dosenBuatKelompok.html
             
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());

@@ -415,32 +415,14 @@ document.addEventListener("DOMContentLoaded", function () {
         btnLogout.addEventListener("click", function () {
             const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
             if (confirmLogout) {
-                window.location.href = "index.html";
+                window.location.href = "/logout";
             }
         });
     }
 
     // --- 9. PROGRESS BAR CLICKABLE ---
-    const steps = document.querySelectorAll(".step");
-    steps.forEach((step, index) => {
-        step.addEventListener("click", () => {
-            if (index === 0) {
-                window.location.href = "dosenEdit.html";
-            } else if (index === 1) {
-                window.location.href = "uploadJadwal.html";
-            }
-            else if (index === 2) {
-                window.location.href = "uploadRubrik.html";
-            }
-            else if (index === 3) {
-                // Sudah di halaman ini
-                return;
-            }
-            else if(index === 4){
-                window.location.href = "dosenPenilaian.html";
-            }
-        });
-    });
+    // Navigation is now handled by <a> tags in HTML
+
 });
 
 // Hapus fungsi yang tidak dipakai lagi

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/css/deskripsiTubes.css">
     <script type="text/javascript" src="/js/deskripsiTubes.js" defer></script>
 </head>
+
 <body>
 
     <header>
@@ -17,18 +19,18 @@
                 <nav class="breadcrumb">
                     <a href="/mahasiswa/home">Dashboard</a>
                     <span class="divider">/</span>
-                    
+
                     <a th:href="@{/mahasiswa/tubes/{id}(id=${tubesActive.idKelas})}">Tubes</a>
-                    
+
                     <span class="divider">/</span>
                     <span class="current">Deskripsi</span>
                 </nav>
             </div>
-            
+
             <div class="user-controls">
-                <div class="user-initials" 
-                     th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
-                     PP
+                <div class="user-initials"
+                    th:text="${mahasiswa != null ? #strings.substring(mahasiswa.nama, 0, 2).toUpperCase() : 'PP'}">
+                    PP
                 </div>
                 <button class="logout-btn" onclick="window.location.href='/logout'">
                     <img src="/icons/exit.png" alt="Logout" class="icon-img">
@@ -46,28 +48,37 @@
 
             <div class="card-body">
                 <p style="white-space: pre-line;" th:text="${tubesActive.deskripsi}">
-                   Deskripsi tugas akan muncul di sini...
+                    Deskripsi tugas akan muncul di sini...
                 </p>
-                
-                <p style="margin-top: 20px; font-size: 0.9em; color: #666;" 
-                   th:text="'Tanggal Dibuat: ' + ${tubesActive.tanggalDibuat}">
+
+                <p style="margin-top: 20px; font-size: 0.9em; color: #666;"
+                    th:text="'Tanggal Dibuat: ' + ${tubesActive.tanggalDibuat}">
                 </p>
             </div>
 
             <div class="card-actions">
-                
-                <a th:href="@{/mahasiswa/tubes/jadwal-nilai/{id}(id=${tubesActive.idTubes})}" 
-                   style="text-decoration: none;">
+
+                <a th:href="@{/mahasiswa/tubes/jadwal-nilai/{id}(id=${tubesActive.idTubes})}"
+                    style="text-decoration: none;">
                     <button class="action-btn" id="jadwal" type="button">
                         <span class="btn-icon">📅</span> Jadwal & Nilai
                     </button>
                 </a>
-                
-                <button class="action-btn" id="rubrik">
+
+                <a th:href="@{/uploads/rubrik/rubrik_{id}.pdf(id=${tubesActive.idTubes})}" th:if="${rubrikExists}"
+                    download style="text-decoration: none;">
+                    <button class="action-btn" id="rubrik">
+                        <span class="btn-icon">📄</span> Unduh Rubrik
+                    </button>
+                </a>
+
+                <button class="action-btn" id="rubrik" th:unless="${rubrikExists}"
+                    onclick="alert('Rubrik belum tersedia.')" style="opacity: 0.5; cursor: not-allowed;">
                     <span class="btn-icon">📄</span> Unduh Rubrik
                 </button>
-                
-                <a th:href="@{/mahasiswa/tubes/{id}/kelompok(id=${tubesActive.idTubes})}" style="text-decoration: none;">
+
+                <a th:href="@{/mahasiswa/tubes/{id}/kelompok(id=${tubesActive.idTubes})}"
+                    style="text-decoration: none;">
                     <button class="action-btn" id="kelompok" type="button">
                         <span class="btn-icon">👥</span> Kelompok
                     </button>
@@ -76,4 +87,5 @@
         </div>
     </main>
 </body>
+
 </html>

@@ -47,4 +47,10 @@ public class RubrikService {
             return false;
         }
     }
+
+    public boolean rubrikExists(Integer idTubes) {
+        String filename = "rubrik_" + idTubes + ".pdf";
+        Path filePath = uploadDir.resolve(filename);
+        return Files.exists(filePath);
+    }
 }
