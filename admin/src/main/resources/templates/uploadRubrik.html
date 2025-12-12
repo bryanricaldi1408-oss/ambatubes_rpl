@@ -77,13 +77,13 @@
         <h1 class="page-title">Upload Rubrik</h1>
 
         <div class="upload-card">
-            <p class="file-info">Supported file: <span class="ext">.pdf, .doc, .docx</span></p>
+            <p class="file-info">Supported file: <span class="ext">.pdf</span></p>
             
             <form th:action="@{/dosen/upload-rubrik-file}" method="POST" enctype="multipart/form-data" id="uploadForm">
                 <input type="hidden" name="kelasId" th:value="${kelas.idKelas}">
                 <input type="hidden" name="idTubes" th:value="${tugasBesar.idTubes}">
                 <label class="blue-dropzone" for="rubrikFile">
-                    <input type="file" name="rubrikFile" id="rubrikFile" accept=".pdf,.doc,.docx" hidden>
+                    <input type="file" name="rubrikFile" id="rubrikFile" accept=".pdf" hidden>
                     <div class="plus-sign" id="plusSign">+</div>
                     <div class="file-name-display" id="fileNameDisplay"></div>
                 </label>
