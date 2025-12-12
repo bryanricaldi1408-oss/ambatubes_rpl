@@ -149,6 +149,8 @@ public class MahasiswaController {
         
         String npm = (String) session.getAttribute("userNpm");
         Mahasiswa mahasiswa = (Mahasiswa) session.getAttribute("mahasiswa");
+        TugasBesar tubes = tugasBesarRepository.findById(idTubes).orElse(null);
+
 
         // Ambil semua kelompok yang tersedia untuk Tugas Besar ini
         List<Kelompok> listKelompokDB = kelompokRepository.findByIdTubes(idTubes);
@@ -175,6 +177,8 @@ public class MahasiswaController {
         model.addAttribute("listKelompok", displayList);
         model.addAttribute("idTubes", idTubes);
         model.addAttribute("mahasiswa", mahasiswa);
+        model.addAttribute("tubesActive", tubes);
+
 
         return "kelompok";
     }
