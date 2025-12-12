@@ -110,35 +110,4 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
-    // --- 6. AUTO-SAVE DRAFT (OPTIONAL) ---
-    if (inputNama && inputDeskripsi) {
-        let autoSaveTimer;
-        
-        function autoSaveDraft() {
-            const namaTugas = inputNama.value;
-            const deskripsi = inputDeskripsi.value;
-            const kelasId = document.querySelector('input[name="kelasId"]')?.value;
-            
-            if (namaTugas || deskripsi) {
-                const draftData = {
-                    namaTugas: namaTugas,
-                    deskripsi: deskripsi,
-                    kelasId: kelasId,
-                    timestamp: new Date().toISOString()
-                };
-                localStorage.setItem('tugasDraft', JSON.stringify(draftData));
-            }
-        }
-        
-        inputNama.addEventListener('input', () => {
-            clearTimeout(autoSaveTimer);
-            autoSaveTimer = setTimeout(autoSaveDraft, 10000);
-        });
-        
-        inputDeskripsi.addEventListener('input', () => {
-            clearTimeout(autoSaveTimer);
-            autoSaveTimer = setTimeout(autoSaveDraft, 10000);
-        });
-    }
 });

@@ -1,5 +1,5 @@
 /* =========================================
-   RESET & GLOBAL STYLES
+   RESET & GLOBAL STYLES (MATCHING mTubesDashboard)
    ========================================= */
 :root {
     --primary: #0169be;
@@ -9,42 +9,43 @@
     --text-dark: #333;
     --text-light: #666;
     --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
+    --shadow-soft: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 @font-face {
   font-family: ubuntuBold;
-  src: url("fonts/Ubuntu/Ubuntu-Bold.ttf");
+  src: url("../fonts/Ubuntu/Ubuntu-Bold.ttf");
 }
 
 @font-face {
   font-family: montserratBold;
-  src: url("fonts/Montserrat/static/Montserrat-Bold.ttf");
+  src: url("../fonts/Montserrat/static/Montserrat-Bold.ttf");
 }
 
 @font-face {
   font-family: nunito;
-  src: url("fonts/Nunito/static/Nunito-Regular.ttf");
+  src: url("../fonts/Nunito/static/Nunito-Regular.ttf");
 }
 
 
 @font-face {
   font-family: nunitoBold;
-  src: url("fonts/Nunito/static/Nunito-Bold.ttf");
+  src: url("../fonts/Nunito/static/Nunito-Bold.ttf");
 }
 
 @font-face {
   font-family: nunitoExtraBold;
-  src: url("fonts/Nunito/static/Nunito-ExtraBold.ttf");
+  src: url("../fonts/Nunito/static/Nunito-ExtraBold.ttf");
 }
 
 @font-face {
   font-family: nunitoSemiBold;
-  src: url("fonts/Nunito/static/Nunito-SemiBold.ttf");
+  src: url("../fonts/Nunito/static/Nunito-SemiBold.ttf");
 }
 
 @font-face {
   font-family: nunitoExtraLight;
-  src: url("fonts/Nunito/static/Nunito-ExtraLight.ttf");
+  src: url("../fonts/Nunito/static/Nunito-ExtraLight.ttf");
 }
 
 
@@ -55,9 +56,11 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-gray);
+    font-family: 'nunito', sans-serif;
+    background-color: var(--bg-body);
     color: var(--text-dark);
+    padding-top: 80px; /* Space for fixed header */
+    min-height: 100vh;
 }
 
 /* =========================================
@@ -77,16 +80,6 @@ header {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     z-index: 100;
 }
-
-/* supaya konten tidak ketutup header */
-body {
-    background-color: var(--bg-body);
-    font-family: 'nunito', sans-serif;
-    color: var(--text-dark);
-    padding-top: 80px; /* Space for fixed header */
-    min-height: 100vh;
-}
-
 
 .header-content {
     width: 100%;
@@ -140,7 +133,7 @@ body {
     text-underline-offset: 4px;
 }
 
-/* USER CONTROLS – sama seperti sebelumnya */
+/* USER CONTROLS */
 .user-controls {
     display: flex;
     align-items: center;
@@ -194,7 +187,7 @@ body {
 .lecturer-profile .profile-icon svg {
     width: 45px;
     height: 45px;
-    stroke: #000; /* Warna icon hitam */
+    stroke: #000;
 }
 
 .lecturer-name {
@@ -206,7 +199,7 @@ body {
 .course-card-pill {
     background-color: var(--white);
     padding: 30px 40px;
-    border-radius: 40px; /* Membuat sudut sangat bulat seperti kapsul */
+    border-radius: 40px;
     box-shadow: var(--shadow-soft);
     margin-bottom: 40px;
     display: flex;
@@ -221,7 +214,7 @@ body {
 
 .course-meta {
     display: flex;
-    gap: 30px; /* Jarak antar item (Kelas, Sem, Tahun) */
+    gap: 30px;
     font-size: 1rem;
     color: #555;
 }
@@ -237,31 +230,32 @@ body {
 
 .cards-container {
     display: flex;
-    gap: 30px; /* Jarak antar kartu */
-    flex-wrap: wrap; /* Agar turun ke bawah jika layar kecil */
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
-/* Styling Kartu Tugas */
+/* Styling Kartu Tugas (MATCHING mTubesDashboard) */
 .task-card {
     background-color: var(--white);
-    border-radius: 25px; /* Sudut membulat kartu */
-    overflow: hidden; /* Agar header biru mengikuti border-radius */
-    width: 300px; /* Lebar tetap atau bisa pakai flex-basis */
+    border-radius: 25px;
+    overflow: hidden;
+    width: 300px;
     box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
     transition: transform 0.2s;
+    height: 240px; /* Fixed height for consistency */
 }
 
 .task-card:hover {
-    transform: translateY(-5px); /* Efek naik sedikit saat di-hover */
+    transform: translateY(-5px);
 }
 
 .card-header {
     background-color: var(--primary);
     color: var(--white);
     padding: 20px;
-    height: 80px; /* Tinggi area biru */
+    height: 80px;
     display: flex;
     align-items: center;
 }
@@ -269,41 +263,42 @@ body {
 .card-header h4 {
     font-weight: 600;
     font-size: 1.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-body {
     padding: 20px;
-    min-height: 120px; /* Tinggi area putih */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card-body p {
     font-size: 0.9rem;
     color: #333;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
+
 /* =========================================
    ADD NEW TASK (DASHED BOX) STYLES
    ========================================= */
 
-.tasks-section {
-    margin-top: 20px;
-}
-
-/* Container agar tombol ada di posisi yang rapi */
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-}
-
 .add-card-dashed {
-    /* Ukuran Kotak */
-    width: 300px;      /* Samakan dengan .task-card jika ada */
-    height: 200px;     /* Tinggi kotak */
+    /* Ukuran Kotak - Match task-card */
+    width: 300px;
+    height: 240px; 
     
     /* Styling Border Putus-putus */
     background-color: transparent;
-    border: 3px dashed #333; /* Warna garis hitam/gelap */
-    border-radius: 30px;     /* Kelengkungan sudut */
+    border: 3px dashed #ccc;
+    border-radius: 25px;
     
     /* Posisi Icon di Tengah */
     display: flex;
@@ -314,24 +309,22 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     outline: none;
-    color: #333; /* Warna icon */
+    color: #ccc;
 }
 
 /* Efek saat mouse diarahkan (Hover) */
 .add-card-dashed:hover {
-    background-color: rgba(0, 0, 0, 0.05); /* Sedikit abu-abu */
-    border-color: var(--primary); /* Berubah jadi biru */
-    color: var(--primary);        /* Icon jadi biru */
-    transform: scale(1.02);       /* Sedikit membesar */
+    background-color: rgba(1, 105, 190, 0.05); /* Sedikit biru */
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-5px);
 }
 
-/* Efek saat diklik (Active) */
 .add-card-dashed:active {
     transform: scale(0.98);
 }
-/* =========================================
-   RESPONSIVE (MOBILE)
-   ========================================= */
+
+/* Responsive */
 @media (max-width: 768px) {
     .top-navbar {
         padding: 15px;
@@ -355,18 +348,7 @@ body {
         justify-content: center;
     }
 
-    .task-card {
-        width: 100%; /* Kartu lebar penuh di HP */
+    .task-card, .add-card-dashed {
+        width: 100%;
     }
-
-}
-
-.page-title{
-    font-family:montserratBold;
-    font-size: 18px;
-    
-}
-.page-title a{
-    text-decoration: none;
-    color: white;
 }

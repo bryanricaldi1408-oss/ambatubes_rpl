@@ -82,7 +82,13 @@
         
         <h1 class="page-title">Upload Jadwal</h1>
 
-        <div class="upload-card">
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading">
+            <div>Memproses file Excel...</div>
+        </div>
+
+        <!-- Upload Card (Shown when no data) -->
+        <div id="uploadCard" class="upload-card">
             <p class="file-info">Supported file: <span class="ext">.xlsx</span></p>
             
             <form th:action="@{/dosen/upload-jadwal-file}" method="POST" enctype="multipart/form-data" id="uploadForm">
@@ -97,8 +103,31 @@
             </form>
         </div>
 
+        <!-- Table Container (Hidden by default) -->
+        <div id="tableContainer" class="table-container">
+            <h3>Jadwal yang Diupload</h3>
+            <div class="data-count">
+                Total data: <span id="dataCount">0</span>
+            </div>
+            <table id="jadwalTable" class="jadwal-table">
+                <thead>
+                    <tr>
+                        <th>Deadline</th>
+                        <th>Kegiatan</th>
+                        <th>Nilai</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
         <div class="action-container">
+            <a href="/templateJadwal.xlsx" class="download-btn" download="templateJadwal.xlsx">Download Template</a>
             <button class="btn-save" id="saveBtn">Save</button>
+            <button class="btn-delete" id="deleteBtn">Delete Uploaded Data</button>
         </div>
 
     </main>

@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Service
-public class ExcelParserService {
+public class ExcelParseKelasService {
 
     public ExcelImportData parseExcelFile(MultipartFile file) throws IOException {
         ExcelImportData importData = new ExcelImportData();
