@@ -1,25 +1,4 @@
-const ALL_STUDENTS = [
-    { name: 'Ahmad Rizki', npm: '6182301010' },
-    { name: 'Budi Santoso', npm: '6182301011' },
-    { name: 'Citra Lestari', npm: '6182301012' },
-    { name: 'Dewi Anggraini', npm: '6182301013' },
-    { name: 'Eko Prasetyo', npm: '6182301014' },
-    { name: 'Fitriani Sari', npm: '6182301015' },
-    { name: 'Gunawan Wibowo', npm: '6182301016' },
-    { name: 'Hana Melati', npm: '6182301017' },
-    { name: 'Irfan Maulana', npm: '6182301018' },
-    { name: 'Jihan Amanda', npm: '6182301019' },
-    { name: 'Kurniawan Adi', npm: '6182301020' },
-    { name: 'Lestari Ningrum', npm: '6182301021' },
-    // Anggota yang sudah ada di kelompokDataContoh:
-    { name: 'Robert Saputra', npm: '6182301001' },
-    { name: 'Bryan Ricaldi', npm: '6182301002' },
-    { name: 'Ethan', npm: '6182301003' },
-    { name: 'Eric Leilpaly', npm: '6182301007' },
-    { name: 'Sarah Johnson', npm: '6182301004' },
-    { name: 'Michael Brown', npm: '6182301005' },
-    { name: 'Lisa Anderson', npm: '6182301006' }
-];
+
 
 document.addEventListener("DOMContentLoaded", function () {
     
@@ -30,20 +9,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const tableBody = document.getElementById("tableBody");
     const selesaiBtn = document.getElementById("selesaiBtn");
 
+    // --- CHECK EXISTING DATA FROM SERVER ---
+    if (typeof serverExistingGroups !== 'undefined' && serverExistingGroups.length > 0) {
+        console.log("Loading existing groups:", serverExistingGroups);
+        renderTabelKelompok(serverExistingGroups);
+        tabelContainer.style.display = "block";
+    }
+
     // --- DATA KELOMPOK ---
-    const kelompokDataContoh = {
-        'Kelompok A': [
-            { name: 'Robert Saputra', npm: '6182301001' },
-            { name: 'Bryan Ricaldi', npm: '6182301002' },
-            { name: 'Ethan', npm: '6182301003' },
-            { name: 'Eric Leilpaly', npm: '6182301007' }
-        ],
-        'Kelompok B': [
-            { name: 'Sarah Johnson', npm: '6182301004' },
-            { name: 'Michael Brown', npm: '6182301005' },
-            { name: 'Lisa Anderson', npm: '6182301006' }
-        ]
-    };
+
 
     // --- 2. HANDLE FORM SUBMIT ---
     if (kelompokForm) {
@@ -97,12 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     alert(data.message);
                     
-                    // Render tabel dengan data dari server
-                    renderTabelKelompok(data.groups);
-                    
-                    // Tampilkan tabel container
-                    tabelContainer.style.display = "block";
-                    tabelContainer.scrollIntoView({ behavior: 'smooth' });
+                    alert(data.message);
+                    window.location.reload();
                 } else {
                     alert("Gagal: " + data.message);
                 }
@@ -154,10 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
             editBtn.className = "edit-kelompok-btn";
             editBtn.textContent = "Edit";
             editBtn.addEventListener("click", function() {
-                // Perlu update logic edit popup agar sesuai dengan data real
-                // Untuk sementara warning dulu
-                // openEditPopup(kelompok.nama);
-                alert("Fitur edit detail kelompok akan diimplementasikan terpisah/nanti."); 
+                openEditPopup(kelompok.nama, kelompok.id, kelompok.anggota);
             });
             tdAksi.appendChild(editBtn);
             
@@ -191,84 +158,64 @@ document.addEventListener("DOMContentLoaded", function () {
     // }
 
     // --- 5. FUNGSI POPUP EDIT KELOMPOK ---
-    function openEditPopup(groupName) {
+    let currentGroupId = null;
+    let allAvailableStudents = []; // Cache for available students
+
+    function openEditPopup(groupName, groupId, members) {
         document.getElementById('popupGroupName').textContent = groupName;
+        currentGroupId = groupId;
         
-        // Isi tabel dengan data anggota
         const tableBody = document.getElementById('popupTableBody');
         tableBody.innerHTML = '';
-        
-        const members = kelompokDataContoh[groupName] || [];
         
         members.forEach(member => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${member.name}</td>
                 <td>${member.npm}</td>
-                <td><button class="hapus-btn" onclick="hapusAnggota(this)">Hapus</button></td>
+                <td><button class="hapus-btn" onclick="hapusAnggota(this, '${member.npm}')">Hapus</button></td>
             `;
             tableBody.appendChild(row);
         });
         
-        // Tampilkan popup
         document.getElementById('editPopup').style.display = 'flex';
-        // Sembunyikan tombol "Tambahkan Anggota" (kita ganti dengan search bar)
         document.getElementById('tambahAnggotaBtn').style.display = 'none';
 
-        // Inisialisasi Search Bar
         const searchInput = document.getElementById('memberSearchInput');
         const searchResultsContainer = document.getElementById('searchResults');
         
-        // Kosongkan hasil search sebelumnya
         searchInput.value = '';
-        searchResultsContainer.innerHTML = ''; 
+        searchResultsContainer.innerHTML = '<div style="padding: 10px; color: #666;">Loading students...</div>';
+        
+        searchInput.oninput = handleMemberSearch;
 
-        // Tambahkan event listener untuk search
-        searchInput.removeEventListener('input', handleMemberSearch); // Hapus jika sudah ada
-        searchInput.addEventListener('input', handleMemberSearch);
+        // Fetch all available students immediately
+        const urlParams = new URLSearchParams(window.location.search);
+        const kelasId = urlParams.get('kelasId');
+        const idTubes = urlParams.get('idTubes');
+
+        fetch(`/dosen/kelompok/available-students?idTubes=${idTubes}&kelasId=${kelasId}`)
+            .then(res => res.json())
+            .then(data => {
+                allAvailableStudents = data; // Store in cache
+                renderStudentList(allAvailableStudents); // Show all initially
+            })
+            .catch(err => {
+                console.error(err);
+                searchResultsContainer.innerHTML = '<div style="padding: 10px; color: red;">Failed to load students.</div>';
+            });
     }
 
-    // Fungsi untuk memfilter dan menampilkan hasil pencarian
-    function handleMemberSearch() {
-        const searchInput = document.getElementById('memberSearchInput');
+    function renderStudentList(students) {
         const searchResultsContainer = document.getElementById('searchResults');
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        const groupName = document.getElementById('popupGroupName').textContent;
-        
         searchResultsContainer.innerHTML = '';
-        
-        if (searchTerm.length < 3) {
-            searchResultsContainer.innerHTML = `
-                <div style="padding: 10px; color: #666; font-style: italic; border: none; background: transparent;">
-                    Ketik minimal 3 karakter untuk mencari.
-                </div>
-            `;
+
+        if (students.length === 0) {
+            searchResultsContainer.innerHTML = '<div style="padding: 10px; color: #666;">Tidak ada mahasiswa yang tersedia.</div>';
             return;
         }
 
-        // Mendapatkan NPM anggota yang sudah ada dalam grup saat ini
-        const existingNPMs = (kelompokDataContoh[groupName] || []).map(member => member.npm);
-
-        const filteredStudents = ALL_STUDENTS.filter(student => {
-            const studentName = student.name.toLowerCase();
-            const studentNPM = student.npm;
-            
-            // Cek jika sudah ada di grup ini
-            const isExisting = existingNPMs.includes(studentNPM);
-
-            // Filter berdasarkan Nama ATAU NPM
-            const matchesSearch = studentName.includes(searchTerm) || studentNPM.includes(searchTerm);
-            
-            return matchesSearch && !isExisting; // Tampilkan yang match dan BUKAN anggota grup ini
-        });
-
-        if (filteredStudents.length === 0) {
-            searchResultsContainer.innerHTML = '<div style="padding: 10px; color: #e74c3c;">Tidak ada mahasiswa ditemukan atau sudah di dalam kelompok.</div>';
-            return;
-        }
-
-        // Tampilkan hasil pencarian
-        filteredStudents.forEach(student => {
+        students.forEach(student => {
             const resultItem = document.createElement('div');
             resultItem.className = 'search-result-item';
             resultItem.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: background-color 0.2s;';
@@ -283,7 +230,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 </button>
             `;
             
-            // Tambahkan event listener untuk tombol tambah
             resultItem.querySelector('.tambah-ke-grup-btn').addEventListener('click', function(e) {
                 e.stopPropagation();
                 addMemberToGroup(this.dataset.name, this.dataset.npm);
@@ -293,58 +239,93 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Fungsi untuk menambahkan anggota ke grup dari hasil pencarian
-    function addMemberToGroup(name, npm) {
-        const groupName = document.getElementById('popupGroupName').textContent;
-        const tableBody = document.getElementById('popupTableBody');
+    // Fungsi untuk memfilter dan menampilkan hasil pencarian (Client-side)
+    function handleMemberSearch() {
+        const searchInput = document.getElementById('memberSearchInput');
+        const searchTerm = searchInput.value.toLowerCase().trim();
         
-        // Tambahkan ke data simulasi (kelompokDataContoh)
-        if (!kelompokDataContoh[groupName]) {
-            kelompokDataContoh[groupName] = [];
-        }
-        
-        // Periksa duplikasi terakhir kali (meskipun sudah difilter di search)
-        const isDuplicate = kelompokDataContoh[groupName].some(member => member.npm === npm);
-        if (isDuplicate) {
-            alert(`${name} (${npm}) sudah menjadi anggota kelompok ini.`);
-            return;
-        }
+        const filteredStudents = allAvailableStudents.filter(student => {
+             return student.name.toLowerCase().includes(searchTerm) || student.npm.includes(searchTerm);
+        });
 
-        kelompokDataContoh[groupName].push({ name, npm });
-        
-        // Tambahkan ke tampilan tabel di popup
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>${name}</td>
-            <td>${npm}</td>
-            <td><button class="hapus-btn" onclick="hapusAnggota(this)">Hapus</button></td>
-        `;
-        tableBody.appendChild(newRow);
-        
-        // Feedback dan refresh hasil search
-        alert(`${name} berhasil ditambahkan ke ${groupName}!`);
-        document.getElementById('memberSearchInput').value = '';
-        document.getElementById('searchResults').innerHTML = '';
+        renderStudentList(filteredStudents);
+    }
+
+    // Fungsi untuk menambahkan anggota ke grup
+    function addMemberToGroup(name, npm) {
+        if(!currentGroupId) return;
+
+        const formData = new FormData();
+        formData.append('npm', npm);
+        formData.append('idKelompok', currentGroupId);
+
+        fetch('/dosen/kelompok/add-member', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                alert(`Berhasil menambahkan ${name}!`);
+                
+                // Add to table immediately
+                const tableBody = document.getElementById('popupTableBody');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${name}</td>
+                    <td>${npm}</td>
+                    <td><button class="hapus-btn" onclick="hapusAnggota(this, '${npm}')">Hapus</button></td>
+                `;
+                tableBody.appendChild(newRow);
+
+                // Update local cache: Remove added student from available list
+                allAvailableStudents = allAvailableStudents.filter(s => s.npm !== npm);
+                
+                // Refresh list using current filter (keeps the list visible)
+                handleMemberSearch();
+            } else {
+                alert('Gagal: ' + data.message);
+            }
+        })
+        .catch(err => alert('Error: ' + err));
     }
 
     // Fungsi untuk menutup popup
     function closeEditPopup() {
         document.getElementById('editPopup').style.display = 'none';
+        window.location.reload(); // Refresh to update main table counts
     }
 
     // Fungsi untuk menghapus anggota
-    window.hapusAnggota = function(button) {
-        const row = button.closest('tr');
-        const groupName = document.getElementById('popupGroupName').textContent;
-        const memberName = row.cells[0].textContent;
+    window.hapusAnggota = function(button, npm) {
+        if(!currentGroupId) return;
         
+        if (!currentGroupId) return;
+
+        const row = button.closest('tr');
+        const memberName = row.cells[0].textContent; // Retrieve name from the first cell
+
         if (confirm(`Apakah Anda yakin ingin menghapus ${memberName} dari kelompok?`)) {
-            row.remove();
-            // Update data di kelompokDataContoh
-            const index = kelompokDataContoh[groupName].findIndex(member => member.name === memberName);
-            if (index !== -1) {
-                kelompokDataContoh[groupName].splice(index, 1);
-            }
+            fetch('/dosen/kelompok/remove-member', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `npm=${npm}&idKelompok=${currentGroupId}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    row.remove();
+
+                    // Add back to available list
+                    allAvailableStudents.push({ name: memberName, npm: npm });
+                    
+                    // Refresh available list
+                    handleMemberSearch();
+                } else {
+                    alert('Gagal: ' + data.message);
+                }
+            })
+            .catch(err => console.error(err));
         }
     };
 
