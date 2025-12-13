@@ -1,25 +1,4 @@
-const ALL_STUDENTS = [
-    { name: 'Ahmad Rizki', npm: '6182301010' },
-    { name: 'Budi Santoso', npm: '6182301011' },
-    { name: 'Citra Lestari', npm: '6182301012' },
-    { name: 'Dewi Anggraini', npm: '6182301013' },
-    { name: 'Eko Prasetyo', npm: '6182301014' },
-    { name: 'Fitriani Sari', npm: '6182301015' },
-    { name: 'Gunawan Wibowo', npm: '6182301016' },
-    { name: 'Hana Melati', npm: '6182301017' },
-    { name: 'Irfan Maulana', npm: '6182301018' },
-    { name: 'Jihan Amanda', npm: '6182301019' },
-    { name: 'Kurniawan Adi', npm: '6182301020' },
-    { name: 'Lestari Ningrum', npm: '6182301021' },
-    // Anggota yang sudah ada di kelompokDataContoh:
-    { name: 'Robert Saputra', npm: '6182301001' },
-    { name: 'Bryan Ricaldi', npm: '6182301002' },
-    { name: 'Ethan', npm: '6182301003' },
-    { name: 'Eric Leilpaly', npm: '6182301007' },
-    { name: 'Sarah Johnson', npm: '6182301004' },
-    { name: 'Michael Brown', npm: '6182301005' },
-    { name: 'Lisa Anderson', npm: '6182301006' }
-];
+
 
 document.addEventListener("DOMContentLoaded", function () {
     
@@ -38,19 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // --- DATA KELOMPOK ---
-    const kelompokDataContoh = {
-        'Kelompok A': [
-            { name: 'Robert Saputra', npm: '6182301001' },
-            { name: 'Bryan Ricaldi', npm: '6182301002' },
-            { name: 'Ethan', npm: '6182301003' },
-            { name: 'Eric Leilpaly', npm: '6182301007' }
-        ],
-        'Kelompok B': [
-            { name: 'Sarah Johnson', npm: '6182301004' },
-            { name: 'Michael Brown', npm: '6182301005' },
-            { name: 'Lisa Anderson', npm: '6182301006' }
-        ]
-    };
+
 
     // --- 2. HANDLE FORM SUBMIT ---
     if (kelompokForm) {
@@ -311,9 +278,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
                 tableBody.appendChild(newRow);
 
-                // Clear search
-                document.getElementById('memberSearchInput').value = '';
-                document.getElementById('searchResults').innerHTML = '';
+                // Update local cache: Remove added student from available list
+                allAvailableStudents = allAvailableStudents.filter(s => s.npm !== npm);
+                
+                // Refresh list using current filter (keeps the list visible)
+                handleMemberSearch();
             } else {
                 alert('Gagal: ' + data.message);
             }
@@ -331,27 +300,32 @@ document.addEventListener("DOMContentLoaded", function () {
     window.hapusAnggota = function(button, npm) {
         if(!currentGroupId) return;
         
-        const row = button.closest('tr');
-        const memberName = row.cells[0].textContent;
-        
-        if (confirm(`Apakah Anda yakin ingin menghapus ${memberName} dari kelompok?`)) {
-            const formData = new FormData();
-            formData.append('npm', npm);
-            formData.append('idKelompok', currentGroupId);
+        if (!currentGroupId) return;
 
+        const row = button.closest('tr');
+        const memberName = row.cells[0].textContent; // Retrieve name from the first cell
+
+        if (confirm(`Apakah Anda yakin ingin menghapus ${memberName} dari kelompok?`)) {
             fetch('/dosen/kelompok/remove-member', {
                 method: 'POST',
-                body: formData
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `npm=${npm}&idKelompok=${currentGroupId}`
             })
             .then(res => res.json())
             .then(data => {
-                if(data.success) {
+                if (data.success) {
                     row.remove();
+
+                    // Add back to available list
+                    allAvailableStudents.push({ name: memberName, npm: npm });
+                    
+                    // Refresh available list
+                    handleMemberSearch();
                 } else {
                     alert('Gagal: ' + data.message);
                 }
             })
-            .catch(err => alert('Error: ' + err));
+            .catch(err => console.error(err));
         }
     };
 
