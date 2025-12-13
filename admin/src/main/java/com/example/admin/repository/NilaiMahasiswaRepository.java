@@ -12,12 +12,13 @@ import java.util.List;
 public interface NilaiMahasiswaRepository extends JpaRepository<NilaiMahasiswa, Integer> {
 
     @Query("SELECT new com.example.admin.dto.JadwalNilaiDto(" +
-           "k.idKegiatan, j.deadline, k.namaKegiatan, nm.nilai, nm.keterangan) " +
-           "FROM NilaiMahasiswa nm " +
-           "JOIN nm.nilaiKelompok nk " +   // Join ke Nilai Kelompok
-           "JOIN nk.kegiatan k " +         // Join ke Kegiatan
-           "JOIN k.jadwal j " +            // Join ke Jadwal
-           "WHERE nm.npm = :npm AND j.idTubes = :idTubes")
+           "k.idKegiatan, j.deadline, k.namaKegiatan, " +
+           "(SELECT nm.nilai FROM NilaiMahasiswa nm JOIN nm.nilaiKelompok nk2 WHERE nk2.kegiatan = k AND nm.npm = :npm), " +
+           "(SELECT nm.keterangan FROM NilaiMahasiswa nm JOIN nm.nilaiKelompok nk2 WHERE nk2.kegiatan = k AND nm.npm = :npm)) " +
+           "FROM Kegiatan k " +
+           "JOIN k.jadwal j " +
+           "WHERE j.idTubes = :idTubes " +
+           "ORDER BY j.deadline ASC, k.idKegiatan ASC")
     List<JadwalNilaiDto> findJadwalDanNilai(@Param("npm") String npm, 
                                             @Param("idTubes") Integer idTubes);
 
