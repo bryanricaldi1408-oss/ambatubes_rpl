@@ -163,6 +163,9 @@ public class MahasiswaController {
 
         // Ambil semua kelompok yang tersedia untuk Tugas Besar ini
         List<Kelompok> listKelompokDB = kelompokRepository.findByIdTubes(idTubes);
+        
+        log.info("DEBUG: Mahasiswa mengakses halaman kelompok. ID Tubes: {}, Jumlah Kelompok Ditemukan: {}", idTubes, listKelompokDB.size());
+        
         List<KelompokDisplayDto> displayList = new ArrayList<>();
 
         // Cek user saat ini sedang berada di kelompok mana (untuk auto-checked radio button)

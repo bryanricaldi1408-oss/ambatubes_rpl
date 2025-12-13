@@ -9,12 +9,17 @@ import com.example.admin.service.KelasService;
 import com.example.admin.service.RubrikService;
 import com.example.admin.service.TugasBesarService;
 import com.example.admin.service.ExcelParseJadwalService;
-
+import com.example.admin.repository.AnggotaKelompokRepository;
+import com.example.admin.repository.PengambilanKelasRepository;
+import com.example.admin.entity.PengambilanKelas;
+import com.example.admin.entity.AnggotaKelompok;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,6 +44,8 @@ public class DosenEditController {
     private final ExcelParseJadwalService ExcelParseJadwalService;
     private final com.example.admin.service.KelompokService kelompokService;
     private final com.example.admin.service.PenilaianService penilaianService;
+    private final com.example.admin.repository.AnggotaKelompokRepository anggotaKelompokRepository;
+    private final com.example.admin.repository.PengambilanKelasRepository pengambilanKelasRepository;
 
     // ==================== STEP 1: DAFTAR TUGAS ====================
     @GetMapping("/tubes")
@@ -478,6 +485,35 @@ public class DosenEditController {
             model.addAttribute("kelasId", kelasId);
             // model.addAttribute("mahasiswaList", mahasiswaList);
             
+            // Add existing groups to model (FORMATTED FOR JS)
+            List<com.example.admin.entity.Kelompok> groups = kelompokService.getByTubesId(idTubes);
+            List<Map<String, Object>> formattedGroups = new ArrayList<>();
+            
+            for (com.example.admin.entity.Kelompok k : groups) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", k.getIdKelompok()); // Add ID for invalidation/editing
+                map.put("nama", "Kelompok " + k.getNamaKelompok());
+                map.put("maxAnggota", k.getJumlahAnggota());
+                
+                // Fetch members
+                List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(k.getIdKelompok());
+                map.put("jumlahAnggota", members.size());
+                
+                List<Map<String, String>> memberList = new ArrayList<>();
+                for (com.example.admin.entity.Mahasiswa m : members) {
+                    Map<String, String> mMap = new HashMap<>();
+                    mMap.put("name", m.getNama());
+                    mMap.put("npm", m.getNpm());
+                    memberList.add(mMap);
+                }
+                map.put("anggota", memberList);
+                
+                formattedGroups.add(map);
+            }
+            
+            model.addAttribute("existingGroups", formattedGroups);
+            model.addAttribute("hasExistingGroups", !formattedGroups.isEmpty());
+            
             return "dosenBuatKelompok"; // template: dosenBuatKelompok.html
             
         } catch (Exception e) {
@@ -626,35 +662,81 @@ public class DosenEditController {
     @PostMapping("/selesai-kelompok")
     @ResponseBody
     public Map<String, Object> selesaiKelompok(@RequestParam Integer kelasId,
-                                               @RequestParam Integer idTubes,
-                                               HttpSession session) {
+                                                @RequestParam Integer idTubes) {
         Map<String, Object> response = new HashMap<>();
-        Dosen dosen = (Dosen) session.getAttribute("dosen");
-        if (dosen == null) {
-            response.put("success", false);
-            response.put("message", "Session expired");
-            response.put("redirect", "/login");
-            return response;
-        }
+        // Logic to finalize groups (can be empty if just redirecting)
+        // For now, just redirect to sorting/penilaian page
+        response.put("success", true);
+        response.put("message", "Konfigurasi kelompok selesai.");
+        response.put("redirect", "/dosen/edit?kelasId=" + kelasId + "&idTubes=" + idTubes); // Or next step
+        return response;
+    }
 
+    // --- API FOR EDITING GROUPS ---
+
+    @PostMapping("/kelompok/remove-member")
+    @ResponseBody
+    public Map<String, Object> removeMember(@RequestParam String npm, @RequestParam Integer idKelompok) {
+        Map<String, Object> response = new HashMap<>();
         try {
-            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
-            if (kelompokList == null || kelompokList.isEmpty()) {
-                response.put("success", false);
-                response.put("message", "Belum ada kelompok. Silakan buat kelompok terlebih dahulu.");
-                return response;
-            }
-
+            anggotaKelompokRepository.deleteByNpmAndIdKelompok(npm, idKelompok);
             response.put("success", true);
-            response.put("message", "Kelompok dinyatakan selesai. Penilaian aktif.");
-            response.put("redirect", "/dosen/penilaian?kelasId=" + kelasId + "&idTubes=" + idTubes);
-            return response;
+            response.put("message", "Anggota berhasil dihapus.");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Gagal menghapus: " + e.getMessage());
+        }
+        return response;
+    }
 
+    @GetMapping("/kelompok/available-students")
+    @ResponseBody
+    public List<Map<String, String>> getAvailableStudents(@RequestParam Integer idTubes, @RequestParam Integer kelasId) {
+        // 1. Get all students in class
+        List<PengambilanKelas> allStudentsInClass = pengambilanKelasRepository.findByKelasWithMahasiswa(kelasId);
+        
+        // 2. Get students already in groups for this tubes
+        List<com.example.admin.entity.Kelompok> groups = kelompokService.getByTubesId(idTubes);
+        Set<String> studentsInGroups = new HashSet<>();
+        for(com.example.admin.entity.Kelompok k : groups) {
+            List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(k.getIdKelompok());
+            for(com.example.admin.entity.Mahasiswa m : members) {
+                studentsInGroups.add(m.getNpm());
+            }
+        }
+        
+        // 3. Filter
+        List<Map<String, String>> available = new ArrayList<>();
+        for(PengambilanKelas pk : allStudentsInClass) {
+            if(!studentsInGroups.contains(pk.getMahasiswa().getNpm())) {
+                Map<String, String> s = new HashMap<>();
+                s.put("npm", pk.getMahasiswa().getNpm());
+                s.put("name", pk.getMahasiswa().getNama());
+                available.add(s);
+            }
+        }
+        return available;
+    }
+
+    @PostMapping("/kelompok/add-member")
+    @ResponseBody
+    public Map<String, Object> addMember(@RequestParam String npm, @RequestParam Integer idKelompok) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // Check capacity (optional logic, maybe enforced by UI or business rule)
+            // Save new AnggotaKelompok
+            AnggotaKelompok newMember = new AnggotaKelompok();
+            newMember.setIdKelompok(idKelompok);
+            newMember.setNpm(npm);
+            anggotaKelompokRepository.save(newMember);
+            
+            response.put("success", true);
+            response.put("message", "Anggota berhasil ditambahkan.");
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
-            return response;
         }
+        return response;
     }
     
     // ==================== HAPUS TUGAS ====================

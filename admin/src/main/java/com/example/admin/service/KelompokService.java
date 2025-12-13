@@ -1,6 +1,8 @@
 package com.example.admin.service;
 
 import com.example.admin.entity.Kelompok;
+import com.example.admin.entity.Kelompok;
+import com.example.admin.repository.AnggotaKelompokRepository;
 import com.example.admin.repository.KelompokRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,13 +16,17 @@ import java.util.List;
 public class KelompokService {
 
     private final KelompokRepository kelompokRepository;
+    private final AnggotaKelompokRepository anggotaKelompokRepository;
 
     @Transactional
     public List<Kelompok> generateKelompok(Integer idTubes, Integer jumlahGrup, Integer maxAnggota) {
-        // 1. Hapus kelompok yang sudah ada untuk tubes ini (bersih-bersih)
+        // 1. Hapus anggota yang sudah ada untuk tubes ini (bersih-bersih)
+        anggotaKelompokRepository.deleteByIdTubes(idTubes);
+
+        // 2. Hapus kelompok yang sudah ada untuk tubes ini (bersih-bersih)
         kelompokRepository.deleteByIdTubes(idTubes);
         
-        // 2. Buat kelompok baru
+        // 3. Buat kelompok baru
         List<Kelompok> newGroups = new ArrayList<>();
         char groupName = 'A';
         

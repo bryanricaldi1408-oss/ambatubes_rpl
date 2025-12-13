@@ -11,6 +11,11 @@
 
 <body>
     <header class="top-navbar">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var serverExistingGroups = /*[[${existingGroups}]]*/[];
+            /*]]>*/
+        </script>
         <div class="header-content">
 
             <!-- KIRI: Brand + Breadcrumb -->
@@ -55,7 +60,8 @@
             </a>
             <div class="step active">
                 <span class="step-num">4</span>
-                <span class="step-desc">Buat Kelompok</span>
+                <span th:text="${hasExistingGroups} ? 'Kelompok' : 'Buat Kelompok'" class="step-desc">Buat
+                    Kelompok</span>
             </div>
             <div class="step" th:classappend="${#lists.isEmpty(kelompokList)} ? ' disabled' : ''">
                 <span class="step-num">5</span>
@@ -66,10 +72,10 @@
     <main>
         <div class="content">
             <div class="page-title-container">
-                <h1 class="page-title">Buat Kelompok</h1>
+                <h1 class="page-title" th:text="${hasExistingGroups} ? 'Kelompok' : 'Buat Kelompok'">Buat Kelompok</h1>
             </div>
 
-            <form class="detail-form-card" id="kelompokForm">
+            <form class="detail-form-card" id="kelompokForm" th:unless="${hasExistingGroups}">
                 <div class="form-group">
                     <label for="jumlahGrup">Jumlah Grup :</label>
                     <input type="text" id="jumlahGrup" name="jumlahGrup" required>
@@ -87,8 +93,8 @@
 
             </form>
 
-            <div id="tabelContainer" style="display: none;">
-                <div class="table-title-container">
+            <div id="tabelContainer" th:style="${hasExistingGroups} ? 'display: block;' : 'display: none;'">
+                <div class="table-title-container" th:unless="${hasExistingGroups}">
                     <h2 class="table-title">Kelompok</h2>
                 </div>
                 <div class="table-card">
