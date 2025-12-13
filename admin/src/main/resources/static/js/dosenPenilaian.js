@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log('dosenPenilaian.js loaded');
-    try {
+    
     // --- 1. REFERENSI ELEMEN ---
     const btnLogout = document.querySelector(".logout-btn");
     const inputNilaiBtns = document.querySelectorAll(".input-nilai-btn:not(.disabled)");
@@ -20,56 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const kelompokSelectPerorangan = document.getElementById("kelompokSelectPerorangan");
     const mahasiswaSelect = document.getElementById("mahasiswaSelect");
     const filterKegiatanDetail = document.getElementById("filterKegiatanDetail");
-
-    // Event delegation fallback: ensure buttons still work even if earlier code errors
-    document.addEventListener('click', function(e) {
-        const inputBtn = e.target.closest('.input-nilai-btn');
-        console.log('delegated click target:', e.target, 'closest inputBtn:', inputBtn);
-        if (inputBtn && !inputBtn.classList.contains('disabled') && !inputBtn.disabled) {
-            try {
-                const row = inputBtn.closest('tr');
-                const kegiatan = row ? (row.querySelector('td:nth-child(2)') ? row.querySelector('td:nth-child(2)').textContent : '') : '';
-                const idKegiatan = inputBtn.getAttribute('data-idkegiatan');
-                console.log('input-nilai-btn clicked, idKegiatan=', idKegiatan, 'kegiatan=', kegiatan);
-                const popupKeg = document.getElementById('popupKegiatan');
-                if (popupKeg) popupKeg.textContent = kegiatan;
-                if (inputNilaiPopup && idKegiatan) inputNilaiPopup.setAttribute('data-idkegiatan', idKegiatan);
-                if (typeof openInputNilaiPopup === 'function') openInputNilaiPopup();
-            } catch (err) {
-                console.error('Error handling delegated input-nilai-btn click', err);
-            }
-        }
-
-        const detailBtn = e.target.closest('.detail-nilai-btn');
-        if (detailBtn) {
-            const kelompok = detailBtn.getAttribute('data-kelompok');
-            if (typeof openDetailNilaiPopup === 'function') openDetailNilaiPopup(kelompok);
-        }
-    });
-
-    // Re-attach per-button listeners in case buttons are rendered/updated after script load
-    function attachInputButtonListeners() {
-        const buttons = document.querySelectorAll('.input-nilai-btn');
-        buttons.forEach(btn => {
-            if (!btn.__hasAttach && !btn.disabled) {
-                btn.addEventListener('click', (ev) => {
-                    ev.preventDefault(); ev.stopPropagation();
-                    console.log('direct input-nilai-btn click handler', btn.getAttribute('data-idkegiatan'));
-                    const row = btn.closest('tr');
-                    const kegiatan = row ? (row.querySelector('td:nth-child(2)') ? row.querySelector('td:nth-child(2)').textContent : '') : '';
-                    const idKegiatan = btn.getAttribute('data-idkegiatan');
-                    const popupKeg = document.getElementById('popupKegiatan');
-                    if (popupKeg) popupKeg.textContent = kegiatan;
-                    if (inputNilaiPopup && idKegiatan) inputNilaiPopup.setAttribute('data-idkegiatan', idKegiatan);
-                    openInputNilaiPopup();
-                });
-                btn.__hasAttach = true;
-            }
-        });
-    }
-
-    // run immediately and after populate
-    attachInputButtonListeners();
 
     // Data contoh mahasiswa per kelompok
     const dataMahasiswa = {
@@ -93,6 +42,63 @@ document.addEventListener("DOMContentLoaded", function () {
             { npm: '6182301011', name: 'Olivia Davis' },
             { npm: '6182301012', name: 'William Garcia' }
         ]
+    };
+
+    // Data contoh nilai - HANYA nilai perorangan
+    const dataNilai = {
+        'Pertemuan ke-1': {
+            perorangan: [
+                {
+                    npm: '6182301001',
+                    name: 'Robert Saputra',
+                    kelompok: 'A',
+                    nilai: 88,
+                    catatan: 'Kontribusi sangat aktif dalam diskusi, menguasai materi dengan baik.',
+                    tanggal: '05 Jan 2024 14:35'
+                },
+                {
+                    npm: '6182301002',
+                    name: 'Bryan Ricaldi',
+                    kelompok: 'A',
+                    nilai: 82,
+                    catatan: 'Presentasi cukup baik, namun perlu lebih percaya diri saat menyampaikan materi.',
+                    tanggal: '05 Jan 2024 14:40'
+                },
+                {
+                    npm: '6182301004',
+                    name: 'Sarah Johnson',
+                    kelompok: 'B',
+                    nilai: 80,
+                    catatan: 'Analisis masalah cukup mendalam, namun solusi yang diberikan kurang inovatif.',
+                    tanggal: '06 Jan 2024 10:20'
+                },
+                {
+                    npm: '6182301008',
+                    name: 'David Wilson',
+                    kelompok: 'C',
+                    nilai: 95,
+                    catatan: 'Outstanding performance! Very creative in problem solving.',
+                    tanggal: '07 Jan 2024 09:50'
+                },
+                {
+                    npm: '6182301005',
+                    name: 'Michael Brown',
+                    kelompok: 'B',
+                    nilai: 75,
+                    catatan: 'Perlu lebih banyak kontribusi dalam diskusi kelompok.',
+                    tanggal: '06 Jan 2024 10:25'
+                }
+            ]
+        },
+        'Presentasi': {
+            perorangan: []
+        },
+        'Demo Aplikasi': {
+            perorangan: []
+        },
+        'Laporan Final': {
+            perorangan: []
+        }
     };
 
     // Daftar kegiatan sesuai tabel Deadline (dibaca dari DOM agar dinamis)
@@ -175,11 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
         const idTubes = urlParams.get('idTubes');
 
-        // Reset perorangan inputs
-        mahasiswaSelect.disabled = true;
-        document.getElementById("inputNilaiPerorangan").value = "";
-        document.getElementById("catatanNilaiPerorangan").value = "";
-
         if (selectedKelompok && idTubes && idKegiatan) {
             fetch(`/dosen/penilaian/kelompok-nilai?idTubes=${idTubes}&idKegiatan=${idKegiatan}&namaKelompok=${encodeURIComponent(selectedKelompok)}`)
                 .then(res => res.json())
@@ -192,15 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             option.textContent = `${m.name} (${m.npm})`;
                             mahasiswaSelect.appendChild(option);
                         });
-
-                        // Also store perorangan values in client-side cache for quick detail view
-                        const peroranganVals = data.filter(m => m.nilai != null).map(m => ({ npm: m.npm, name: m.name, kelompok: selectedKelompok, nilai: Math.round(m.nilai), catatan: m.keterangan || '' }));
-                        if (peroranganVals.length > 0) {
-                            if (!dataNilai[kegiatanList.find(k=>k.id==idKegiatan)?.name]) dataNilai[kegiatanList.find(k=>k.id==idKegiatan)?.name] = { perorangan: [] };
-                            const key = kegiatanList.find(k=>k.id==idKegiatan)?.name;
-                            const existingNpm = new Set(dataNilai[key].perorangan.map(x => x.npm));
-                            peroranganVals.forEach(pv => { if (!existingNpm.has(pv.npm)) dataNilai[key].perorangan.push(pv); });
-                        }
                     } else {
                         mahasiswaSelect.disabled = true;
                     }
@@ -213,49 +205,33 @@ document.addEventListener("DOMContentLoaded", function () {
             mahasiswaSelect.disabled = true;
         }
     });
-    
-    function closeInputNilaiPopup() {
-        inputNilaiPopup.style.display = 'none';
+
+    // --- 6. FUNGSI POPUP INPUT NILAI ---
+    function openInputNilaiPopup() {
+        inputNilaiPopup.style.display = 'flex';
+        // Reset form
+        resetForms();
+        // Set default ke nilai kelompok
+        document.querySelector('input[name="tipeInput"][value="kelompok"]').checked = true;
+        formKelompok.style.display = "flex";
+        formPerorangan.style.display = "none";
     }
 
-    function openInputNilaiPopup() {
-        console.log('openInputNilaiPopup called');
-        inputNilaiPopup.style.display = 'flex';
+    function resetForms() {
+        // Reset form kelompok
+        document.getElementById("kelompokSelect").value = "";
+        document.getElementById("inputNilaiKelompok").value = "";
+        
+        // Reset form perorangan
+        document.getElementById("kelompokSelectPerorangan").value = "";
+        document.getElementById("mahasiswaSelect").innerHTML = '<option value="">-- Pilih Mahasiswa --</option>';
+        document.getElementById("mahasiswaSelect").disabled = true;
+        document.getElementById("inputNilaiPerorangan").value = "";
+        document.getElementById("catatanNilaiPerorangan").value = "";
+    }
 
-        // Default to kelompok input
-        const kelompokRadio = document.querySelector('input[name="tipeInput"][value="kelompok"]');
-        if (kelompokRadio) kelompokRadio.checked = true;
-        if (formKelompok) formKelompok.style.display = 'flex';
-        if (formPerorangan) formPerorangan.style.display = 'none';
-
-        // Clear previous values
-        const selKel = document.getElementById('kelompokSelect');
-        if (selKel) { selKel.value = ''; }
-        const inKel = document.getElementById('inputNilaiKelompok');
-        if (inKel) { inKel.value = ''; }
-
-        const selKelPer = document.getElementById('kelompokSelectPerorangan');
-        if (selKelPer) { selKelPer.value = ''; }
-        const mahasiswaSel = document.getElementById('mahasiswaSelect');
-        if (mahasiswaSel) { mahasiswaSel.innerHTML = '<option value="">-- Pilih Mahasiswa --</option>'; mahasiswaSel.disabled = true; }
-        const inPer = document.getElementById('inputNilaiPerorangan'); if (inPer) inPer.value = '';
-        const catPer = document.getElementById('catatanNilaiPerorangan'); if (catPer) catPer.value = '';
-
-        // Populate kelompok selects from current rendered table to ensure they're in sync
-        const kelompokNames = Array.from(document.querySelectorAll('.kelompok-penilaian-table tbody tr .kelompok-nama')).map(td => td.textContent.replace(/^Kelompok\s*/i,'').trim());
-        const uniqueKelompok = [...new Set(kelompokNames)];
-        if (selKel) {
-            selKel.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-            uniqueKelompok.forEach(k => { const opt = document.createElement('option'); opt.value = k; opt.textContent = `Kelompok ${k}`; selKel.appendChild(opt); });
-        }
-        if (selKelPer) {
-            selKelPer.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-            uniqueKelompok.forEach(k => { const opt = document.createElement('option'); opt.value = k; opt.textContent = `Kelompok ${k}`; selKelPer.appendChild(opt); });
-        }
-
-        // keep the data-idkegiatan attribute that was set by click handler
-        // focus first field for convenience
-        if (selKel) selKel.focus();
+    function closeInputNilaiPopup() {
+        inputNilaiPopup.style.display = 'none';
     }
 
     // --- 7. VALIDASI FORM INPUT NILAI ---
@@ -400,7 +376,22 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    // Refresh kelompok table values for this idKegiatan
+                    // Immediately update the kelompok table cell for feedback
+                    try {
+                        const idKegiatanNum = parseInt(idKegiatan);
+                        const row = document.querySelector(`.kelompok-penilaian-table tbody tr[data-kelompok="${kelompok}"]`);
+                        if (row) {
+                            const cell = row.querySelector(`.nilai-cell[data-idkegiatan="${idKegiatanNum}"]`);
+                            if (cell) {
+                                cell.textContent = Math.round(parseFloat(nilaiKelompok));
+                                cell.dataset.groupNilai = parseFloat(nilaiKelompok);
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error updating table cell immediately:', e);
+                    }
+
+                    // Refresh kelompok table values for this idKegiatan to sync members
                     populateKelompokTable().then(() => {
                         updateTabelNilai();
                         closeInputNilaiPopup();
@@ -532,14 +523,27 @@ async function tampilkanDetailNilai(kelompok, filterKegiatan) {
         rows.forEach(row => {
             const kelompok = row.querySelector('.detail-nilai-btn').getAttribute('data-kelompok');
             
-            // For kelompok table, show only group-level nilai (if any). Do not compute or show perorangan averages here.
+            // Hitung nilai rata-rata untuk setiap kegiatan (perorangan override jika ada)
             kegiatanList.forEach((kegiatan) => {
                 const idKegiatan = kegiatan.id;
                 const nilaiCell = idKegiatan ? row.querySelector(`.nilai-cell[data-idkegiatan="${idKegiatan}"]`) : null;
+
+                // Ambil semua nilai perorangan untuk kelompok dan kegiatan ini
+                const namaKegiatan = kegiatan.name || kegiatan;
+                const nilaiPerorangan = dataNilai[namaKegiatan]?.perorangan?.filter(
+                    item => item.kelompok === kelompok
+                ) || [];
+
                 if (nilaiCell) {
-                    if (nilaiCell.dataset.groupNilai) {
-                        nilaiCell.textContent = Math.round(Number(nilaiCell.dataset.groupNilai));
-                    } else {
+                    if (nilaiPerorangan.length > 0) {
+                        // Hitung rata-rata nilai perorangan dan gunakan sebagai tampilan
+                        const total = nilaiPerorangan.reduce((sum, item) => sum + item.nilai, 0);
+                        const rataRata = Math.round(total / nilaiPerorangan.length);
+                        // Only override cell if there is no group nilai set
+                        if (!nilaiCell.dataset.groupNilai) {
+                            nilaiCell.textContent = rataRata;
+                        }
+                    } else if (!nilaiCell.textContent || nilaiCell.textContent.trim() === '') {
                         nilaiCell.textContent = '-';
                     }
                 }
@@ -558,13 +562,10 @@ async function tampilkanDetailNilai(kelompok, filterKegiatan) {
         // Ambil nilai dari setiap kolom nilai
         const nilaiCells = row.querySelectorAll('.nilai-cell');
         nilaiCells.forEach(cell => {
-            // Only consider group-level nilai for akhir
-            if (cell.dataset && cell.dataset.groupNilai) {
-                const nilai = Number(cell.dataset.groupNilai);
-                if (!isNaN(nilai)) {
-                    totalNilai += nilai;
-                    jumlahKegiatan++;
-                }
+            const nilai = cell.textContent;
+            if (nilai !== '-') {
+                totalNilai += parseInt(nilai);
+                jumlahKegiatan++;
             }
         });
         
@@ -643,7 +644,6 @@ async function tampilkanDetailNilai(kelompok, filterKegiatan) {
     // Populate kelompok table from server (group nilai per kegiatan), then overlay perorangan if present
     populateKelompokTable().then(() => {
         updateTabelNilai();
-        try { attachInputButtonListeners(); } catch (e) { console.warn('attachInputButtonListeners failed', e); }
     });
 
     // Fetch group nilai for each kelompok & kegiatan and populate cells
@@ -683,20 +683,29 @@ async function tampilkanDetailNilai(kelompok, filterKegiatan) {
                                 const peroranganVals = data.filter(m => m.nilai != null).map(m => ({ npm: m.npm, name: m.name, kelompok: kelompok, nilai: Math.round(m.nilai), catatan: m.keterangan || '' }));
                                 if (peroranganVals.length > 0) {
                                     if (!dataNilai[kegiatan.name]) dataNilai[kegiatan.name] = { perorangan: [] };
-                                    const existingNpm = new Set(dataNilai[kegiatan.name].perorangan.map(x => x.npm));
-                                    peroranganVals.forEach(pv => { if (!existingNpm.has(pv.npm)) dataNilai[kegiatan.name].perorangan.push(pv); });
+                                    peroranganVals.forEach(pv => {
+                                        const idx = dataNilai[kegiatan.name].perorangan.findIndex(x => x.npm === pv.npm);
+                                        if (idx !== -1) dataNilai[kegiatan.name].perorangan[idx] = pv;
+                                        else dataNilai[kegiatan.name].perorangan.push(pv);
+                                    });
                                 }
                             } else {
-                                // No group nilai: do NOT display perorangan averages in kelompok column.
+                                // No group nilai; if there are perorangan values, compute average otherwise '-'
                                 const peroranganVals = data.filter(m => m.nilai != null).map(m => ({ npm: m.npm, name: m.name, kelompok: kelompok, nilai: Math.round(m.nilai), catatan: m.keterangan || '' }));
                                 if (peroranganVals.length > 0) {
+                                    const total = peroranganVals.reduce((s, it) => s + it.nilai, 0);
+                                    const avg = Math.round(total / peroranganVals.length);
+                                    cell.textContent = avg;
+                                    delete cell.dataset.groupNilai;
                                     if (!dataNilai[kegiatan.name]) dataNilai[kegiatan.name] = { perorangan: [] };
-                                    const existingNpm = new Set(dataNilai[kegiatan.name].perorangan.map(x => x.npm));
-                                    peroranganVals.forEach(pv => { if (!existingNpm.has(pv.npm)) dataNilai[kegiatan.name].perorangan.push(pv); });
+                                    peroranganVals.forEach(pv => {
+                                        const idx = dataNilai[kegiatan.name].perorangan.findIndex(x => x.npm === pv.npm);
+                                        if (idx !== -1) dataNilai[kegiatan.name].perorangan[idx] = pv;
+                                        else dataNilai[kegiatan.name].perorangan.push(pv);
+                                    });
+                                } else {
+                                    cell.textContent = '-';
                                 }
-                                // Keep kelompok column showing '-' when no group nilai exists
-                                cell.textContent = '-';
-                                delete cell.dataset.groupNilai;
                             }
                         })
                     .catch(err => {
@@ -713,16 +722,10 @@ async function tampilkanDetailNilai(kelompok, filterKegiatan) {
 
         await Promise.all(tasks);
 
-        // Ensure listeners on input buttons after data population
-        try { attachInputButtonListeners(); } catch (e) { console.warn('attachInputButtonListeners failed', e); }
-
         // Compute nilai akhir for each row now
         rows.forEach(r => {
             const kelompok = r.querySelector('.kelompok-nama').textContent.replace(/^Kelompok\s*/i, '').trim();
             updateNilaiAkhir(r, kelompok);
         });
-    }
-    } catch (e) {
-        console.error('Error in dosenPenilaian.js:', e);
     }
 });

@@ -7,6 +7,7 @@ import com.example.admin.repository.KelompokRepository;
 import com.example.admin.repository.NilaiKelompokRepository;
 import com.example.admin.repository.NilaiMahasiswaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PenilaianService {
 
     private final KelompokRepository kelompokRepository;
@@ -25,6 +27,7 @@ public class PenilaianService {
     @Transactional
     public void simpanNilai(Integer idTubes, List<Map<String, Object>> nilaiList) {
         for (Map<String, Object> item : nilaiList) {
+            log.info("simpanNilai() item: {}", item);
             // Expected keys: npm, kelompok (letter), idKegiatan (Integer), nilai (Number), keterangan (String)
             String npm = (String) item.get("npm");
             String kelompokName = (String) item.get("kelompok");
@@ -33,8 +36,10 @@ public class PenilaianService {
             Double nilai = nilaiNum == null ? null : nilaiNum.doubleValue();
             String keterangan = (String) item.get("keterangan");
 
-            if (npm == null || kelompokName == null || idKegiatan == null || nilai == null) {
-                continue; // skip malformed
+            // npm is optional (present for perorangan), but kelompokName, idKegiatan and nilai are required
+            if (kelompokName == null || idKegiatan == null || nilai == null) {
+                log.warn("Skipping malformed nilai entry (missing required fields): {}", item);
+                continue;
             }
 
             Kelompok kelompok = kelompokRepository.findByIdTubesAndNamaKelompok(idTubes, kelompokName);
@@ -44,6 +49,7 @@ public class PenilaianService {
 
             // If npm provided, treat as perorangan (existing behavior)
             if (npm != null) {
+                log.info("Processing perorangan: npm={} kelompok={} idKegiatan={} nilai={}", npm, kelompokName, idKegiatan, nilai);
                 // Find or create NilaiKelompok for this kelompok-kegiatan
                 NilaiKelompok nilaiKelompok = nilaiKelompokRepository.findByIdKelompokAndIdKegiatan(kelompok.getIdKelompok(), idKegiatan);
                 if (nilaiKelompok == null) {
@@ -66,6 +72,7 @@ public class PenilaianService {
                 nilaiMahasiswaRepository.save(nm);
             } else {
                 // Treat as kelompok-level input: set NilaiKelompok and propagate to members
+                log.info("Processing kelompok-level for kelompok={} idKegiatan={} nilai={}", kelompokName, idKegiatan, nilai);
                 NilaiKelompok nilaiKelompok = nilaiKelompokRepository.findByIdKelompokAndIdKegiatan(kelompok.getIdKelompok(), idKegiatan);
                 if (nilaiKelompok == null) {
                     nilaiKelompok = new NilaiKelompok();
