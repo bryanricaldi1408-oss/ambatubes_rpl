@@ -1,8 +1,10 @@
 package com.example.admin.controller;
 
+import com.example.admin.entity.Dosen;
 import com.example.admin.entity.Mahasiswa;
 // 1. IMPORT SERVICE ADMIN (Sesuaikan package-nya jika perlu)
-import com.example.admin.service.AdminService; 
+import com.example.admin.service.AdminService;
+import com.example.admin.service.DosenService;
 import com.example.admin.service.MahasiswaService;
 
 import jakarta.servlet.http.HttpSession;
@@ -22,6 +24,7 @@ public class LoginController {
     // 2. INJECT KEDUA SERVICE
     private final MahasiswaService mahasiswaService;
     private final AdminService adminService; // Tambahkan ini
+    private final DosenService dosenService;
 
     @GetMapping("/")
     public String showLoginPage() {
@@ -51,6 +54,28 @@ public class LoginController {
                 
                 log.info("Login successful as ADMIN: {}", email);
                 return "redirect:/adminHome"; // Arahkan ke rute AdminController
+            }
+
+             // === LOGIKA 2: CEK APAKAH DIA DOSEN? ===
+            // Menggunakan DosenService yang sudah terhubung dengan DosenCredentialsRepository
+            if (dosenService.validateDosen(email, password)) {
+                // Dapatkan data dosen lengkap menggunakan findDosenByEmail
+                // Method ini akan mencari di DosenCredentialsRepository terlebih dahulu,
+                // lalu mengambil data dari DosenRepository berdasarkan NIK
+                
+                Dosen dosen = dosenService.findDosenByEmail(email);
+                
+                if (dosen != null) {
+                    // Set session untuk Dosen
+                    session.setAttribute("userRole", "dosen");
+                    session.setAttribute("dosen", dosen); // Simpan objek Dosen lengkap
+                    session.setAttribute("userEmail", email);
+                    session.setAttribute("userNik", dosen.getNik());
+                    
+                    log.info("Login successful as DOSEN: NIK={}, Nama={}", 
+                            dosen.getNik(), dosen.getNama());
+                    return "redirect:/dosen/home"; // Arahkan ke DosenController
+                }
             }
 
             // === LOGIKA 2: JIKA BUKAN ADMIN, CEK APAKAH DIA MAHASISWA? ===

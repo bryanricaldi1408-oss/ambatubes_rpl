@@ -15,6 +15,23 @@ public class KelasService {
     @Autowired
     private KelasRepository kelasRepository;
     
+    // TAMBAHKAN METHOD INI ↓
+    public Kelas findById(Integer id) {
+        return kelasRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Kelas tidak ditemukan dengan ID: " + id));
+    }
+    
+    // ATAU kalau mau return Optional:
+    public Optional<Kelas> findByIdOptional(Integer id) {
+        return kelasRepository.findById(id);
+    }
+    
+    // Method getKelasById yang lebih eksplisit (jika mau)
+    public Kelas getKelasById(Integer kelasId) {
+        return findById(kelasId); // panggil method di atas
+    }
+    
+    // Method lainnya tetap sama...
     public List<ClassDisplayDto> getAllClassesForDisplay() {
         return kelasRepository.findAllClassDisplay();
     }
@@ -41,8 +58,8 @@ public class KelasService {
     }
 
     public Kelas saveKelas(Kelas kelas) {
-    return kelasRepository.save(kelas);
-}
+        return kelasRepository.save(kelas);
+    }
 
     public Optional<Kelas> findKelasByCompositeKey(String kodeMk, String namaKelas, String semester) {
         return kelasRepository.findByCompositeKey(kodeMk, namaKelas, semester);

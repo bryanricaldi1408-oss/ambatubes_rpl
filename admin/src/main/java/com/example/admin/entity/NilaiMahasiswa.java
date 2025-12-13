@@ -29,7 +29,6 @@ public class NilaiMahasiswa {
     // --- RELASI ---
     
     // Relasi ke Nilai Kelompok (Many-to-One)
-    // Ini PENTING untuk query JOIN "Maut" tadi
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idnilaikelompok", insertable = false, updatable = false)
     @ToString.Exclude

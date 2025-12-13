@@ -32,4 +32,16 @@ public interface AnggotaKelompokRepository extends JpaRepository<AnggotaKelompok
     @Transactional
     @Query("DELETE FROM AnggotaKelompok ak WHERE ak.npm = :npm AND ak.idKelompok IN (SELECT k.idKelompok FROM Kelompok k WHERE k.idTubes = :idTubes)")
     void deleteByNpmAndIdTubes(@Param("npm") String npm, @Param("idTubes") Integer idTubes);
+
+    // 5. Hapus semua anggota berdasarkan idTubes (untuk reset kelompok)
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM AnggotaKelompok ak WHERE ak.idKelompok IN (SELECT k.idKelompok FROM Kelompok k WHERE k.idTubes = :idTubes)")
+    void deleteByIdTubes(@Param("idTubes") Integer idTubes);
+
+    // 6. Hapus anggota spesifik dari kelompok
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM AnggotaKelompok ak WHERE ak.npm = :npm AND ak.idKelompok = :idKelompok")
+    void deleteByNpmAndIdKelompok(@Param("npm") String npm, @Param("idKelompok") Integer idKelompok);
 }

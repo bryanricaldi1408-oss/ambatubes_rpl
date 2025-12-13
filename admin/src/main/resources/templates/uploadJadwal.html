@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Upload Jadwal</title>
+    <link rel="stylesheet" th:href="@{/css/uploadJadwal.css}">
+    <script type="text/javascript" th:src="@{/js/uploadJadwal.js}" defer></script>
+</head>
+<body>
+    <!-- ========== NAVBAR ========== -->
+    <header class="top-navbar">
+        <div class="header-content">
+            
+            <!-- KIRI: Brand + Breadcrumb -->
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                <nav class="breadcrumb">
+                    <a th:href="@{/dosen/home}">Dashboard</a>
+                    <span class="divider">/</span>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelas.idKelas})}">Tugas Besar</a>
+                    <span class="divider">/</span>
+                    <span class="current">Upload Jadwal</span>
+                </nav>
+            </div>
+            
+            <!-- KANAN: User + Logout -->
+            <div class="user-controls">
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
+                <button class="logout-btn">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
+                </button>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- ========== PROGRESS BAR ========== -->
+    <div class="horizontal-progress-wrap">
+        <div class="progress-bar-container horizontal">
+            <div class="step" data-step="1">
+                <span class="step-num">1</span>
+                <span class="step-desc">Detail Tugas</span>
+            </div>
+            <div class="step active">
+                <span class="step-num">2</span>
+                <span class="step-desc">Upload Jadwal</span>
+            </div>
+            <div class="step" data-step="3">
+                <span class="step-num">3</span>
+                <span class="step-desc">Upload Rubrik</span>
+            </div>
+            <div class="step" data-step="4">
+                <span class="step-num">4</span>
+                <span class="step-desc">Buat Kelompok</span>
+            </div>
+            <div class="step" data-step="5">
+                <span class="step-num">5</span>
+                <span class="step-desc">Penilaian</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <!-- Error/Success Messages -->
+        <div th:if="${error}" class="error-message">
+            <span th:text="${error}"></span>
+        </div>
+        
+        <div th:if="${success}" class="success-message">
+            <span th:text="${success}"></span>
+        </div>
+        
+        <!-- Info Tugas -->
+        <div class="tugas-info-card">
+            <h4 th:text="${tugasBesar.namaTugas}">Tugas Besar</h4>
+            <p>Kelas: <span th:text="${kelas.namaKelas}"></span></p>
+            <p>Mata Kuliah: <span th:text="${kelas.mataKuliah?.namaMk}"></span></p>
+        </div>
+        
+        <h1 class="page-title">Upload Jadwal</h1>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading">
+            <div>Memproses file Excel...</div>
+        </div>
+
+        <!-- Upload Card (Shown when no data) -->
+        <div id="uploadCard" class="upload-card">
+            <p class="file-info">Supported file: <span class="ext">.xlsx</span></p>
+            
+            <form th:action="@{/dosen/upload-jadwal-file}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                <input type="hidden" name="kelasId" th:value="${kelas.idKelas}">
+                <input type="hidden" name="idTubes" th:value="${tugasBesar.idTubes}">
+                
+                <label class="blue-dropzone" for="jadwalFile">
+                    <input type="file" name="jadwalFile" id="jadwalFile" accept=".xlsx" hidden>
+                    <div class="plus-sign" id="plusSign">+</div>
+                    <div class="file-name-display" id="fileNameDisplay"></div>
+                </label>
+            </form>
+        </div>
+
+        <!-- Table Container (Hidden by default) -->
+        <div id="tableContainer" class="table-container">
+            <h3>Jadwal yang Diupload</h3>
+            <div class="data-count">
+                Total data: <span id="dataCount">0</span>
+            </div>
+            <table id="jadwalTable" class="jadwal-table">
+                <thead>
+                    <tr>
+                        <th>Deadline</th>
+                        <th>Kegiatan</th>
+                        <th>Nilai</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="action-container">
+            <a th:href="@{/templateJadwal.xlsx}" class="download-btn" download="templateJadwal.xlsx">Download Template</a>
+            <button class="btn-save" id="saveBtn">Save</button>
+            <button class="btn-delete" id="deleteBtn">Delete Uploaded Data</button>
+        </div>
+
+    </main>
+</body>
+</html>

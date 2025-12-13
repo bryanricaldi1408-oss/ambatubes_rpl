@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Tugas Besar</title>
+    <link rel="stylesheet" th:href="@{/css/dosenTubes.css}">
+    <script type="text/javascript" th:src="@{/js/dosenTubes.js}" defer></script>
+</head>
+
+<body>
+    <!-- ========== NAVBAR ========== -->
+    <header class="top-navbar">
+        <div class="header-content">
+            <!-- KIRI: Brand + Breadcrumb -->
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                <nav class="breadcrumb">
+                    <a th:href="@{/dosen/home}">Dashboard</a>
+                    <span class="divider">/</span>
+                    <span class="current">Tugas Besar</span>
+                </nav>
+            </div>
+
+            <!-- KANAN: User + Logout -->
+            <div class="user-controls">
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
+                <button class="logout-btn" onclick="location.href='/logout'">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="info-section">
+            <div class="lecturer-profile">
+                <div class="profile-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h2 class="lecturer-name" th:text="${dosen.nama}">Dr. Gede Karya S.T., S.E., M.T. CISA, MPr.</h2>
+            </div>
+
+            <div class="course-card-pill">
+                <h3 class="course-code"
+                    th:text="${kelas.mataKuliah?.kodeMk + ' ' + kelas.mataKuliah?.namaMk ?: 'Mata Kuliah'}">
+                    AIF 23020100 Algortima Pemrograman
+                </h3>
+                <div class="course-meta">
+                    <span class="meta-item" th:text="'Kelas ' + ${kelas.namaKelas}">Kelas A</span>
+                    <span class="meta-item"
+                        th:text="${kelas.semester != null and #strings.length(kelas.semester) > 9 ? #strings.substring(kelas.semester, 0, #strings.length(kelas.semester)-9).trim() : (kelas.semester ?: '')}">Ganjil</span>
+                    <span class="meta-item"
+                        th:text="${kelas.semester != null and #strings.length(kelas.semester) > 9 ? #strings.substring(kelas.semester, #strings.length(kelas.semester)-9) : ''}">2024/2025</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="tasks-section">
+            <h3 class="section-title">Tugas Besar</h3>
+            <div class="cards-container">
+                <!-- Kartu tugas besar akan ditampilkan di sini -->
+                <!-- Loop existing tasks -->
+                <a th:each="tubes : ${listTubes}" th:href="@{/dosen/edit(kelasId=${kelasId}, idTubes=${tubes.idTubes})}"
+                    style="text-decoration: none; color: inherit;">
+
+                    <article class="task-card">
+                        <div class="card-header">
+                            <h4 th:text="${tubes.namaTugas}">Tugas Besar 1</h4>
+                        </div>
+                        <div class="card-body">
+                            <p th:text="${#strings.abbreviate(tubes.deskripsi, 100)}">Deskripsi singkat...</p>
+                            <br>
+                            <small style="color: #666;"
+                                th:text="${#temporals.format(tubes.tanggalDibuat, 'dd MMM yyyy')}">12 Des 2025</small>
+                        </div>
+                    </article>
+                </a>
+
+                <!-- Add Button -->
+                <button class="add-card-dashed" onclick="redirectToEdit()">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script th:inline="javascript">
+        // Ambil kelasId dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const kelasId = urlParams.get('kelasId');
+
+        // Fungsi untuk redirect ke halaman edit dengan parameter kelasId
+        function redirectToEdit() {
+            if (kelasId) {
+                window.location.href = '/dosen/edit?kelasId=' + kelasId;
+            } else {
+                alert('Error: Tidak dapat menemukan ID kelas');
+            }
+        }
+    </script>
+</body>
+
+</html>

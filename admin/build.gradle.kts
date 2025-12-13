@@ -10,7 +10,7 @@ description = "Demo project for Spring Boot"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(24)
+		languageVersion = JavaLanguageVersion.of(22)
 	}
 }
 
@@ -43,6 +43,8 @@ dependencies {
     
     // For file upload
     implementation("commons-io:commons-io:2.13.0")
+    // Jackson for JSON parsing (used by controller)
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
 }
 
 tasks.withType<Test> {

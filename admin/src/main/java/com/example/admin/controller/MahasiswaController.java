@@ -11,8 +11,10 @@ import com.example.admin.service.MahasiswaService;
 import com.example.admin.repository.AnggotaKelompokRepository; // IMPORT BARU
 import com.example.admin.repository.KelasRepository;
 import com.example.admin.repository.KelompokRepository; // IMPORT BARU
+import com.example.admin.repository.KelompokRepository; // IMPORT BARU
 import com.example.admin.repository.NilaiMahasiswaRepository;
 import com.example.admin.repository.TugasBesarRepository;
+import com.example.admin.service.RubrikService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,9 @@ public class MahasiswaController {
 
     @Autowired
     private NilaiMahasiswaRepository nilaiMahasiswaRepository;
+
+    @Autowired
+    private RubrikService rubrikService;
 
     // === INJECT REPOSITORY BARU UNTUK KELOMPOK ===
     @Autowired 
@@ -111,8 +116,12 @@ public class MahasiswaController {
         }
 
         model.addAttribute("tubesActive", tubes);
+        model.addAttribute("tubesActive", tubes);
         Mahasiswa mahasiswa = (Mahasiswa) session.getAttribute("mahasiswa");
         model.addAttribute("mahasiswa", mahasiswa);
+
+        boolean hasRubrik = rubrikService.rubrikExists(idTubes);
+        model.addAttribute("rubrikExists", hasRubrik);
 
         return "deskripsiTubes";
     }
@@ -149,9 +158,14 @@ public class MahasiswaController {
         
         String npm = (String) session.getAttribute("userNpm");
         Mahasiswa mahasiswa = (Mahasiswa) session.getAttribute("mahasiswa");
+        TugasBesar tubes = tugasBesarRepository.findById(idTubes).orElse(null);
+
 
         // Ambil semua kelompok yang tersedia untuk Tugas Besar ini
         List<Kelompok> listKelompokDB = kelompokRepository.findByIdTubes(idTubes);
+        
+        log.info("DEBUG: Mahasiswa mengakses halaman kelompok. ID Tubes: {}, Jumlah Kelompok Ditemukan: {}", idTubes, listKelompokDB.size());
+        
         List<KelompokDisplayDto> displayList = new ArrayList<>();
 
         // Cek user saat ini sedang berada di kelompok mana (untuk auto-checked radio button)
@@ -175,6 +189,8 @@ public class MahasiswaController {
         model.addAttribute("listKelompok", displayList);
         model.addAttribute("idTubes", idTubes);
         model.addAttribute("mahasiswa", mahasiswa);
+        model.addAttribute("tubesActive", tubes);
+
 
         return "kelompok";
     }

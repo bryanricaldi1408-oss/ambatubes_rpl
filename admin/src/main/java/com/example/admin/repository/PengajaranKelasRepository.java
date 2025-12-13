@@ -1,5 +1,6 @@
 package com.example.admin.repository;
 
+import com.example.admin.entity.Kelas;
 import com.example.admin.entity.PengajaranKelas;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,16 @@ public interface PengajaranKelasRepository extends JpaRepository<PengajaranKelas
                                 @Param("kodeMk") String kodeMk, 
                                 @Param("namaKelas") String namaKelas, 
                                 @Param("semester") String semester);
+
+     @Query("SELECT pk.kelas FROM PengajaranKelas pk WHERE pk.dosen.nik = :nik")
+    List<Kelas> findKelasByDosenNik(@Param("nik") String nik);
+
+    @Query("SELECT pk.kelas FROM PengajaranKelas pk " +
+           "JOIN pk.kelas.mataKuliah mk " +
+           "WHERE pk.dosen.nik = :nik " +
+           "AND (LOWER(pk.kelas.namaKelas) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "OR LOWER(pk.kelas.semester) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "OR LOWER(mk.namaMk) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<Kelas> searchKelasByDosenAndKeyword(@Param("nik") String nik, 
+                                             @Param("keyword") String keyword);
 }
