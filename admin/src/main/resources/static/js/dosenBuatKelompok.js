@@ -70,8 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    
-                    alert(data.message);
                     window.location.reload();
                 } else {
                     alert("Gagal: " + data.message);
