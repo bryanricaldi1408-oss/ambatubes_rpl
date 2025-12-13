@@ -28,14 +28,14 @@
                     <span class="divider">/</span>
                     <a th:href="@{/dosen/tubes(kelasId=${kelasId})}">Tubes</a>
                     <span class="divider">/</span>
-                    <span class="current">Edit</span>
+                    <span class="current">Buat Kelompok</span>
 
                 </nav>
             </div>
 
             <!-- KANAN: User + Logout -->
             <div class="user-controls">
-                <div class="user-initials">PP</div>
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
                 <button class="logout-btn">
                     <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
@@ -63,16 +63,16 @@
                 <span th:text="${hasExistingGroups} ? 'Kelompok' : 'Buat Kelompok'" class="step-desc">Buat
                     Kelompok</span>
             </div>
-            <div class="step" th:classappend="${#lists.isEmpty(kelompokList)} ? ' disabled' : ''">
+            <a th:href="@{/dosen/penilaian(kelasId=${kelasId}, idTubes=${idTubes})}" class="step" data-step="5">
                 <span class="step-num">5</span>
                 <span class="step-desc">Penilaian</span>
-            </div>
+            </a>
         </div>
     </div>
     <main>
         <div class="content">
             <div class="page-title-container">
-                <h1 class="page-title" th:text="${hasExistingGroups} ? 'Kelompok' : 'Buat Kelompok'">Buat Kelompok</h1>
+                <h1 class="page-title">Buat Kelompok</h1>
             </div>
 
             <form class="detail-form-card" id="kelompokForm" th:unless="${hasExistingGroups}">

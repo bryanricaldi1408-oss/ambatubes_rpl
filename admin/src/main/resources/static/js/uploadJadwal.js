@@ -41,6 +41,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.href = '/dosen/upload-rubrik?kelasId=' + kelasId + '&idTubes=' + idTubes;
             } else if (stepNumber === '4') {
                 window.location.href = '/dosen/buat-kelompok?kelasId=' + kelasId + '&idTubes=' + idTubes;
+
+            } else if (stepNumber === '5') {
+                window.location.href = '/dosen/penilaian?kelasId=' + kelasId + '&idTubes=' + idTubes;
             }
         });
     });
@@ -58,6 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = '/dosen/upload-rubrik?kelasId=' + kelasId + '&idTubes=' + idTubes;
         } else if (stepNumber === 4) {
             window.location.href = '/dosen/buat-kelompok?kelasId=' + kelasId + '&idTubes=' + idTubes;
+        } else if (stepNumber === 5) {
+            window.location.href = '/dosen/penilaian?kelasId=' + kelasId + '&idTubes=' + idTubes;
         }
     };
 

@@ -199,6 +199,12 @@ header {
     text-decoration: none !important;
 }
 
+/* State: Clickable (hover like Upload Jadwal) */
+.step:hover .step-num {
+    background-color: #e6f2ff;
+    border-color: var(--primary-color);
+}
+
 /* Garis penghubung antar step */
 .step:not(:last-child)::before {
     content: '';

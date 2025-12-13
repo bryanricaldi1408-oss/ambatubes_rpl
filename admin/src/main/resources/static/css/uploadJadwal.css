@@ -241,7 +241,7 @@ header {
 }
 
 /* State: Clickable */
-.step[data-step]:hover .step-num {
+.step:hover .step-num {
     background-color: #e6f2ff;
     border-color: var(--primary-color);
 }

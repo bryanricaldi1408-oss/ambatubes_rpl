@@ -182,6 +182,12 @@ header {
     text-decoration: none !important;
 }
 
+/* State: Clickable (hover like Upload Jadwal) */
+.step:hover .step-num {
+    background-color: #e6f2ff;
+    border-color: var(--primary-color);
+}
+
 .step:not(:last-child)::before {
     content: '';
     position: absolute;

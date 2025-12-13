@@ -46,6 +46,8 @@ public class DosenEditController {
     private final com.example.admin.service.PenilaianService penilaianService;
     private final com.example.admin.repository.AnggotaKelompokRepository anggotaKelompokRepository;
     private final com.example.admin.repository.PengambilanKelasRepository pengambilanKelasRepository;
+    private final com.example.admin.repository.NilaiKelompokRepository nilaiKelompokRepository;
+    private final com.example.admin.repository.NilaiMahasiswaRepository nilaiMahasiswaRepository;
 
     // ==================== STEP 1: DAFTAR TUGAS ====================
     @GetMapping("/tubes")
@@ -596,7 +598,7 @@ public class DosenEditController {
             model.addAttribute("kelompokList", kelompokList);
             model.addAttribute("jadwalList", jadwalList);
             
-            return "penilaian"; // template: penilaian.html
+            return "dosenPenilaian"; // template: dosenPenilaian.html
             
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -716,6 +718,54 @@ public class DosenEditController {
             }
         }
         return available;
+    }
+
+    @GetMapping("/penilaian/kelompok-nilai")
+    @ResponseBody
+    public List<Map<String, Object>> getKelompokNilai(@RequestParam Integer idTubes,
+                                                      @RequestParam Integer idKegiatan,
+                                                      @RequestParam String namaKelompok) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        // Find kelompok
+        com.example.admin.entity.Kelompok kelompok = kelompokService.findByIdTubesAndNama(idTubes, namaKelompok);
+        if (kelompok == null) {
+            return result;
+        }
+
+        // Find nilaiKelompok record for this kelompok+kegiatan
+        com.example.admin.entity.NilaiKelompok nk = nilaiKelompokRepository.findByIdKelompokAndIdKegiatan(kelompok.getIdKelompok(), idKegiatan);
+
+        // Fetch members
+        List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(kelompok.getIdKelompok());
+        for (com.example.admin.entity.Mahasiswa m : members) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("npm", m.getNpm());
+            map.put("name", m.getNama());
+
+            Double nilai = null;
+            String keterangan = null;
+            Double groupNilai = null;
+            String groupKeterangan = null;
+            if (nk != null) {
+                groupNilai = nk.getNilai();
+                groupKeterangan = nk.getKeterangan();
+                com.example.admin.entity.NilaiMahasiswa nm = nilaiMahasiswaRepository.findByNpmAndIdNilaiKelompok(m.getNpm(), nk.getIdNilaiKelompok());
+                if (nm != null) {
+                    nilai = nm.getNilai();
+                    keterangan = nm.getKeterangan();
+                }
+            }
+
+            map.put("nilai", nilai);
+            map.put("keterangan", keterangan == null ? "" : keterangan);
+            // Include group-level nilai/keterangan so frontend can populate kelompok table cells easily
+            map.put("groupNilai", groupNilai);
+            map.put("groupKeterangan", groupKeterangan == null ? "" : groupKeterangan);
+            result.add(map);
+        }
+
+        return result;
     }
 
     @PostMapping("/kelompok/add-member")

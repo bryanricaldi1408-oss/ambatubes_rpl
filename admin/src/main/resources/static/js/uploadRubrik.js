@@ -143,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     case '1': url = `/dosen/edit?kelasId=${kelasId}&idTubes=${idTubes}`; break;
                     case '2': url = `/dosen/upload-jadwal?kelasId=${kelasId}&idTubes=${idTubes}`; break;
                     case '4': url = `/dosen/buat-kelompok?kelasId=${kelasId}&idTubes=${idTubes}`; break;
+                    case '5': url = `/dosen/penilaian?kelasId=${kelasId}&idTubes=${idTubes}`; break;
                 }
                 if(url) window.location.href = url;
             }

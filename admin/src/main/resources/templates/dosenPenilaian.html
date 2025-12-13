@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMBaTuBes - Penilaian</title>
     <link rel="stylesheet" th:href="@{/css/dosenPenilaian.css}">
+    <link rel="stylesheet" th:href="@{/css/uploadJadwal.css}">
     <script type="text/javascript" th:src="@{/js/dosenPenilaian.js}" defer></script>
 </head>
 <body>
@@ -23,9 +24,9 @@
             </div>
 
             <div class="user-controls">
-                <div class="user-initials">PP</div>
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
                 <button class="logout-btn">
-                    <img src="icons/exit.png" alt="Logout" class="icon-img">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
                 </button>
             </div>
         </div>
@@ -33,23 +34,23 @@
 
     <div class="horizontal-progress-wrap">
         <div class="progress-bar-container horizontal">
-            <div class="step">
+            <div class="step" data-step="1">
                 <span class="step-num">1</span>
                 <span class="step-desc">Detail Tugas</span>
             </div>
-            <div class="step">
+            <div class="step" data-step="2">
                 <span class="step-num">2</span>
                 <span class="step-desc">Upload Jadwal</span>
             </div>
-            <div class="step">
+            <div class="step" data-step="3">
                 <span class="step-num">3</span>
                 <span class="step-desc">Upload Rubrik</span>
             </div>
-            <div class="step">
+            <div class="step" data-step="4">
                 <span class="step-num">4</span>
                 <span class="step-desc">Buat Kelompok</span>
             </div>
-            <div class="step active">
+            <div class="step active" data-step="5">
                 <span class="step-num">5</span>
                 <span class="step-desc">Penilaian</span>
             </div>
@@ -68,20 +69,18 @@
                     <h2 class="table-title">Deadline</h2>
                 </div>
                 <div class="table-card">
-                    <table class="deadline-table">
+                    <table class="jadwal-table deadline-table">
                         <thead>
                             <tr>
+                                <th>Deadline</th>
                                 <th>Kegiatan</th>
-                                <th>Awal</th>
-                                <th>Akhir</th>
-                                <th>Input Nilai</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="jadwal : ${jadwalList}">
+                                <td th:text="${#temporals.format(jadwal.deadline, 'dd MMM yyyy HH:mm')}">Deadline</td>
                                 <td th:text="${jadwal.namaKegiatan}">Kegiatan</td>
-                                <td th:text="${#dates.format(jadwal.deadline, 'dd MMM yyyy')}">Awal</td>
-                                <td th:text="${#dates.format(jadwal.deadline, 'dd MMM yyyy')}">Akhir</td>
                                 <td>
                                     <button class="input-nilai-btn" type="button" th:attr="data-idkegiatan=${jadwal.idKegiatan}">Input Nilai</button>
                                 </td>
@@ -101,59 +100,23 @@
                         <thead>
                             <tr>
                                 <th>Kelompok</th>
-                                <th>Nilai Pertemuan 1</th>
-                                <th>Nilai Presentasi</th>
-                                <th>Nilai Demo</th>
-                                <th>Nilai Laporan</th>
+                                <!-- Generate a header column for each jadwal/kegiatan -->
+                                <th th:each="jadwal : ${jadwalList}" th:text="${jadwal.namaKegiatan}">Kegiatan</th>
                                 <th>Nilai Akhir</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="k : ${kelompokList}">
+                            <tr th:each="k : ${kelompokList}" th:attr="data-kelompok=${k.namaKelompok}">
                                 <td class="kelompok-nama" th:text="${'Kelompok ' + k.namaKelompok}">Kelompok</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
+                                <!-- one cell per kegiatan; mark with data-idkegiatan for JS population -->
+                                <td class="nilai-cell" th:each="jadwal : ${jadwalList}" th:attr="data-idkegiatan=${jadwal.idKegiatan}">-</td>
                                 <td class="nilai-akhir">-</td>
                                 <td>
                                     <button class="detail-nilai-btn" type="button" th:attr="data-kelompok=${k.namaKelompok}">Detail Nilai</button>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="kelompok-nama">Kelompok B</td>
-                                <td class="nilai-cell">78</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-akhir">-</td>
-                                <td>
-                                    <button class="detail-nilai-btn" data-kelompok="B">Detail Nilai</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="kelompok-nama">Kelompok C</td>
-                                <td class="nilai-cell">92</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-akhir">-</td>
-                                <td>
-                                    <button class="detail-nilai-btn" data-kelompok="C">Detail Nilai</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="kelompok-nama">Kelompok D</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-cell">-</td>
-                                <td class="nilai-akhir">-</td>
-                                <td>
-                                    <button class="detail-nilai-btn" data-kelompok="D">Detail Nilai</button>
-                                </td>
-                            </tr>
+                            <!-- kelompok rows are rendered from ${kelompokList} only -->
                         </tbody>
                     </table>
                 </div>
@@ -192,16 +155,13 @@
                         <label for="kelompokSelect">Pilih Kelompok:</label>
                         <select id="kelompokSelect" class="form-select">
                             <option value="">-- Pilih Kelompok --</option>
-                            <option value="A">Kelompok A</option>
-                            <option value="B">Kelompok B</option>
-                            <option value="C">Kelompok C</option>
-                            <option value="D">Kelompok D</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="inputNilaiKelompok">Nilai Kelompok:</label>
                         <input type="number" id="inputNilaiKelompok" class="form-input" min="0" max="100" placeholder="0-100">
                     </div>
+                    <!-- no group notes: kelompok doesn't have catatan, only perorangan -->
                 </div>
 
                 <!-- Form Input Nilai Perorangan -->
@@ -210,10 +170,6 @@
                         <label for="kelompokSelectPerorangan">Pilih Kelompok:</label>
                         <select id="kelompokSelectPerorangan" class="form-select">
                             <option value="">-- Pilih Kelompok --</option>
-                            <option value="A">Kelompok A</option>
-                            <option value="B">Kelompok B</option>
-                            <option value="C">Kelompok C</option>
-                            <option value="D">Kelompok D</option>
                         </select>
                     </div>
                     <div class="form-group">

@@ -49,4 +49,8 @@ public class KelompokService {
     public List<Kelompok> getByTubesId(Integer idTubes) {
         return kelompokRepository.findByIdTubes(idTubes);
     }
+
+    public Kelompok findByIdTubesAndNama(Integer idTubes, String namaKelompok) {
+        return kelompokRepository.findByIdTubesAndNamaKelompok(idTubes, namaKelompok);
+    }
 }

@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
+    console.log('dosenPenilaian.js loaded');
+    try {
     // --- 1. REFERENSI ELEMEN ---
     const btnLogout = document.querySelector(".logout-btn");
     const inputNilaiBtns = document.querySelectorAll(".input-nilai-btn:not(.disabled)");
@@ -19,6 +20,56 @@ document.addEventListener("DOMContentLoaded", function () {
     const kelompokSelectPerorangan = document.getElementById("kelompokSelectPerorangan");
     const mahasiswaSelect = document.getElementById("mahasiswaSelect");
     const filterKegiatanDetail = document.getElementById("filterKegiatanDetail");
+
+    // Event delegation fallback: ensure buttons still work even if earlier code errors
+    document.addEventListener('click', function(e) {
+        const inputBtn = e.target.closest('.input-nilai-btn');
+        console.log('delegated click target:', e.target, 'closest inputBtn:', inputBtn);
+        if (inputBtn && !inputBtn.classList.contains('disabled') && !inputBtn.disabled) {
+            try {
+                const row = inputBtn.closest('tr');
+                const kegiatan = row ? (row.querySelector('td:nth-child(2)') ? row.querySelector('td:nth-child(2)').textContent : '') : '';
+                const idKegiatan = inputBtn.getAttribute('data-idkegiatan');
+                console.log('input-nilai-btn clicked, idKegiatan=', idKegiatan, 'kegiatan=', kegiatan);
+                const popupKeg = document.getElementById('popupKegiatan');
+                if (popupKeg) popupKeg.textContent = kegiatan;
+                if (inputNilaiPopup && idKegiatan) inputNilaiPopup.setAttribute('data-idkegiatan', idKegiatan);
+                if (typeof openInputNilaiPopup === 'function') openInputNilaiPopup();
+            } catch (err) {
+                console.error('Error handling delegated input-nilai-btn click', err);
+            }
+        }
+
+        const detailBtn = e.target.closest('.detail-nilai-btn');
+        if (detailBtn) {
+            const kelompok = detailBtn.getAttribute('data-kelompok');
+            if (typeof openDetailNilaiPopup === 'function') openDetailNilaiPopup(kelompok);
+        }
+    });
+
+    // Re-attach per-button listeners in case buttons are rendered/updated after script load
+    function attachInputButtonListeners() {
+        const buttons = document.querySelectorAll('.input-nilai-btn');
+        buttons.forEach(btn => {
+            if (!btn.__hasAttach && !btn.disabled) {
+                btn.addEventListener('click', (ev) => {
+                    ev.preventDefault(); ev.stopPropagation();
+                    console.log('direct input-nilai-btn click handler', btn.getAttribute('data-idkegiatan'));
+                    const row = btn.closest('tr');
+                    const kegiatan = row ? (row.querySelector('td:nth-child(2)') ? row.querySelector('td:nth-child(2)').textContent : '') : '';
+                    const idKegiatan = btn.getAttribute('data-idkegiatan');
+                    const popupKeg = document.getElementById('popupKegiatan');
+                    if (popupKeg) popupKeg.textContent = kegiatan;
+                    if (inputNilaiPopup && idKegiatan) inputNilaiPopup.setAttribute('data-idkegiatan', idKegiatan);
+                    openInputNilaiPopup();
+                });
+                btn.__hasAttach = true;
+            }
+        });
+    }
+
+    // run immediately and after populate
+    attachInputButtonListeners();
 
     // Data contoh mahasiswa per kelompok
     const dataMahasiswa = {
@@ -44,70 +95,47 @@ document.addEventListener("DOMContentLoaded", function () {
         ]
     };
 
-    // Data contoh nilai - HANYA nilai perorangan
-    const dataNilai = {
-        'Pertemuan ke-1': {
-            perorangan: [
-                {
-                    npm: '6182301001',
-                    name: 'Robert Saputra',
-                    kelompok: 'A',
-                    nilai: 88,
-                    catatan: 'Kontribusi sangat aktif dalam diskusi, menguasai materi dengan baik.',
-                    tanggal: '05 Jan 2024 14:35'
-                },
-                {
-                    npm: '6182301002',
-                    name: 'Bryan Ricaldi',
-                    kelompok: 'A',
-                    nilai: 82,
-                    catatan: 'Presentasi cukup baik, namun perlu lebih percaya diri saat menyampaikan materi.',
-                    tanggal: '05 Jan 2024 14:40'
-                },
-                {
-                    npm: '6182301004',
-                    name: 'Sarah Johnson',
-                    kelompok: 'B',
-                    nilai: 80,
-                    catatan: 'Analisis masalah cukup mendalam, namun solusi yang diberikan kurang inovatif.',
-                    tanggal: '06 Jan 2024 10:20'
-                },
-                {
-                    npm: '6182301008',
-                    name: 'David Wilson',
-                    kelompok: 'C',
-                    nilai: 95,
-                    catatan: 'Outstanding performance! Very creative in problem solving.',
-                    tanggal: '07 Jan 2024 09:50'
-                },
-                {
-                    npm: '6182301005',
-                    name: 'Michael Brown',
-                    kelompok: 'B',
-                    nilai: 75,
-                    catatan: 'Perlu lebih banyak kontribusi dalam diskusi kelompok.',
-                    tanggal: '06 Jan 2024 10:25'
-                }
-            ]
-        },
-        'Presentasi': {
-            perorangan: []
-        },
-        'Demo Aplikasi': {
-            perorangan: []
-        },
-        'Laporan Final': {
-            perorangan: []
-        }
-    };
-
     // Daftar kegiatan sesuai tabel Deadline (dibaca dari DOM agar dinamis)
-    let kegiatanList = Array.from(document.querySelectorAll('.deadline-table tbody tr')).map(r => r.querySelector('td:first-child').textContent.trim());
+    // Support both jadwal-table (shared style) and legacy deadline-table
+    let kegiatanRows = Array.from(document.querySelectorAll('.jadwal-table tbody tr, .deadline-table tbody tr'));
+    let kegiatanList = kegiatanRows.map(r => {
+        // Table now: 1=Deadline, 2=Kegiatan, 3=Aksi
+        const name = r.querySelector('td:nth-child(2)') ? r.querySelector('td:nth-child(2)').textContent.trim() : '';
+        const deadline = r.querySelector('td:nth-child(1)') ? r.querySelector('td:nth-child(1)').textContent.trim() : '';
+        const id = r.querySelector('.input-nilai-btn') ? r.querySelector('.input-nilai-btn').getAttribute('data-idkegiatan') : null;
+        return { name, id: id ? parseInt(id) : null, deadline };
+    });
+
+        // Ambil daftar kelompok yang ada di tabel Kelompok (hanya kelompok yang dirender untuk Tubes saat ini)
+        const kelompokNames = Array.from(document.querySelectorAll('.kelompok-penilaian-table tbody tr .kelompok-nama')).map(td => td.textContent.replace(/^Kelompok\s*/i, '').trim());
+        const uniqueKelompok = [...new Set(kelompokNames)];
+
+        // Isi dropdown kelompok pada form input (kelompok & perorangan) - clear first to avoid duplicates
+        const kelompokSelect = document.getElementById("kelompokSelect");
+        if (kelompokSelect) {
+            kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+            uniqueKelompok.forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = `Kelompok ${k}`;
+                kelompokSelect.appendChild(opt);
+            });
+        }
+        if (kelompokSelectPerorangan) {
+            kelompokSelectPerorangan.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+            uniqueKelompok.forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = `Kelompok ${k}`;
+                kelompokSelectPerorangan.appendChild(opt);
+            });
+        }
 
     // --- 2. HANDLE TOMBOL INPUT NILAI ---
     inputNilaiBtns.forEach(btn => {
         btn.addEventListener("click", function() {
-            const kegiatan = this.closest("tr").querySelector("td:first-child").textContent;
+            // Table layout: 1=Deadline, 2=Kegiatan, 3=Aksi
+            const kegiatan = this.closest("tr").querySelector("td:nth-child(2)").textContent;
             const idKegiatan = this.getAttribute('data-idkegiatan');
             document.getElementById("popupKegiatan").textContent = kegiatan;
             // store idKegiatan on popup for later
@@ -141,46 +169,93 @@ document.addEventListener("DOMContentLoaded", function () {
     kelompokSelectPerorangan.addEventListener("change", function() {
         const selectedKelompok = this.value;
         mahasiswaSelect.innerHTML = '<option value="">-- Pilih Mahasiswa --</option>';
-        
-        if (selectedKelompok && dataMahasiswa[selectedKelompok]) {
-            mahasiswaSelect.disabled = false;
-            dataMahasiswa[selectedKelompok].forEach(mahasiswa => {
-                const option = document.createElement("option");
-                option.value = mahasiswa.npm;
-                option.textContent = `${mahasiswa.name} (${mahasiswa.npm})`;
-                mahasiswaSelect.appendChild(option);
-            });
+
+        // Try fetching members from server for this kelompok (requires idKegiatan context)
+        const idKegiatan = inputNilaiPopup.getAttribute('data-idkegiatan');
+        const urlParams = new URLSearchParams(window.location.search);
+        const idTubes = urlParams.get('idTubes');
+
+        // Reset perorangan inputs
+        mahasiswaSelect.disabled = true;
+        document.getElementById("inputNilaiPerorangan").value = "";
+        document.getElementById("catatanNilaiPerorangan").value = "";
+
+        if (selectedKelompok && idTubes && idKegiatan) {
+            fetch(`/dosen/penilaian/kelompok-nilai?idTubes=${idTubes}&idKegiatan=${idKegiatan}&namaKelompok=${encodeURIComponent(selectedKelompok)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        mahasiswaSelect.disabled = false;
+                        data.forEach(m => {
+                            const option = document.createElement("option");
+                            option.value = m.npm;
+                            option.textContent = `${m.name} (${m.npm})`;
+                            mahasiswaSelect.appendChild(option);
+                        });
+
+                        // Also store perorangan values in client-side cache for quick detail view
+                        const peroranganVals = data.filter(m => m.nilai != null).map(m => ({ npm: m.npm, name: m.name, kelompok: selectedKelompok, nilai: Math.round(m.nilai), catatan: m.keterangan || '' }));
+                        if (peroranganVals.length > 0) {
+                            if (!dataNilai[kegiatanList.find(k=>k.id==idKegiatan)?.name]) dataNilai[kegiatanList.find(k=>k.id==idKegiatan)?.name] = { perorangan: [] };
+                            const key = kegiatanList.find(k=>k.id==idKegiatan)?.name;
+                            const existingNpm = new Set(dataNilai[key].perorangan.map(x => x.npm));
+                            peroranganVals.forEach(pv => { if (!existingNpm.has(pv.npm)) dataNilai[key].perorangan.push(pv); });
+                        }
+                    } else {
+                        mahasiswaSelect.disabled = true;
+                    }
+                })
+                .catch(err => {
+                    console.error('Gagal fetch anggota kelompok:', err);
+                    mahasiswaSelect.disabled = true;
+                });
         } else {
             mahasiswaSelect.disabled = true;
         }
     });
-
-    // --- 6. FUNGSI POPUP INPUT NILAI ---
-    function openInputNilaiPopup() {
-        inputNilaiPopup.style.display = 'flex';
-        // Reset form
-        resetForms();
-        // Set default ke nilai kelompok
-        document.querySelector('input[name="tipeInput"][value="kelompok"]').checked = true;
-        formKelompok.style.display = "flex";
-        formPerorangan.style.display = "none";
-    }
-
-    function resetForms() {
-        // Reset form kelompok
-        document.getElementById("kelompokSelect").value = "";
-        document.getElementById("inputNilaiKelompok").value = "";
-        
-        // Reset form perorangan
-        document.getElementById("kelompokSelectPerorangan").value = "";
-        document.getElementById("mahasiswaSelect").innerHTML = '<option value="">-- Pilih Mahasiswa --</option>';
-        document.getElementById("mahasiswaSelect").disabled = true;
-        document.getElementById("inputNilaiPerorangan").value = "";
-        document.getElementById("catatanNilaiPerorangan").value = "";
-    }
-
+    
     function closeInputNilaiPopup() {
         inputNilaiPopup.style.display = 'none';
+    }
+
+    function openInputNilaiPopup() {
+        console.log('openInputNilaiPopup called');
+        inputNilaiPopup.style.display = 'flex';
+
+        // Default to kelompok input
+        const kelompokRadio = document.querySelector('input[name="tipeInput"][value="kelompok"]');
+        if (kelompokRadio) kelompokRadio.checked = true;
+        if (formKelompok) formKelompok.style.display = 'flex';
+        if (formPerorangan) formPerorangan.style.display = 'none';
+
+        // Clear previous values
+        const selKel = document.getElementById('kelompokSelect');
+        if (selKel) { selKel.value = ''; }
+        const inKel = document.getElementById('inputNilaiKelompok');
+        if (inKel) { inKel.value = ''; }
+
+        const selKelPer = document.getElementById('kelompokSelectPerorangan');
+        if (selKelPer) { selKelPer.value = ''; }
+        const mahasiswaSel = document.getElementById('mahasiswaSelect');
+        if (mahasiswaSel) { mahasiswaSel.innerHTML = '<option value="">-- Pilih Mahasiswa --</option>'; mahasiswaSel.disabled = true; }
+        const inPer = document.getElementById('inputNilaiPerorangan'); if (inPer) inPer.value = '';
+        const catPer = document.getElementById('catatanNilaiPerorangan'); if (catPer) catPer.value = '';
+
+        // Populate kelompok selects from current rendered table to ensure they're in sync
+        const kelompokNames = Array.from(document.querySelectorAll('.kelompok-penilaian-table tbody tr .kelompok-nama')).map(td => td.textContent.replace(/^Kelompok\s*/i,'').trim());
+        const uniqueKelompok = [...new Set(kelompokNames)];
+        if (selKel) {
+            selKel.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+            uniqueKelompok.forEach(k => { const opt = document.createElement('option'); opt.value = k; opt.textContent = `Kelompok ${k}`; selKel.appendChild(opt); });
+        }
+        if (selKelPer) {
+            selKelPer.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+            uniqueKelompok.forEach(k => { const opt = document.createElement('option'); opt.value = k; opt.textContent = `Kelompok ${k}`; selKelPer.appendChild(opt); });
+        }
+
+        // keep the data-idkegiatan attribute that was set by click handler
+        // focus first field for convenience
+        if (selKel) selKel.focus();
     }
 
     // --- 7. VALIDASI FORM INPUT NILAI ---
@@ -237,7 +312,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const tipeInput = document.querySelector('input[name="tipeInput"]:checked').value;
         const kegiatan = document.getElementById("popupKegiatan").textContent;
 
-        // Hanya proses Tipe Perorangan
         if (tipeInput === "perorangan") {
             const kelompok = document.getElementById("kelompokSelectPerorangan").value;
             const mahasiswaNpm = document.getElementById("mahasiswaSelect").value;
@@ -290,6 +364,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
                     updateTabelNilai();
+                    closeInputNilaiPopup();
                 } else {
                     alert('Gagal: ' + data.message);
                 }
@@ -299,12 +374,46 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert('Terjadi kesalahan saat menyimpan nilai');
             });
         } else {
-            alert("Input nilai kelompok sudah dinonaktifkan. Silakan gunakan input nilai perorangan.");
-            return;
-        }
+            // Process kelompok input: send group nilai to server
+            const kelompok = document.getElementById("kelompokSelect").value;
+            const nilaiKelompok = document.getElementById("inputNilaiKelompok").value;
 
-        closeInputNilaiPopup();
-        updateTabelNilai();
+            const idKegiatan = inputNilaiPopup.getAttribute('data-idkegiatan');
+            const urlParams = new URLSearchParams(window.location.search);
+            const kelasId = urlParams.get('kelasId');
+            const idTubes = urlParams.get('idTubes');
+
+            const payloadItem = {
+                kelompok: kelompok,
+                idKegiatan: parseInt(idKegiatan),
+                nilai: parseFloat(nilaiKelompok)
+            };
+
+            const body = { kelasId: parseInt(kelasId), idTubes: parseInt(idTubes), nilaiData: [payloadItem] };
+
+            fetch('/dosen/simpan-nilai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    // Refresh kelompok table values for this idKegiatan
+                    populateKelompokTable().then(() => {
+                        updateTabelNilai();
+                        closeInputNilaiPopup();
+                    });
+                } else {
+                    alert('Gagal: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan saat menyimpan nilai kelompok');
+            });
+        }
     }
 
     function getMonthName(monthIndex) {
@@ -319,17 +428,19 @@ document.addEventListener("DOMContentLoaded", function () {
         
         // Isi dropdown filter dengan kegiatan
         filterKegiatanDetail.innerHTML = '';
-        
+
         kegiatanList.forEach(kegiatan => {
             const option = document.createElement("option");
-            option.value = kegiatan;
-            option.textContent = kegiatan;
+            option.value = kegiatan.name;
+            option.dataset.idkegiatan = kegiatan.id;
+            option.textContent = kegiatan.name;
             filterKegiatanDetail.appendChild(option);
         });
-        
+
         // Tampilkan data berdasarkan filter default
-        tampilkanDetailNilai(kelompok, kegiatanList[0]);
-        
+        const defaultKeg = kegiatanList[0];
+        if (defaultKeg) tampilkanDetailNilai(kelompok, defaultKeg.name);
+
         // Event listener untuk perubahan filter
         filterKegiatanDetail.onchange = function() {
             const selectedKegiatan = this.value;
@@ -339,15 +450,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fungsi untuk menampilkan detail nilai mahasiswa
     // Fungsi untuk menampilkan detail nilai mahasiswa
-function tampilkanDetailNilai(kelompok, filterKegiatan) {
+async function tampilkanDetailNilai(kelompok, filterKegiatan) {
     const detailNilaiList = document.getElementById("detailNilaiList");
     
     detailNilaiList.innerHTML = '';
-    
-    // Ambil semua mahasiswa dalam kelompok ini
-    const mahasiswaKelompok = dataMahasiswa[kelompok] || [];
-    
-    if (mahasiswaKelompok.length === 0) {
+
+    const kegiatanObj = kegiatanList.find(k => k.name === filterKegiatan);
+    const idKegiatan = kegiatanObj ? kegiatanObj.id : null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const idTubes = urlParams.get('idTubes');
+
+    // Fetch server-side data for this kelompok + kegiatan
+    let members = [];
+    if (idTubes && idKegiatan) {
+        try {
+            const res = await fetch(`/dosen/penilaian/kelompok-nilai?idTubes=${idTubes}&idKegiatan=${idKegiatan}&namaKelompok=${encodeURIComponent(kelompok)}`);
+            if (res.ok) {
+                members = await res.json();
+            }
+        } catch (err) {
+            console.error('Error fetching kelompok nilai:', err);
+        }
+    }
+
+    if (!members || members.length === 0) {
         detailNilaiList.innerHTML = `
             <div class="no-data">
                 <div class="no-data-icon">📊</div>
@@ -356,16 +483,11 @@ function tampilkanDetailNilai(kelompok, filterKegiatan) {
         `;
         return;
     }
-    
-    // Cari nilai untuk kegiatan yang dipilih
-    const nilaiKegiatan = dataNilai[filterKegiatan]?.perorangan?.filter(
-        item => item.kelompok === kelompok
-    ) || [];
-    
+
     // Buat elemen tabel
     const table = document.createElement('table');
     table.className = 'detail-nilai-table';
-    
+
     // Header tabel
     const thead = document.createElement('thead');
     thead.innerHTML = `
@@ -377,77 +499,26 @@ function tampilkanDetailNilai(kelompok, filterKegiatan) {
         </tr>
     `;
     table.appendChild(thead);
-    
+
     // Body tabel
     const tbody = document.createElement('tbody');
-    
-    if (nilaiKegiatan.length === 0) {
-        // Jika belum ada nilai untuk kegiatan ini, tampilkan semua mahasiswa dengan status "Belum dinilai"
-        mahasiswaKelompok.forEach((mahasiswa, index) => {
-            const row = document.createElement('tr');
-            row.style.cssText = index % 2 === 0 ? 'background-color: #f8f9fa;' : '';
-            
-            row.innerHTML = `
-                <td style="font-family: nunitoSemiBold; color: var(--text-dark);">
-                    ${mahasiswa.name}
-                </td>
-                <td style="color: #666;">
-                    ${mahasiswa.npm}
-                </td>
-                <td>
-                    <span class="badge-belum">Belum dinilai</span>
-                </td>
-                <td>-</td>
-            `;
-            
-            tbody.appendChild(row);
-        });
-    } else {
-        // Tampilkan mahasiswa yang sudah dinilai
-        mahasiswaKelompok.forEach((mahasiswa, index) => {
-            // Cari nilai mahasiswa ini
-            const nilaiItem = nilaiKegiatan.find(item => item.npm === mahasiswa.npm);
-            
-            const row = document.createElement('tr');
-            row.style.cssText = index % 2 === 0 ? 'background-color: #f8f9fa;' : '';
-            
-            row.innerHTML = `
-                <td style="font-family: nunitoSemiBold; color: var(--text-dark);">
-                    ${mahasiswa.name}
-                </td>
-                <td style="color: #666;">
-                    ${mahasiswa.npm}
-                </td>
-                <td>
-                    ${nilaiItem ? 
-                        `<span class="badge-nilai">${nilaiItem.nilai}</span>` : 
-                        `<span class="badge-belum">Belum dinilai</span>`
-                    }
-                </td>
-                <td>
-                    <div class="catatan-text">${nilaiItem ? nilaiItem.catatan : '-'}</div>
-                    ${nilaiItem ? `<div class="catatan-date">${nilaiItem.tanggal}</div>` : ''}
-                </td>
-            `;
-            
-            tbody.appendChild(row);
-        });
-    }
-    
-    table.appendChild(tbody);
-    
-    // Cek apakah ada data yang ditampilkan
-    const rows = tbody.querySelectorAll('tr');
-    if (rows.length === 0) {
-        detailNilaiList.innerHTML = `
-            <div class="no-data">
-                <div class="no-data-icon">📊</div>
-                <p class="no-data-text">Belum ada mahasiswa dalam kelompok ini</p>
-            </div>
+
+    members.forEach((m, index) => {
+        const row = document.createElement('tr');
+        row.style.cssText = index % 2 === 0 ? 'background-color: #f8f9fa;' : '';
+
+        row.innerHTML = `
+            <td style="font-family: nunitoSemiBold; color: var(--text-dark);">${m.name}</td>
+            <td style="color: #666;">${m.npm}</td>
+            <td>${m.nilai != null ? `<span class="badge-nilai">${m.nilai}</span>` : `<span class="badge-belum">Belum dinilai</span>`}</td>
+            <td>${m.keterangan ? `<div class="catatan-text">${m.keterangan}</div>` : '-'}</td>
         `;
-    } else {
-        detailNilaiList.appendChild(table);
-    }
+
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    detailNilaiList.appendChild(table);
 }
 
     function closeDetailNilaiPopup() {
@@ -461,22 +532,16 @@ function tampilkanDetailNilai(kelompok, filterKegiatan) {
         rows.forEach(row => {
             const kelompok = row.querySelector('.detail-nilai-btn').getAttribute('data-kelompok');
             
-            // Hitung nilai rata-rata untuk setiap kegiatan
-            kegiatanList.forEach((kegiatan, index) => {
-                const nilaiCell = row.querySelector(`.nilai-cell:nth-child(${index + 2})`);
-                
-                // Ambil semua nilai perorangan untuk kelompok dan kegiatan ini
-                const nilaiPerorangan = dataNilai[kegiatan]?.perorangan?.filter(
-                    item => item.kelompok === kelompok
-                ) || [];
-                
-                if (nilaiPerorangan.length > 0) {
-                    // Hitung rata-rata nilai
-                    const total = nilaiPerorangan.reduce((sum, item) => sum + item.nilai, 0);
-                    const rataRata = Math.round(total / nilaiPerorangan.length);
-                    nilaiCell.textContent = rataRata;
-                } else {
-                    nilaiCell.textContent = '-';
+            // For kelompok table, show only group-level nilai (if any). Do not compute or show perorangan averages here.
+            kegiatanList.forEach((kegiatan) => {
+                const idKegiatan = kegiatan.id;
+                const nilaiCell = idKegiatan ? row.querySelector(`.nilai-cell[data-idkegiatan="${idKegiatan}"]`) : null;
+                if (nilaiCell) {
+                    if (nilaiCell.dataset.groupNilai) {
+                        nilaiCell.textContent = Math.round(Number(nilaiCell.dataset.groupNilai));
+                    } else {
+                        nilaiCell.textContent = '-';
+                    }
                 }
             });
             
@@ -493,10 +558,13 @@ function tampilkanDetailNilai(kelompok, filterKegiatan) {
         // Ambil nilai dari setiap kolom nilai
         const nilaiCells = row.querySelectorAll('.nilai-cell');
         nilaiCells.forEach(cell => {
-            const nilai = cell.textContent;
-            if (nilai !== '-') {
-                totalNilai += parseInt(nilai);
-                jumlahKegiatan++;
+            // Only consider group-level nilai for akhir
+            if (cell.dataset && cell.dataset.groupNilai) {
+                const nilai = Number(cell.dataset.groupNilai);
+                if (!isNaN(nilai)) {
+                    totalNilai += nilai;
+                    jumlahKegiatan++;
+                }
             }
         });
         
@@ -549,27 +617,112 @@ function tampilkanDetailNilai(kelompok, filterKegiatan) {
     }
 
     // --- 13. PROGRESS BAR CLICKABLE ---
-    const steps = document.querySelectorAll(".step");
-    steps.forEach((step, index) => {
-        step.addEventListener("click", () => {
-            if (index === 0) {
-                window.location.href = "dosenEdit.html";
-            } else if (index === 1) {
-                window.location.href = "uploadJadwal.html";
-            }
-            else if (index === 2) {
-                window.location.href = "uploadRubrik.html";
-            }
-            else if (index === 3) {
-                window.location.href = "dosenBuatKelompok.html";
-            }
-            else if (index === 4) {
-                // Sudah di halaman ini
+    const urlParamsForProgress = new URLSearchParams(window.location.search);
+    const kelasIdForProgress = urlParamsForProgress.get('kelasId');
+    const idTubesForProgress = urlParamsForProgress.get('idTubes');
+
+    const steps = document.querySelectorAll(".step[data-step]");
+    steps.forEach((step) => {
+        step.addEventListener("click", function() {
+            const stepNumber = this.getAttribute('data-step');
+            if (!stepNumber) return;
+            if (!kelasIdForProgress || !idTubesForProgress) {
+                alert('Error: ID Kelas atau ID Tugas tidak ditemukan.');
                 return;
+            }
+            switch(stepNumber) {
+                case '1': window.location.href = `/dosen/edit?kelasId=${kelasIdForProgress}&idTubes=${idTubesForProgress}`; break;
+                case '2': window.location.href = `/dosen/upload-jadwal?kelasId=${kelasIdForProgress}&idTubes=${idTubesForProgress}`; break;
+                case '3': window.location.href = `/dosen/upload-rubrik?kelasId=${kelasIdForProgress}&idTubes=${idTubesForProgress}`; break;
+                case '4': window.location.href = `/dosen/buat-kelompok?kelasId=${kelasIdForProgress}&idTubes=${idTubesForProgress}`; break;
+                case '5': /* already here */ return;
             }
         });
     });
     
-    // Inisialisasi tabel nilai saat pertama kali load
-    updateTabelNilai();
+    // Populate kelompok table from server (group nilai per kegiatan), then overlay perorangan if present
+    populateKelompokTable().then(() => {
+        updateTabelNilai();
+        try { attachInputButtonListeners(); } catch (e) { console.warn('attachInputButtonListeners failed', e); }
+    });
+
+    // Fetch group nilai for each kelompok & kegiatan and populate cells
+    async function populateKelompokTable() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const idTubes = urlParams.get('idTubes');
+        if (!idTubes) return;
+
+        const rows = document.querySelectorAll('.kelompok-penilaian-table tbody tr');
+        const tasks = [];
+
+        rows.forEach(row => {
+            const kelompokFull = row.querySelector('.kelompok-nama').textContent || '';
+            const kelompok = kelompokFull.replace(/^Kelompok\s*/i, '').trim();
+
+            kegiatanList.forEach(kegiatan => {
+                const idKegiatan = kegiatan.id;
+                if (!idKegiatan) return;
+                const cell = row.querySelector(`.nilai-cell[data-idkegiatan=\"${idKegiatan}\"]`);
+                if (!cell) return;
+
+                const p = fetch(`/dosen/penilaian/kelompok-nilai?idTubes=${idTubes}&idKegiatan=${idKegiatan}&namaKelompok=${encodeURIComponent(kelompok)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            // `data` is array of members with fields: npm, name, nilai, keterangan, plus groupNilai/groupKeterangan on first item
+                            if (!Array.isArray(data)) {
+                                cell.textContent = '-';
+                                return;
+                            }
+
+                            // If group-level nilai exists, show it (group nilai should be authoritative for the kelompok column)
+                            if (Array.isArray(data) && data.length > 0 && data[0].groupNilai != null) {
+                                cell.textContent = Math.round(data[0].groupNilai);
+                                cell.dataset.groupNilai = data[0].groupNilai;
+
+                                // Also merge perorangan into client-side dataNilai for later perorangan views/overrides
+                                const peroranganVals = data.filter(m => m.nilai != null).map(m => ({ npm: m.npm, name: m.name, kelompok: kelompok, nilai: Math.round(m.nilai), catatan: m.keterangan || '' }));
+                                if (peroranganVals.length > 0) {
+                                    if (!dataNilai[kegiatan.name]) dataNilai[kegiatan.name] = { perorangan: [] };
+                                    const existingNpm = new Set(dataNilai[kegiatan.name].perorangan.map(x => x.npm));
+                                    peroranganVals.forEach(pv => { if (!existingNpm.has(pv.npm)) dataNilai[kegiatan.name].perorangan.push(pv); });
+                                }
+                            } else {
+                                // No group nilai: do NOT display perorangan averages in kelompok column.
+                                const peroranganVals = data.filter(m => m.nilai != null).map(m => ({ npm: m.npm, name: m.name, kelompok: kelompok, nilai: Math.round(m.nilai), catatan: m.keterangan || '' }));
+                                if (peroranganVals.length > 0) {
+                                    if (!dataNilai[kegiatan.name]) dataNilai[kegiatan.name] = { perorangan: [] };
+                                    const existingNpm = new Set(dataNilai[kegiatan.name].perorangan.map(x => x.npm));
+                                    peroranganVals.forEach(pv => { if (!existingNpm.has(pv.npm)) dataNilai[kegiatan.name].perorangan.push(pv); });
+                                }
+                                // Keep kelompok column showing '-' when no group nilai exists
+                                cell.textContent = '-';
+                                delete cell.dataset.groupNilai;
+                            }
+                        })
+                    .catch(err => {
+                        console.error('Gagal fetch group nilai:', err);
+                        cell.textContent = '-';
+                    });
+
+                tasks.push(p);
+            });
+
+            // After all kegiatan for this row are fetched, compute nilai akhir
+            // We'll compute after all fetches finish
+        });
+
+        await Promise.all(tasks);
+
+        // Ensure listeners on input buttons after data population
+        try { attachInputButtonListeners(); } catch (e) { console.warn('attachInputButtonListeners failed', e); }
+
+        // Compute nilai akhir for each row now
+        rows.forEach(r => {
+            const kelompok = r.querySelector('.kelompok-nama').textContent.replace(/^Kelompok\s*/i, '').trim();
+            updateNilaiAkhir(r, kelompok);
+        });
+    }
+    } catch (e) {
+        console.error('Error in dosenPenilaian.js:', e);
+    }
 });

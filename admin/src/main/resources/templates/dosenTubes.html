@@ -54,9 +54,10 @@
                 </h3>
                 <div class="course-meta">
                     <span class="meta-item" th:text="'Kelas ' + ${kelas.namaKelas}">Kelas A</span>
-                    <span class="meta-item" th:text="${kelas.semester}">Sem. Ganjil</span>
                     <span class="meta-item"
-                        th:text="${#strings.substring(kelas.semester, #strings.length(kelas.semester)-9)}">2024/2025</span>
+                        th:text="${kelas.semester != null and #strings.length(kelas.semester) > 9 ? #strings.substring(kelas.semester, 0, #strings.length(kelas.semester)-9).trim() : (kelas.semester ?: '')}">Ganjil</span>
+                    <span class="meta-item"
+                        th:text="${kelas.semester != null and #strings.length(kelas.semester) > 9 ? #strings.substring(kelas.semester, #strings.length(kelas.semester)-9) : ''}">2024/2025</span>
                 </div>
             </div>
         </section>
