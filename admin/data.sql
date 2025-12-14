@@ -177,14 +177,24 @@ INSERT INTO Mahasiswa (NPM, Nama) VALUES
 ('61823012', 'Filipo Lautan'),
 ('61823013', 'Andi Pratama'),
 ('61823014', 'Budi Santoso'),
-('61823015', 'Citra Kirana');
+('61823015', 'Citra Kirana'),
+('61823101', 'Student A1'), ('61823102', 'Student A2'), ('61823103', 'Student A3'), ('61823104', 'Student A4'), ('61823105', 'Student A5'),
+('61823106', 'Student B1'), ('61823107', 'Student B2'), ('61823108', 'Student B3'), ('61823109', 'Student B4'), ('61823110', 'Student B5'),
+('61823111', 'Student C1'), ('61823112', 'Student C2'), ('61823113', 'Student C3'), ('61823114', 'Student C4'), ('61823115', 'Student C5'),
+('61823116', 'Student D1'), ('61823117', 'Student D2'), ('61823118', 'Student D3'), ('61823119', 'Student D4'), ('61823120', 'Student D5'),
+('61823121', 'Student E1'), ('61823122', 'Student E2'), ('61823123', 'Student E3'), ('61823124', 'Student E4'), ('61823125', 'Student E5');
 
 INSERT INTO MahasiswaCredentials (NPM, Email, Password) VALUES 
 ('61823011', '61823011@student.unpar.ac.id', 'aaa'),
 ('61823012', '61823012@student.unpar.ac.id', 'aaa'),
 ('61823013', '61823013@student.unpar.ac.id', 'aaa'),
 ('61823014', '61823014@student.unpar.ac.id', 'aaa'),
-('61823015', '61823015@student.unpar.ac.id', 'aaa');
+('61823015', '61823015@student.unpar.ac.id', 'aaa'),
+('61823101', '61823101@student.unpar.ac.id', 'aaa'), ('61823102', '61823102@student.unpar.ac.id', 'aaa'), ('61823103', '61823103@student.unpar.ac.id', 'aaa'), ('61823104', '61823104@student.unpar.ac.id', 'aaa'), ('61823105', '61823105@student.unpar.ac.id', 'aaa'),
+('61823106', '61823106@student.unpar.ac.id', 'aaa'), ('61823107', '61823107@student.unpar.ac.id', 'aaa'), ('61823108', '61823108@student.unpar.ac.id', 'aaa'), ('61823109', '61823109@student.unpar.ac.id', 'aaa'), ('61823110', '61823110@student.unpar.ac.id', 'aaa'),
+('61823111', '61823111@student.unpar.ac.id', 'aaa'), ('61823112', '61823112@student.unpar.ac.id', 'aaa'), ('61823113', '61823113@student.unpar.ac.id', 'aaa'), ('61823114', '61823114@student.unpar.ac.id', 'aaa'), ('61823115', '61823115@student.unpar.ac.id', 'aaa'),
+('61823116', '61823116@student.unpar.ac.id', 'aaa'), ('61823117', '61823117@student.unpar.ac.id', 'aaa'), ('61823118', '61823118@student.unpar.ac.id', 'aaa'), ('61823119', '61823119@student.unpar.ac.id', 'aaa'), ('61823120', '61823120@student.unpar.ac.id', 'aaa'),
+('61823121', '61823121@student.unpar.ac.id', 'aaa'), ('61823122', '61823122@student.unpar.ac.id', 'aaa'), ('61823123', '61823123@student.unpar.ac.id', 'aaa'), ('61823124', '61823124@student.unpar.ac.id', 'aaa'), ('61823125', '61823125@student.unpar.ac.id', 'aaa');
 
 INSERT INTO Dosen (NIK, Nama) VALUES 
 ('19800001', 'Aditya Bagoes Saputra'),
@@ -222,7 +232,12 @@ INSERT INTO Pengambilan_Kelas(NPM, idKelas) VALUES
 ('61823011', 4),
 ('61823012', 4),
 ('61823014', 5),
-('61823013', 6);
+('61823013', 6),
+('61823101', 1), ('61823102', 1), ('61823103', 1), ('61823104', 1), ('61823105', 1),
+('61823106', 1), ('61823107', 1), ('61823108', 1), ('61823109', 1), ('61823110', 1),
+('61823111', 1), ('61823112', 1), ('61823113', 1), ('61823114', 1), ('61823115', 1),
+('61823116', 1), ('61823117', 1), ('61823118', 1), ('61823119', 1), ('61823120', 1),
+('61823121', 1), ('61823122', 1), ('61823123', 1), ('61823124', 1), ('61823125', 1);
 
 INSERT INTO Pengajaran_Kelas(NIK, idKelas) VALUES 
 ('19800001', 1),

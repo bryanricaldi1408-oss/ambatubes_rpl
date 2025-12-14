@@ -22,5 +22,10 @@ public interface NilaiMahasiswaRepository extends JpaRepository<NilaiMahasiswa, 
     List<JadwalNilaiDto> findJadwalDanNilai(@Param("npm") String npm, 
                                             @Param("idTubes") Integer idTubes);
 
-       NilaiMahasiswa findByNpmAndIdNilaiKelompok(String npm, Integer idNilaiKelompok);
+       @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    @Query("DELETE FROM NilaiMahasiswa nm WHERE nm.idNilaiKelompok IN :ids")
+    void deleteByIdNilaiKelompokIn(@Param("ids") List<Integer> ids);
+
+    NilaiMahasiswa findByNpmAndIdNilaiKelompok(String npm, Integer idNilaiKelompok);
 }

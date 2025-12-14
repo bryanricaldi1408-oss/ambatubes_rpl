@@ -19,6 +19,8 @@ public class KelompokService {
     private final AnggotaKelompokRepository anggotaKelompokRepository;
     private final com.example.admin.repository.TugasBesarRepository tugasBesarRepository;
     private final com.example.admin.repository.PengambilanKelasRepository pengambilanKelasRepository;
+    private final com.example.admin.repository.NilaiKelompokRepository nilaiKelompokRepository;
+    private final com.example.admin.repository.NilaiMahasiswaRepository nilaiMahasiswaRepository;
 
     @Transactional
     public List<Kelompok> generateKelompok(Integer idTubes, Integer jumlahGrup, Integer maxAnggota, boolean isAutoAssign) {
@@ -61,21 +63,45 @@ public class KelompokService {
             // Acak urutan mahasiswa
             java.util.Collections.shuffle(students);
             
-            // Distribusi mahasiswa ke kelompok (Round Robin)
+            // Distribusi mahasiswa ke kelompok (Round Robin with Capacity Check)
             List<com.example.admin.entity.AnggotaKelompok> newMembers = new ArrayList<>();
             int groupIndex = 0;
             
+            // Track current member count for each group
+            int[] groupMemberCounts = new int[jumlahGrup];
+            
             for (com.example.admin.entity.Mahasiswa s : students) {
-                Kelompok targetGroup = newGroups.get(groupIndex);
+                // Find a group with available space
+                int attempts = 0;
+                boolean assigned = false;
                 
-                com.example.admin.entity.AnggotaKelompok member = new com.example.admin.entity.AnggotaKelompok();
-                member.setIdKelompok(targetGroup.getIdKelompok());
-                member.setNpm(s.getNpm());
+                while (attempts < jumlahGrup) {
+                    if (groupMemberCounts[groupIndex] < maxAnggota) {
+                        Kelompok targetGroup = newGroups.get(groupIndex);
+                        
+                        com.example.admin.entity.AnggotaKelompok member = new com.example.admin.entity.AnggotaKelompok();
+                        member.setIdKelompok(targetGroup.getIdKelompok());
+                        member.setNpm(s.getNpm());
+                        
+                        newMembers.add(member);
+                        groupMemberCounts[groupIndex]++;
+                        assigned = true;
+                        
+                        // Move to next group for round-robin
+                        groupIndex = (groupIndex + 1) % jumlahGrup;
+                        break;
+                    }
+                    
+                    // Try next group
+                    groupIndex = (groupIndex + 1) % jumlahGrup;
+                    attempts++;
+                }
                 
-                newMembers.add(member);
-                
-                // Pindah ke grup berikutnya
-                groupIndex = (groupIndex + 1) % jumlahGrup;
+                if (!assigned) {
+                    // All groups are full. Stop assigning.
+                    // Remaining students will be left unassigned.
+                    break; 
+                }
             }
 
             // Simpan anggota
@@ -93,12 +119,29 @@ public class KelompokService {
         return kelompokRepository.findByIdTubesAndNamaKelompok(idTubes, namaKelompok);
     }
 
+    public com.example.admin.entity.Kelompok findById(Integer idKelompok) {
+        return kelompokRepository.findById(idKelompok).orElse(null);
+    }
+
     @Transactional
     public void deleteKelompok(Integer idKelompok) {
-        // 1. Hapus anggotanya dulu (Cascade)
+        // 1. Hapus Nilai Mahasiswa terkait (via Nilai Kelompok)
+        List<com.example.admin.entity.NilaiKelompok> nilaiKelompokList = nilaiKelompokRepository.findByIdKelompok(idKelompok);
+        if (!nilaiKelompokList.isEmpty()) {
+            List<Integer> ids = new ArrayList<>();
+            for (com.example.admin.entity.NilaiKelompok nk : nilaiKelompokList) {
+                ids.add(nk.getIdNilaiKelompok());
+            }
+            nilaiMahasiswaRepository.deleteByIdNilaiKelompokIn(ids);
+        }
+
+        // 2. Hapus Nilai Kelompok
+        nilaiKelompokRepository.deleteByIdKelompok(idKelompok);
+
+        // 3. Hapus anggotanya (Cascade)
         anggotaKelompokRepository.deleteByIdKelompok(idKelompok);
         
-        // 2. Hapus kelompoknya
+        // 4. Hapus kelompoknya
         kelompokRepository.deleteById(idKelompok);
     }
 }
