@@ -49,18 +49,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            // Ambil mode pembuatan
+            const generationMode = document.querySelector('input[name="generationMode"]:checked').value;
+            const isAutoAssign = (generationMode === 'auto');
+
             // Panggil API Backend
             const formData = new FormData();
             formData.append('kelasId', kelasId);
             formData.append('idTubes', idTubes);
             formData.append('jumlahGrup', jumlahGrup);
             formData.append('jumlahAnggota', jumlahAnggota);
-
-            // Tampilkan loading state (opsional)
-            const btnSubmit = kelompokForm.querySelector('button[type="submit"]');
-            const originalText = btnSubmit.textContent;
-            btnSubmit.textContent = "Processing...";
-            btnSubmit.disabled = true;
+            formData.append('isAutoAssign', isAutoAssign); // Send flag
 
             fetch('/dosen/generate-kelompok', {
                 method: 'POST',
@@ -116,15 +115,28 @@ document.addEventListener("DOMContentLoaded", function () {
             }
            
             
-            // Kolom Aksi (Edit)
+            // Kolom Aksi (Edit & Delete)
             const tdAksi = document.createElement("td");
+            
+            // Edit Button
             const editBtn = document.createElement("button");
             editBtn.className = "edit-kelompok-btn";
-            editBtn.textContent = "Edit";
+            editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit';
             editBtn.addEventListener("click", function() {
                 openEditPopup(kelompok.nama, kelompok.id, kelompok.anggota);
             });
+            
+            // Delete Button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "btn-delete-group";
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Hapus';
+            deleteBtn.style.cssText = "background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-left: 5px; cursor: pointer;";
+            deleteBtn.addEventListener("click", function() {
+                deleteGroup(kelompok.id, kelompok.nama);
+            });
+
             tdAksi.appendChild(editBtn);
+            tdAksi.appendChild(deleteBtn);
             
             // Tambahkan kolom ke row
             row.appendChild(tdNama);
@@ -135,6 +147,31 @@ document.addEventListener("DOMContentLoaded", function () {
             // Tambahkan row ke tabel
             tableBody.appendChild(row);
         });
+    }
+
+    // Function to delete group
+    async function deleteGroup(id, nama) {
+        if (!confirm(`Apakah Anda yakin ingin menghapus ${nama}? Semua anggota akan dikeluarkan.`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/dosen/delete-kelompok/${id}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // alert(result.message);
+                window.location.reload(); 
+            } else {
+                alert('Gagal: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menghapus kelompok');
+        }
     }
 
     // --- 4. FUNGSI UNTUK GENERATE ANGGOTA OTOMATIS (TIDAK DIPAKAI LAGI) ---

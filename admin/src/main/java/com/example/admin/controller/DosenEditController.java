@@ -530,6 +530,7 @@ public class DosenEditController {
                                             @RequestParam Integer idTubes,
                                             @RequestParam Integer jumlahGrup,
                                             @RequestParam Integer jumlahAnggota,
+                                            @RequestParam(defaultValue = "true") Boolean isAutoAssign,
                                             HttpSession session) {
         
         Map<String, Object> response = new HashMap<>();
@@ -544,17 +545,32 @@ public class DosenEditController {
         
         try {
             // Generate kelompok using service
-            List<com.example.admin.entity.Kelompok> groups = kelompokService.generateKelompok(idTubes, jumlahGrup, jumlahAnggota);
+            List<com.example.admin.entity.Kelompok> groups = kelompokService.generateKelompok(idTubes, jumlahGrup, jumlahAnggota, isAutoAssign);
             
             // Format response matching frontend expectation
-            List<Map<String, Object>> groupsData = groups.stream().map(g -> {
+            List<Map<String, Object>> groupsData = new ArrayList<>();
+            
+            for (com.example.admin.entity.Kelompok g : groups) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("nama", "Kelompok " + g.getNamaKelompok());
-                map.put("jumlahAnggota", 0); // Baru dibuat, pasti 0
+                map.put("id", g.getIdKelompok()); // Add ID
                 map.put("maxAnggota", g.getJumlahAnggota());
-                map.put("anggota", new ArrayList<>());
-                return map;
-            }).collect(Collectors.toList());
+                
+                // Fetch members for this group
+                List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(g.getIdKelompok());
+                map.put("jumlahAnggota", members.size());
+                
+                List<Map<String, String>> memberList = new ArrayList<>();
+                for (com.example.admin.entity.Mahasiswa m : members) {
+                    Map<String, String> mMap = new HashMap<>();
+                    mMap.put("name", m.getNama());
+                    mMap.put("npm", m.getNpm());
+                    memberList.add(mMap);
+                }
+                map.put("anggota", memberList);
+                
+                groupsData.add(map);
+            }
 
             response.put("success", true);
             response.put("message", "Kelompok berhasil digenerate!");
@@ -568,6 +584,9 @@ public class DosenEditController {
             return response;
         }
     }
+
+
+
     
     // ==================== STEP 5: PENILAIAN ====================
     @GetMapping("/penilaian")
@@ -838,5 +857,29 @@ public class DosenEditController {
             response.put("message", e.getMessage());
             return response;
         }
+    }
+
+    @DeleteMapping("/delete-kelompok/{id}")
+    @ResponseBody
+    public Map<String, Object> deleteKelompok(@PathVariable Integer id, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Dosen dosen = (Dosen) session.getAttribute("dosen");
+        
+        if (dosen == null) {
+            response.put("success", false);
+            response.put("message", "Session expired");
+            return response;
+        }
+
+        try {
+            kelompokService.deleteKelompok(id);
+            response.put("success", true);
+            response.put("message", "Kelompok berhasil dihapus");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Gagal menghapus kelompok: " + e.getMessage());
+        }
+        
+        return response;
     }
 }

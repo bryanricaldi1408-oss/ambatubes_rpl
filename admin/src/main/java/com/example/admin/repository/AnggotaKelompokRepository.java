@@ -44,4 +44,10 @@ public interface AnggotaKelompokRepository extends JpaRepository<AnggotaKelompok
     @Transactional
     @Query("DELETE FROM AnggotaKelompok ak WHERE ak.npm = :npm AND ak.idKelompok = :idKelompok")
     void deleteByNpmAndIdKelompok(@Param("npm") String npm, @Param("idKelompok") Integer idKelompok);
+
+    // 7. Hapus semua anggota dalam satu kelompok (Cascade Delete Manual)
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM AnggotaKelompok ak WHERE ak.idKelompok = :idKelompok")
+    void deleteByIdKelompok(@Param("idKelompok") Integer idKelompok);
 }
