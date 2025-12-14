@@ -792,8 +792,22 @@ public class DosenEditController {
     public Map<String, Object> addMember(@RequestParam String npm, @RequestParam Integer idKelompok) {
         Map<String, Object> response = new HashMap<>();
         try {
-            // Check capacity (optional logic, maybe enforced by UI or business rule)
-            // Save new AnggotaKelompok
+            // 1. Cek kapasitas kelompok
+            com.example.admin.entity.Kelompok kelompok = kelompokService.findById(idKelompok);
+            if (kelompok == null) {
+                response.put("success", false);
+                response.put("message", "Kelompok tidak ditemukan.");
+                return response;
+            }
+
+            int currentMembers = anggotaKelompokRepository.countAnggotaByKelompok(idKelompok);
+            if (currentMembers >= kelompok.getJumlahAnggota()) {
+                response.put("success", false);
+                response.put("message", "Gagal: Kelompok sudah penuh (Max: " + kelompok.getJumlahAnggota() + ").");
+                return response;
+            }
+
+            // 2. Simpan anggota baru
             AnggotaKelompok newMember = new AnggotaKelompok();
             newMember.setIdKelompok(idKelompok);
             newMember.setNpm(npm);

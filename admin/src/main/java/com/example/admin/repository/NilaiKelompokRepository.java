@@ -7,4 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NilaiKelompokRepository extends JpaRepository<NilaiKelompok, Integer> {
     NilaiKelompok findByIdKelompokAndIdKegiatan(Integer idKelompok, Integer idKegiatan);
+    
+    java.util.List<NilaiKelompok> findByIdKelompok(Integer idKelompok);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    void deleteByIdKelompok(Integer idKelompok);
 }
