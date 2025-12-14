@@ -954,3 +954,40 @@ label[for="auto-create-group"] {
     background: #fff;
     box-shadow: var(--shadow-soft);
 }
+
+.btn-delete-group{
+    background-color: transparent;
+    color: #be0101;
+    border: 2px solid #be0101;
+    padding: 8px 20px;
+    border-radius: 50px;
+    margin-left: 10px;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-delete-group:hover {
+    background-color: #be0101;
+    color: white;
+}
+
+.tambah-ke-grup-btn{
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'nunitoBold', sans-serif;
+    transition: all 0.3s ease;
+    min-width: 20px;
+    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+.tambah-ke-grup-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}

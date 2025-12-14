@@ -130,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const deleteBtn = document.createElement("button");
             deleteBtn.className = "btn-delete-group";
             deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Hapus';
-            deleteBtn.style.cssText = "background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-left: 5px; cursor: pointer;";
             deleteBtn.addEventListener("click", function() {
                 deleteGroup(kelompok.id, kelompok.nama);
             });
@@ -259,8 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <span style="font-family: 'nunitoBold';">${student.name}</span>
                     <br><span style="font-size: 12px; color: #666;">NPM: ${student.npm}</span>
                 </div>
-                <button class="tambah-ke-grup-btn" data-name="${student.name}" data-npm="${student.npm}" 
-                        style="background-color: #2ecc71; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                <button class="tambah-ke-grup-btn" data-name="${student.name}" data-npm="${student.npm}">
                     + Tambah
                 </button>
             `;
