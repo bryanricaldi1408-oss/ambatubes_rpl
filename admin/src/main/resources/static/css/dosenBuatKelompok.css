@@ -424,7 +424,7 @@ label[for="auto-create-group"] {
 }
 
 .kelompok-table th {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, #0169be, #004e92);
     color: white;
     padding: 15px;
     text-align: center;

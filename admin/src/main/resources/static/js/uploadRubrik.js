@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Create and add the icon
                 const icon = document.createElement('img');
-                icon.src = '/icons/excel.png'; // Using excel icon as placeholder
+                icon.src = '/icons/pdf.png'; // Using excel icon as placeholder
                 icon.classList.add('upload-icon');
                 dropzone.prepend(icon);
                 

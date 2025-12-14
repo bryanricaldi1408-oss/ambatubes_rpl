@@ -319,13 +319,16 @@ main {
 }
 
 .download-btn {
-    background-color: #6cca46;
-    color: #1f1f1f;
-    min-width: 100px;
-}
-
-.download-btn:hover {
-    background-color: #7ac15f;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 50px;
+    border-radius: 50px;
+    font-family: 'nunitoBold', sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(1, 105, 190, 0.3);
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 /* AFTER UPLOAD STATE STYLING */
