@@ -540,3 +540,17 @@ header {
         .loading.show {
             display: block;
         }
+
+.upload-icon {
+    width: 60px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.blue-dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+}

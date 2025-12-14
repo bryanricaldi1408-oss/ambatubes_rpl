@@ -18,12 +18,35 @@ document.addEventListener("DOMContentLoaded", function () {
     if (dropzone && fileInput) {
         // File dipilih
         fileInput.addEventListener('change', function(e) {
+            const dropzone = this.parentElement;
+            const plusSign = document.getElementById('plusSign');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+            // Remove existing icon if any
+            const existingIcon = dropzone.querySelector('.upload-icon');
+            if (existingIcon) {
+                dropzone.removeChild(existingIcon);
+            }
+
             if (this.files && this.files[0]) {
                 const fileName = this.files[0].name;
+                if(plusSign) plusSign.style.display = 'none';
+
+                // Create and add the icon
+                const icon = document.createElement('img');
+                icon.src = '/icons/excel.png'; // Using excel icon as placeholder
+                icon.classList.add('upload-icon');
+                dropzone.prepend(icon);
+                
                 fileNameDisplay.textContent = fileName;
                 fileNameDisplay.style.display = 'block';
-                if(plusSign) plusSign.style.display = 'none';
+
                 if(saveBtn) saveBtn.disabled = false;
+            } else {
+                // No file selected
+                if(plusSign) plusSign.style.display = 'block';
+                fileNameDisplay.textContent = '';
+                fileNameDisplay.style.display = 'none';
             }
         });
         

@@ -73,11 +73,34 @@ document.addEventListener("DOMContentLoaded", function () {
         
         // File input change handler
         document.getElementById('jadwalFile').addEventListener('change', function(e) {
+            const dropzone = this.parentElement; // the <label>
+            const plusSign = document.getElementById('plusSign');
             const fileNameDisplay = document.getElementById('fileNameDisplay');
+            
+            // Remove existing icon if any
+            const existingIcon = dropzone.querySelector('.upload-icon');
+            if (existingIcon) {
+                dropzone.removeChild(existingIcon);
+            }
+
             if (this.files.length > 0) {
+                // File is selected
+                if(plusSign) plusSign.style.display = 'none';
+
+                // Create and add the icon
+                const icon = document.createElement('img');
+                icon.src = '/icons/excel.png';
+                icon.classList.add('upload-icon');
+                dropzone.prepend(icon);
+
                 fileNameDisplay.textContent = this.files[0].name;
+                fileNameDisplay.style.display = 'block';
+
             } else {
+                // No file selected or selection cancelled
+                if(plusSign) plusSign.style.display = 'block';
                 fileNameDisplay.textContent = '';
+                fileNameDisplay.style.display = 'none';
             }
         });
         
