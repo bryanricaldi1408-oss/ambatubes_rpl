@@ -1,37 +1,39 @@
 package com.example.admin.controller;
 
 import com.example.admin.dto.JadwalNilaiDto;
-import com.example.admin.dto.KelompokDisplayDto; // IMPORT BARU
-import com.example.admin.entity.AnggotaKelompok; // IMPORT BARU
+import com.example.admin.dto.KelompokDisplayDto;
+import com.example.admin.entity.AnggotaKelompok;
 import com.example.admin.entity.Kelas;
-import com.example.admin.entity.Kelompok; // IMPORT BARU
+import com.example.admin.entity.Kelompok;
 import com.example.admin.entity.Mahasiswa;
 import com.example.admin.entity.TugasBesar;
 import com.example.admin.service.MahasiswaService;
-import com.example.admin.repository.AnggotaKelompokRepository; // IMPORT BARU
+import com.example.admin.repository.AnggotaKelompokRepository; 
 import com.example.admin.repository.KelasRepository;
-import com.example.admin.repository.KelompokRepository; // IMPORT BARU
+import com.example.admin.repository.KelompokRepository; 
+import com.example.admin.repository.KelompokRepository; 
 import com.example.admin.repository.NilaiMahasiswaRepository;
 import com.example.admin.repository.TugasBesarRepository;
+import com.example.admin.service.RubrikService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity; // IMPORT BARU
+import org.springframework.http.ResponseEntity; 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping; // IMPORT BARU
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam; // IMPORT BARU
-import org.springframework.web.bind.annotation.ResponseBody; // IMPORT BARU
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList; // IMPORT BARU
+import java.util.ArrayList; 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional; // IMPORT BARU
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -51,7 +53,9 @@ public class MahasiswaController {
     @Autowired
     private NilaiMahasiswaRepository nilaiMahasiswaRepository;
 
-    // === INJECT REPOSITORY BARU UNTUK KELOMPOK ===
+    @Autowired
+    private RubrikService rubrikService;
+
     @Autowired 
     private KelompokRepository kelompokRepository;
     
@@ -111,8 +115,12 @@ public class MahasiswaController {
         }
 
         model.addAttribute("tubesActive", tubes);
+        model.addAttribute("tubesActive", tubes);
         Mahasiswa mahasiswa = (Mahasiswa) session.getAttribute("mahasiswa");
         model.addAttribute("mahasiswa", mahasiswa);
+
+        boolean hasRubrik = rubrikService.rubrikExists(idTubes);
+        model.addAttribute("rubrikExists", hasRubrik);
 
         return "deskripsiTubes";
     }
@@ -136,11 +144,7 @@ public class MahasiswaController {
         return "mJadwalNilai";
     }
 
-    // ==========================================
-    // LOGIKA KELOMPOK (FULL BACKEND CONNECTED)
-    // ==========================================
-
-    // 1. Menampilkan Halaman Kelompok dengan Data SQL
+    //ini buat nampilin kelompoknya di halaman kelompok mahasiswa
     @GetMapping("/tubes/{idTubes}/kelompok")
     public String halamanKelompok(@PathVariable Integer idTubes, HttpSession session, Model model) {
         if (!"mahasiswa".equals(session.getAttribute("userRole"))) {
@@ -149,9 +153,14 @@ public class MahasiswaController {
         
         String npm = (String) session.getAttribute("userNpm");
         Mahasiswa mahasiswa = (Mahasiswa) session.getAttribute("mahasiswa");
+        TugasBesar tubes = tugasBesarRepository.findById(idTubes).orElse(null);
+
 
         // Ambil semua kelompok yang tersedia untuk Tugas Besar ini
         List<Kelompok> listKelompokDB = kelompokRepository.findByIdTubes(idTubes);
+        
+        log.info("DEBUG: Mahasiswa mengakses halaman kelompok. ID Tubes: {}, Jumlah Kelompok Ditemukan: {}", idTubes, listKelompokDB.size());
+        
         List<KelompokDisplayDto> displayList = new ArrayList<>();
 
         // Cek user saat ini sedang berada di kelompok mana (untuk auto-checked radio button)
@@ -175,14 +184,13 @@ public class MahasiswaController {
         model.addAttribute("listKelompok", displayList);
         model.addAttribute("idTubes", idTubes);
         model.addAttribute("mahasiswa", mahasiswa);
+        model.addAttribute("tubesActive", tubes);
+
 
         return "kelompok";
     }
 
-    // 2. Proses Save/Pindah Kelompok
-    // ... (kode atas sama)
-
-    // PERBAIKAN 1: Save Kelompok dengan Validasi & Logika Transaksi
+    //ini buat mahasiswa bs pindah2 klompok
     @PostMapping("/tubes/{idTubes}/kelompok/save")
     public String saveKelompok(@PathVariable Integer idTubes, 
                                @RequestParam("selectedGroup") Integer idKelompokBaru,
@@ -190,36 +198,36 @@ public class MahasiswaController {
         
         String npm = (String) session.getAttribute("userNpm");
         
-        // Validasi Session
+        //klo npmnya g ada brarti blom login
         if (npm == null) {
             return "redirect:/login";
         }
 
         try {
-            // Hapus keanggotaan lama user di tubes ini
+            //hapus keanggotaan lama user di tubes ini
             anggotaKelompokRepository.deleteByNpmAndIdTubes(npm, idTubes);
             
-            // Masukkan ke kelompok baru
+            //masukkan ke kelompok baru
             AnggotaKelompok anggotaBaru = new AnggotaKelompok();
             anggotaBaru.setNpm(npm);
             anggotaBaru.setIdKelompok(idKelompokBaru);
             anggotaKelompokRepository.save(anggotaBaru);
             
         } catch (Exception e) {
-            e.printStackTrace(); // Cek console jika error
+            e.printStackTrace();
         }
 
         return "redirect:/mahasiswa/tubes/" + idTubes + "/kelompok";
     }
 
-    // PERBAIKAN 2: API Menggunakan DTO agar data JSON bersih & pasti muncul
+    //udh g dipake harusnya
     @GetMapping("/api/kelompok/{idKelompok}/anggota")
     @ResponseBody
     public ResponseEntity<List<com.example.admin.dto.AnggotaDto>> getAnggotaKelompok(@PathVariable Integer idKelompok) {
         
         List<Mahasiswa> listMahasiswa = anggotaKelompokRepository.findMahasiswaByKelompok(idKelompok);
         
-        // Konversi ke DTO Sederhana (Nama & NPM saja)
+        // Konversi ke DTO
         List<com.example.admin.dto.AnggotaDto> result = new ArrayList<>();
         for (Mahasiswa m : listMahasiswa) {
             result.add(new com.example.admin.dto.AnggotaDto(m.getNama(), m.getNpm()));

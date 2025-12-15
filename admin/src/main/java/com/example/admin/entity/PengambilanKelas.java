@@ -22,7 +22,6 @@ public class PengambilanKelas {
     @JoinColumn(name = "npm", referencedColumnName = "npm", insertable = false, updatable = false)
     private Mahasiswa mahasiswa;
     
-    // Add this relationship
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idkelas", referencedColumnName = "idkelas", insertable = false, updatable = false)
     private Kelas kelas;

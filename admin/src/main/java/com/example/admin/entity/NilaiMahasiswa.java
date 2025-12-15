@@ -26,16 +26,13 @@ public class NilaiMahasiswa {
     @Column(name = "npm")
     private String npm;
     
-    // --- RELASI ---
-    
-    // Relasi ke Nilai Kelompok (Many-to-One)
-    // Ini PENTING untuk query JOIN "Maut" tadi
+    // relasi ke Nilai Kelompok (Many-to-One)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idnilaikelompok", insertable = false, updatable = false)
     @ToString.Exclude
     private NilaiKelompok nilaiKelompok;
     
-    // Relasi ke Mahasiswa (Many-to-One)
+    // relasi ke Mahasiswa (Many-to-One)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "npm", insertable = false, updatable = false)
     @ToString.Exclude

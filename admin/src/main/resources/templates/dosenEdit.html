@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Buat Tugas Besar</title>
+    <link rel="stylesheet" th:href="@{/css/dosenEdit.css}"> 
+    <script type="text/javascript" th:src="@{/js/dosenEdit.js}" defer></script>
+</head>
+<body>
+    <header class="top-navbar">
+        <div class="header-content">
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                <nav class="breadcrumb">
+                    <a th:href="@{/dosen/home}">Dashboard</a>
+                    <span class="divider">/</span>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelas.idKelas})}">Tugas Besar</a>
+                    <span class="divider">/</span>
+                    <span class="current">Buat Tugas</span>
+                </nav>
+            </div>
+            
+            <div class="user-controls">
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
+                <button class="logout-btn">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="horizontal-progress-wrap">
+        <div class="progress-bar-container horizontal">
+            <div class="step active">
+                <span class="step-num">1</span>
+                <span class="step-desc">Detail Tugas</span>
+            </div>
+            <div class="step">
+                <span class="step-num">2</span>
+                <span class="step-desc">Upload Jadwal</span>
+            </div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <span class="step-desc">Upload Rubrik</span>
+            </div>
+            <div class="step">
+                <span class="step-num">4</span>
+                <span class="step-desc">Buat Kelompok</span>
+            </div>
+            <div class="step" data-step="5">
+                <span class="step-num">5</span>
+                <span class="step-desc">Penilaian</span>
+            </div>
+        </div>
+    </div>
+    
+    <main>
+        <div class="content">
+            <div class="class-info-card" style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #0169be;">
+                <h4 style="margin-bottom: 8px; color: #333;">Kelas: <span th:text="${kelas.namaKelas}"></span></h4>
+                <p style="margin-bottom: 5px; color: #666;">Mata Kuliah: <span th:text="${kelas.mataKuliah?.namaMk}"></span></p>
+                <p style="color: #666;">Semester: <span th:text="${kelas.semester}"></span></p>
+            </div>
+            
+            <form class="detail-form-card" 
+                  th:action="${isEditMode} ? @{/dosen/update-tugas} : @{/dosen/save-tugas}" 
+                  method="post">
+                <input type="hidden" name="kelasId" th:value="${kelas.idKelas}">
+                <input type="hidden" name="idTubes" th:if="${isEditMode}" th:value="${tugasBesar.idTubes}">
+                
+                <div class="form-group">
+                    <label for="namaTugas">Nama Tugas<span class="required-icon">*</span> :</label>
+                    <input type="text" id="namaTugas" name="namaTugas" required 
+                           placeholder="Contoh: Tugas Besar 1 - Implementasi Algoritma"
+                           th:value="${isEditMode ? tugasBesar.namaTugas : ''}">
+                </div>
+                
+                <div class="form-group large-textarea">
+                    <label for="deskripsi">Deskripsi :</label>
+                    <textarea id="deskripsi" name="deskripsi" rows="5"
+                              placeholder="Deskripsi detail tentang tugas besar..."
+                              th:text="${isEditMode ? tugasBesar.deskripsi : ''}"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">
+                        <span th:text="${isEditMode ? 'Update & Lanjutkan' : 'Simpan & Lanjutkan'}">Simpan & Lanjutkan</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

@@ -12,12 +12,20 @@ import java.util.List;
 public interface NilaiMahasiswaRepository extends JpaRepository<NilaiMahasiswa, Integer> {
 
     @Query("SELECT new com.example.admin.dto.JadwalNilaiDto(" +
-           "j.deadline, k.namaKegiatan, nm.nilai, nm.keterangan) " +
-           "FROM NilaiMahasiswa nm " +
-           "JOIN nm.nilaiKelompok nk " +   // Join ke Nilai Kelompok
-           "JOIN nk.kegiatan k " +         // Join ke Kegiatan
-           "JOIN k.jadwal j " +            // Join ke Jadwal
-           "WHERE nm.npm = :npm AND j.idTubes = :idTubes")
+           "k.idKegiatan, j.deadline, k.namaKegiatan, " +
+           "(SELECT nm.nilai FROM NilaiMahasiswa nm JOIN nm.nilaiKelompok nk2 WHERE nk2.kegiatan = k AND nm.npm = :npm), " +
+           "(SELECT nm.keterangan FROM NilaiMahasiswa nm JOIN nm.nilaiKelompok nk2 WHERE nk2.kegiatan = k AND nm.npm = :npm)) " +
+           "FROM Kegiatan k " +
+           "JOIN k.jadwal j " +
+           "WHERE j.idTubes = :idTubes " +
+           "ORDER BY j.deadline ASC, k.idKegiatan ASC")
     List<JadwalNilaiDto> findJadwalDanNilai(@Param("npm") String npm, 
                                             @Param("idTubes") Integer idTubes);
+
+       @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    @Query("DELETE FROM NilaiMahasiswa nm WHERE nm.idNilaiKelompok IN :ids")
+    void deleteByIdNilaiKelompokIn(@Param("ids") List<Integer> ids);
+
+    NilaiMahasiswa findByNpmAndIdNilaiKelompok(String npm, Integer idNilaiKelompok);
 }

@@ -19,7 +19,7 @@ public class Kegiatan {
     @Column(name = "idjadwal")
     private Integer idJadwal;
 
-    // Relasi ke Jadwal
+    // relasi ke Jadwal
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idjadwal", insertable = false, updatable = false)
     @ToString.Exclude

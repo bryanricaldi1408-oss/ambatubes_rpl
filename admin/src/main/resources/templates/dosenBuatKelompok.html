@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Dashboard Tugas</title>
+    <link rel="stylesheet" th:href="@{/css/dosenBuatKelompok.css}">
+    <script type="text/javascript" th:src="@{/js/dosenBuatKelompok.js}" defer></script>
+</head>
+
+<body>
+    <header class="top-navbar">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var serverExistingGroups = /*[[${existingGroups}]]*/[];
+            /*]]>*/
+        </script>
+        <div class="header-content">
+
+            <!-- KIRI: Brand + Breadcrumb -->
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+
+                <nav class="breadcrumb">
+                    <a th:href="@{/dosen/home}">Dashboard</a>
+                    <span class="divider">/</span>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelasId})}">Tubes</a>
+                    <span class="divider">/</span>
+                    <span class="current">Buat Kelompok</span>
+
+                </nav>
+            </div>
+
+            <!-- KANAN: User + Logout -->
+            <div class="user-controls">
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
+                <button class="logout-btn">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="horizontal-progress-wrap">
+        <div class="progress-bar-container horizontal">
+            <a th:href="@{/dosen/edit(kelasId=${kelasId}, idTubes=${idTubes})}" class="step">
+                <span class="step-num">1</span>
+                <span class="step-desc">Detail Tugas</span>
+            </a>
+            <a th:href="@{/dosen/upload-jadwal(kelasId=${kelasId}, idTubes=${idTubes})}" class="step">
+                <span class="step-num">2</span>
+                <span class="step-desc">Upload Jadwal</span>
+            </a>
+            <a th:href="@{/dosen/upload-rubrik(kelasId=${kelasId}, idTubes=${idTubes})}" class="step">
+                <span class="step-num">3</span>
+                <span class="step-desc">Upload Rubrik</span>
+            </a>
+            <div class="step active">
+                <span class="step-num">4</span>
+                <span th:text="${hasExistingGroups} ? 'Kelompok' : 'Buat Kelompok'" class="step-desc">Buat
+                    Kelompok</span>
+            </div>
+            <a th:href="@{/dosen/penilaian(kelasId=${kelasId}, idTubes=${idTubes})}" class="step" data-step="5">
+                <span class="step-num">5</span>
+                <span class="step-desc">Penilaian</span>
+            </a>
+        </div>
+    </div>
+    <main>
+        <div class="content">
+            <div class="page-title-container">
+                <h1 class="page-title">Buat Kelompok</h1>
+            </div>
+
+            <form class="detail-form-card" id="kelompokForm" th:unless="${hasExistingGroups}">
+                <div class="form-group">
+                    <label for="jumlahGrup">Jumlah Grup :</label>
+                    <input type="text" id="jumlahGrup" name="jumlahGrup" required>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="jumlahAnggota">Jumlah Anggota :</label>
+                    <input type="text" id="jumlahAnggota" name="jumlahAnggota" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Metode Pembuatan:</label>
+                    <div style="display: flex; gap: 20px; margin-left:30px; margin-top: 15px; margin-bottom: 20px;">
+                        <label style="font-weight: normal; display: flex; align-items: center; gap: 8px;">
+                            <input type="radio" name="generationMode" value="auto" checked>
+                            Generate Otomatis (Acak)
+                        </label>
+                        <label style="font-weight: normal; display: flex; align-items: center; gap: 8px;">
+                            <input type="radio" name="generationMode" value="empty">
+                            Buat Tabel Kosong
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="buat-kelompok-btn">Buat Kelompok</button>
+                </div>
+
+            </form>
+
+            <div id="tabelContainer" th:style="${hasExistingGroups} ? 'display: block;' : 'display: none;'">
+                <div class="table-title-container" th:unless="${hasExistingGroups}">
+                    <h2 class="table-title">Kelompok</h2>
+                </div>
+                <div class="table-card">
+                    <table class="kelompok-table" id="kelompokTable">
+                        <thead>
+                            <tr>
+                                <th>Kelompok</th>
+                                <th>Jumlah Anggota</th>
+                                <th>Anggota</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data kelompok akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="action-container">
+                    <button type="button" class="selesai-btn" id="selesaiBtn">Selesai</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="popup-overlay" id="editPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2 class="popup-title">Edit Anggota Kelompok <span id="popupGroupName"></span></h2>
+                <button class="close-btn" id="closePopup">&times;</button>
+            </div>
+            <!-- <div class="popup-body">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>NPM</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popupTableBody">
+                         Data anggota akan diisi oleh JavaScript 
+                    </tbody>
+                </table>
+            </div> -->
+
+            <div class="popup-body">
+                <table class="members-table">
+                    <thead>
+                    </thead>
+                    <tbody id="popupTableBody">
+                    </tbody>
+                </table>
+
+                <div class="search-member-container" id="searchMemberContainer" style="margin-top: 20px;">
+                    <h3
+                        style="font-family: 'nunitoBold'; font-size: 16px; margin-bottom: 10px; color: var(--primary-color);">
+                        Tambahkan Anggota Baru:</h3>
+                    <input type="text" id="memberSearchInput" placeholder="Cari Nama atau NPM..."
+                        class="new-member-name" style="width: 100%;" />
+
+                    <div id="searchResults" class="search-results-list">
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="tambah-anggota-btn" id="tambahAnggotaBtn">Tambahkan Anggota</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

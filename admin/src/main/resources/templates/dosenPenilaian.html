@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMBaTuBes - Penilaian</title>
+    <link rel="stylesheet" th:href="@{/css/dosenPenilaian.css}">
+    <link rel="stylesheet" th:href="@{/css/uploadJadwal.css}">
+    <script type="text/javascript" th:src="@{/js/dosenPenilaian.js}" defer></script>
+</head>
+<body>
+    <header class="top-navbar">
+        <div class="header-content">
+            <div class="brand">
+                <span class="logo-text">AMBaTuBes</span>
+                <span class="separator">|</span>
+                <nav class="breadcrumb">
+                    <a th:href="@{/dosen/tubes(kelasId=${kelasId})}">Dashboard</a>
+                    <span class="divider">/</span>
+                    <a th:href="@{/dosen/tubes(kelasId=${kelasId})}">Tubes</a>
+                    <span class="divider">/</span>
+                    <span class="current">Penilaian</span>
+                </nav>
+            </div>
+
+            <div class="user-controls">
+                <div class="user-initials" th:text="${#strings.substring(dosen.nama, 0, 2).toUpperCase()}">PP</div>
+                <button class="logout-btn">
+                    <img th:src="@{/icons/exit.png}" alt="Logout" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="horizontal-progress-wrap">
+        <div class="progress-bar-container horizontal">
+            <div class="step" data-step="1">
+                <span class="step-num">1</span>
+                <span class="step-desc">Detail Tugas</span>
+            </div>
+            <div class="step" data-step="2">
+                <span class="step-num">2</span>
+                <span class="step-desc">Upload Jadwal</span>
+            </div>
+            <div class="step" data-step="3">
+                <span class="step-num">3</span>
+                <span class="step-desc">Upload Rubrik</span>
+            </div>
+            <div class="step" data-step="4">
+                <span class="step-num">4</span>
+                <span class="step-desc">Buat Kelompok</span>
+            </div>
+            <div class="step active" data-step="5">
+                <span class="step-num">5</span>
+                <span class="step-desc">Penilaian</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="content">
+            <div class="page-title-container">
+                <h1 class="page-title">Penilaian</h1>
+            </div>
+
+            <!-- Tabel Deadline -->
+            <div class="deadline-section">
+                <div class="table-title-container">
+                    <h2 class="table-title">Deadline</h2>
+                </div>
+                <div class="table-card">
+                    <table class="jadwal-table deadline-table">
+                        <thead>
+                            <tr>
+                                <th>Deadline</th>
+                                <th>Kegiatan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="jadwal : ${jadwalList}">
+                                <td th:text="${#temporals.format(jadwal.deadline, 'dd MMM yyyy HH:mm')}">Deadline</td>
+                                <td th:text="${jadwal.namaKegiatan}">Kegiatan</td>
+                                <td>
+                                    <button class="input-nilai-btn" type="button" th:attr="data-idkegiatan=${jadwal.idKegiatan}">Input Nilai</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabel Kelompok untuk Penilaian -->
+            <div class="kelompok-penilaian-section">
+                <div class="table-title-container">
+                    <h2 class="table-title">Kelompok</h2>
+                </div>
+                <div class="table-card">
+                    <table class="kelompok-penilaian-table">
+                        <thead>
+                            <tr>
+                                <th>Kelompok</th>
+                                <!-- Generate a header column for each jadwal/kegiatan -->
+                                <th th:each="jadwal : ${jadwalList}" th:text="${jadwal.namaKegiatan}">Kegiatan</th>
+                                <th>Nilai Akhir</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="k : ${kelompokList}" th:attr="data-kelompok=${k.namaKelompok}">
+                                <td class="kelompok-nama" th:text="${'Kelompok ' + k.namaKelompok}">Kelompok</td>
+                                <!-- one cell per kegiatan; mark with data-idkegiatan for JS population -->
+                                <td class="nilai-cell" th:each="jadwal : ${jadwalList}" th:attr="data-idkegiatan=${jadwal.idKegiatan}">-</td>
+                                <td class="nilai-akhir">-</td>
+                                <td>
+                                    <button class="detail-nilai-btn" type="button" th:attr="data-kelompok=${k.namaKelompok}">Detail Nilai</button>
+                                </td>
+                            </tr>
+                            <!-- kelompok rows are rendered from ${kelompokList} only -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Popup Input Nilai -->
+    <div class="popup-overlay" id="inputNilaiPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2 class="popup-title">Input Nilai - <span id="popupKegiatan"></span></h2>
+                <button class="close-btn" id="closeNilaiPopup">&times;</button>
+            </div>
+            <div class="popup-body">
+                <!-- Pilihan Tipe Input -->
+                <div class="tipe-input-section">
+                    <label class="tipe-input-label">Tipe Input:</label>
+                    <div class="tipe-input-options">
+                        <label class="radio-option">
+                            <input type="radio" name="tipeInput" value="kelompok" checked>
+                            <span class="radio-custom"></span>
+                            Nilai Kelompok
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="tipeInput" value="perorangan">
+                            <span class="radio-custom"></span>
+                            Nilai Perorangan
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Form Input Nilai Kelompok -->
+                <div class="nilai-form" id="formKelompok">
+                    <div class="form-group">
+                        <label for="kelompokSelect">Pilih Kelompok:</label>
+                        <select id="kelompokSelect" class="form-select">
+                            <option value="">-- Pilih Kelompok --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNilaiKelompok">Nilai Kelompok:</label>
+                        <input type="number" id="inputNilaiKelompok" class="form-input" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <!-- no group notes: kelompok doesn't have catatan, only perorangan -->
+                </div>
+
+                <!-- Form Input Nilai Perorangan -->
+                <div class="nilai-form" id="formPerorangan" style="display: none;">
+                    <div class="form-group">
+                        <label for="kelompokSelectPerorangan">Pilih Kelompok:</label>
+                        <select id="kelompokSelectPerorangan" class="form-select">
+                            <option value="">-- Pilih Kelompok --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mahasiswaSelect">Pilih Mahasiswa:</label>
+                        <select id="mahasiswaSelect" class="form-select" disabled>
+                            <option value="">-- Pilih Mahasiswa --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNilaiPerorangan">Nilai Individu:</label>
+                        <input type="number" id="inputNilaiPerorangan" class="form-input" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label for="catatanNilaiPerorangan">Catatan:</label>
+                        <textarea id="catatanNilaiPerorangan" class="form-textarea" placeholder="Tambahkan catatan untuk nilai individu..." rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="batal-btn" id="batalInputBtn">Batal</button>
+                <button class="simpan-btn" id="simpanNilaiBtn">Simpan Nilai</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Detail Nilai Kelompok -->
+    <div class="popup-overlay" id="detailNilaiPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2 class="popup-title">Detail Nilai - <span id="popupKelompokNama"></span></h2>
+                <button class="close-btn" id="closeDetailPopup">&times;</button>
+            </div>
+            
+            <div class="popup-body">
+                <!-- Filter Kegiatan -->
+                <div class="tipe-catatan-section"> 
+                    <div class="form-group">
+                        <label for="filterKegiatanDetail">Filter Kegiatan:</label>
+                        <select id="filterKegiatanDetail" class="form-select">
+                            <!-- Options akan diisi oleh JavaScript -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="detail-nilai-list" id="detailNilaiList">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </div>
+            </div>
+            
+            <div class="popup-footer">
+                <button class="tutup-btn" id="tutupDetailBtn">Tutup</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

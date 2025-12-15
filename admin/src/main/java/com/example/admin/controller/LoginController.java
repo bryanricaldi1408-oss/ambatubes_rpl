@@ -1,8 +1,10 @@
 package com.example.admin.controller;
 
+import com.example.admin.entity.Dosen;
 import com.example.admin.entity.Mahasiswa;
 // 1. IMPORT SERVICE ADMIN (Sesuaikan package-nya jika perlu)
-import com.example.admin.service.AdminService; 
+import com.example.admin.service.AdminService;
+import com.example.admin.service.DosenService;
 import com.example.admin.service.MahasiswaService;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,13 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 public class LoginController {
 
-    // 2. INJECT KEDUA SERVICE
     private final MahasiswaService mahasiswaService;
-    private final AdminService adminService; // Tambahkan ini
+    private final AdminService adminService;
+    private final DosenService dosenService;
 
+    //ini 2 harusnya disamain aj
     @GetMapping("/")
     public String showLoginPage() {
-        return "login"; // Pakai satu tampilan login saja (login.html)
+        return "login"; 
     }
 
     @GetMapping("/login")
@@ -42,18 +45,33 @@ public class LoginController {
         log.info("Login attempt - Email: {}", email);
         
         try {
-            // === LOGIKA 1: CEK APAKAH DIA ADMIN? ===
-            // Kita cek admin dulu, karena biasanya jumlah admin lebih sedikit
+            //klo dia admin bawa ke admin home
             if (adminService.validateAdmin(email, password)) {
-                // Set session untuk Admin
                 session.setAttribute("userRole", "admin");
                 session.setAttribute("userEmail", email);
                 
                 log.info("Login successful as ADMIN: {}", email);
-                return "redirect:/adminHome"; // Arahkan ke rute AdminController
+                return "redirect:/adminHome";
             }
 
-            // === LOGIKA 2: JIKA BUKAN ADMIN, CEK APAKAH DIA MAHASISWA? ===
+            //klo dosen, dosen home, etc.
+            if (dosenService.validateDosen(email, password)) {
+
+                
+                Dosen dosen = dosenService.findDosenByEmail(email);
+                
+                if (dosen != null) {
+                    session.setAttribute("userRole", "dosen");
+                    session.setAttribute("dosen", dosen);
+                    session.setAttribute("userEmail", email);
+                    session.setAttribute("userNik", dosen.getNik());
+                    
+                    log.info("Login successful as DOSEN: NIK={}, Nama={}", 
+                            dosen.getNik(), dosen.getNama());
+                    return "redirect:/dosen/home";
+                }
+            }
+
             if (mahasiswaService.validateMahasiswa(email, password)) {
                 Mahasiswa mahasiswa = mahasiswaService.findMahasiswaByEmail(email);
                 
@@ -68,7 +86,7 @@ public class LoginController {
                 }
             }
             
-            // === JIKA KEDUANYA GAGAL ===
+            //klo peran ilegal
             model.addAttribute("error", "Login gagal! Email atau password salah.");
             return "login";
             
@@ -84,6 +102,4 @@ public class LoginController {
         session.invalidate();
         return "redirect:/login";
     }
-
-    
 }

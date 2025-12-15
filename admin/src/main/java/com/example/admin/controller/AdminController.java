@@ -3,7 +3,7 @@ package com.example.admin.controller;
 import com.example.admin.service.KelasService;
 import com.example.admin.service.DatabaseImportService;
 import com.example.admin.service.DosenService;
-import com.example.admin.service.ExcelParserService;
+import com.example.admin.service.ExcelParseKelasService;
 import com.example.admin.service.ImportResult;
 import com.example.admin.service.MahasiswaService;
 import com.example.admin.dto.ClassDisplayDto;
@@ -48,7 +48,7 @@ public class AdminController {
     }
 
     @Autowired
-    private ExcelParserService excelParserService;
+    private ExcelParseKelasService ExcelParseKelasService;
     
     @Autowired
     private DatabaseImportService databaseImportService;
@@ -68,7 +68,7 @@ public class AdminController {
         
         try {
             // Parse Excel file
-            ExcelImportData excelData = excelParserService.parseExcelFile(file);
+            ExcelImportData excelData = ExcelParseKelasService.parseExcelFile(file);
             
             // Import to database
             ImportResult result = databaseImportService.importExcelData(excelData);

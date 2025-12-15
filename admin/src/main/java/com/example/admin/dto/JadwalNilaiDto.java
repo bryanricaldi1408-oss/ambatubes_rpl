@@ -2,13 +2,14 @@ package com.example.admin.dto;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
-import java.time.LocalDateTime; // Sesuaikan dengan tipe data deadline di DB
+import java.time.LocalDateTime; 
 
 @Data
 @AllArgsConstructor
 public class JadwalNilaiDto {
-    private LocalDateTime deadline; // Dari tabel Jadwal
-    private String namaKegiatan;    // Dari tabel Kegiatan
-    private Double nilai;           // Dari tabel Nilai_Mahasiswa
-    private String keterangan;      // Dari tabel Nilai_Mahasiswa
+    private Integer idKegiatan;  
+    private LocalDateTime deadline; 
+    private String namaKegiatan;  
+    private Double nilai;         
+    private String keterangan;
 }
