@@ -189,6 +189,7 @@ public class ExcelParseKelasService {
         }
     }
 
+    //harusnya g kepake krn semua keisi
     private boolean isRowEmpty(Row row) {
         if (row == null) {
             return true;

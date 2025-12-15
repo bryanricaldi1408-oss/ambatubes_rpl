@@ -10,5 +10,5 @@ public class KelompokDisplayDto {
     private String namaKelompok;
     private int jumlahSaatIni;
     private int kapasitasMax;
-    private boolean isSelected; // True jika user login ada di kelompok ini
+    private boolean isSelected; //True lo mahasiswa ada di klompok ini
 }

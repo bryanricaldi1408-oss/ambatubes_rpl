@@ -5,7 +5,7 @@ jadwal.addEventListener('click', () => {
 
 let undut = document.getElementById('rubrik');
 undut.addEventListener('click',( )=>{
-    //MCdownld 
+
 });
 
 let tobrut = document.getElementById('kelompok');

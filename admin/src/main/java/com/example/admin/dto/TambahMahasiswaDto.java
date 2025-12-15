@@ -6,7 +6,4 @@ import lombok.Data;
 public class TambahMahasiswaDto {
     private String npm;
     private String namaLengkap;
-    
-    // You can add validation annotations here later
-    // @NotBlank, @Size, etc.
 }

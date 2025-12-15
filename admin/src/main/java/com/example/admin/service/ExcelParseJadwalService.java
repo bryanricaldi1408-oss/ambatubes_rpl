@@ -32,14 +32,13 @@ public class ExcelParseJadwalService {
     public List<JadwalNilaiDto> parseAndSaveExcel(MultipartFile file, Integer idTubes) throws IOException {
         List<JadwalNilaiDto> parsedData = new ArrayList<>();
         
-        // First, delete existing data for this idTubes
+        //jadwal yang udh ada di delete dulu
         deleteExistingData(idTubes);
         
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             
-            // Skip header row (row index 0)
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
@@ -49,17 +48,17 @@ public class ExcelParseJadwalService {
                 
                 if (deadlineCell == null || kegiatanCell == null) continue;
                 
-                // Parse deadline from Excel cell
+                //ambil value unutk deadline sama nama kegiatannya
                 LocalDateTime deadline = parseDeadlineCell(deadlineCell);
                 String namaKegiatan = kegiatanCell.getStringCellValue().trim();
                 
                 if (namaKegiatan.isEmpty()) continue;
                 
-                // Save to database
+                //simpen db
                 Jadwal savedJadwal = saveJadwal(deadline, idTubes);
                 Kegiatan savedKegiatan = saveKegiatan(namaKegiatan, savedJadwal.getIdJadwal());
 
-                // Add to parsed data DTO (include idKegiatan)
+                //masukin ke dto sekalian
                 parsedData.add(new JadwalNilaiDto(savedKegiatan.getIdKegiatan(), deadline, namaKegiatan, null, null));
             }
             
@@ -72,14 +71,12 @@ public class ExcelParseJadwalService {
     private LocalDateTime parseDeadlineCell(Cell cell) {
         try {
             if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
-                // Excel date format
                 return cell.getDateCellValue().toInstant()
                         .atZone(java.time.ZoneId.systemDefault())
                         .toLocalDateTime();
             } else {
-                // Try parsing as string
                 String dateString = cell.getStringCellValue().trim();
-                // Try multiple date formats
+
                 DateTimeFormatter[] formatters = {
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
                     DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"),
@@ -91,15 +88,12 @@ public class ExcelParseJadwalService {
                     try {
                         return LocalDateTime.parse(dateString, formatter);
                     } catch (Exception e) {
-                        // Try next format
                     }
                 }
                 
-                // If we can't parse, use current time
                 return LocalDateTime.now();
             }
         } catch (Exception e) {
-            // Log error and return current time as fallback
             return LocalDateTime.now();
         }
     }
@@ -120,16 +114,15 @@ public class ExcelParseJadwalService {
     
     @Transactional
     public void deleteExistingData(Integer idTubes) {
-        // Find all jadwal for this tubes
         List<Jadwal> existingJadwal = jadwalRepository.findByIdTubes(idTubes);
         
         if (!existingJadwal.isEmpty()) {
-            // Get all idJadwal
+            //ambil semuanya
             List<Integer> idJadwalList = existingJadwal.stream()
                     .map(Jadwal::getIdJadwal)
                     .toList();
             
-            // Delete kegiatan first (due to foreign key constraint)
+            // Delete kegiatan
             kegiatanRepository.deleteByIdJadwalIn(idJadwalList);
             
             // Delete jadwal
@@ -137,6 +130,7 @@ public class ExcelParseJadwalService {
         }
     }
     
+    //beda ama parse yg diatas, ini gunanya buat nyiapin data tabal di halaman dosen
     public List<JadwalNilaiDto> getParsedDataForTubes(Integer idTubes) {
         List<JadwalNilaiDto> result = new ArrayList<>();
         

@@ -20,16 +20,14 @@ public class AnggotaKelompok {
     @Column(name = "npm")
     private String npm;
 
-    // --- RELASI (PENTING) ---
-
-    // Relasi ke Entity Kelompok (Many-to-One)
-    // Digunakan untuk mengecek kapasitas & idTubes
+    // relasi ke Entity Kelompok (Many-to-One)
+    // buat cek kapasitas & idTubes
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idkelompok", insertable = false, updatable = false)
     @ToString.Exclude
     private Kelompok kelompok;
 
-    // Relasi ke Entity Mahasiswa (Many-to-One)
+    // relasi ke Entity Mahasiswa (Many-to-One)
     // Digunakan untuk menampilkan nama anggota di Modal Show
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "npm", insertable = false, updatable = false)

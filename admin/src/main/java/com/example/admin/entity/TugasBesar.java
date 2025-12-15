@@ -26,7 +26,7 @@ public class TugasBesar {
     @Column(name = "idkelas")
     private Integer idKelas;
 
-    // Relasi balik ke Kelas (Opsional tapi bagus untuk data integrity)
+    // relasi ke Kelas 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idkelas", insertable = false, updatable = false)
     private Kelas kelas;

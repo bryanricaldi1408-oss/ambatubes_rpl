@@ -24,13 +24,13 @@ public class KelompokService {
 
     @Transactional
     public List<Kelompok> generateKelompok(Integer idTubes, Integer jumlahGrup, Integer maxAnggota, boolean isAutoAssign) {
-        // 1. Hapus anggota yang sudah ada untuk tubes ini (bersih-bersih)
+        // 1. Hapus anggota yang sudah ada untuk tubes ini
         anggotaKelompokRepository.deleteByIdTubes(idTubes);
 
-        // 2. Hapus kelompok yang sudah ada untuk tubes ini (bersih-bersih)
+        // 2. Hapus kelompok yang sudah ada untuk tubes ini 
         kelompokRepository.deleteByIdTubes(idTubes);
         
-        // 3. Buat kelompok baru (Empty groups are always created)
+        // 3. Buat kelompok baru 
         List<Kelompok> newGroups = new ArrayList<>();
         char groupName = 'A';
         
@@ -38,7 +38,7 @@ public class KelompokService {
             Kelompok k = new Kelompok();
             k.setIdTubes(idTubes);
             k.setNamaKelompok(String.valueOf(groupName));
-            k.setJumlahAnggota(maxAnggota); // Ini kapasitas max
+            k.setJumlahAnggota(maxAnggota); 
             
             newGroups.add(k);
             groupName++;
@@ -99,7 +99,6 @@ public class KelompokService {
                 
                 if (!assigned) {
                     // All groups are full. Stop assigning.
-                    // Remaining students will be left unassigned.
                     break; 
                 }
             }
@@ -125,7 +124,7 @@ public class KelompokService {
 
     @Transactional
     public void deleteKelompok(Integer idKelompok) {
-        // 1. Hapus Nilai Mahasiswa terkait (via Nilai Kelompok)
+        // 1. Hapus Nilai Mahasiswa terkait
         List<com.example.admin.entity.NilaiKelompok> nilaiKelompokList = nilaiKelompokRepository.findByIdKelompok(idKelompok);
         if (!nilaiKelompokList.isEmpty()) {
             List<Integer> ids = new ArrayList<>();
@@ -138,7 +137,7 @@ public class KelompokService {
         // 2. Hapus Nilai Kelompok
         nilaiKelompokRepository.deleteByIdKelompok(idKelompok);
 
-        // 3. Hapus anggotanya (Cascade)
+        // 3. Hapus anggotanya
         anggotaKelompokRepository.deleteByIdKelompok(idKelompok);
         
         // 4. Hapus kelompoknya

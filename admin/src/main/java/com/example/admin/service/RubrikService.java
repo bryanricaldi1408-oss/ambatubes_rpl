@@ -11,7 +11,6 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class RubrikService {
     
-    // Define where to store uploaded files
     private final Path uploadDir = Paths.get("src/main/resources/static/uploads/rubrik");
     
     public RubrikService() {
@@ -24,8 +23,6 @@ public class RubrikService {
     }
     
     public String storeFile(MultipartFile file, Integer idTubes) throws IOException {
-        // Generate filename
-        // Removed the underscore before extension and fixed extension handling
         String filename = "rubrik_" + idTubes + ".pdf";
                 
         // Copy file to upload directory

@@ -9,12 +9,9 @@ import com.example.admin.service.KelasService;
 import com.example.admin.service.RubrikService;
 import com.example.admin.service.TugasBesarService;
 import com.example.admin.service.ExcelParseJadwalService;
-import com.example.admin.repository.AnggotaKelompokRepository;
-import com.example.admin.repository.PengambilanKelasRepository;
 import com.example.admin.entity.PengambilanKelas;
 import com.example.admin.entity.AnggotaKelompok;
 import org.springframework.web.bind.annotation.RequestBody;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +34,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class DosenEditController {
     
-    private final DosenService dosenService;
     private final RubrikService rubrikService;
     private final KelasService kelasService;
     private final TugasBesarService tugasBesarService;
@@ -49,7 +45,7 @@ public class DosenEditController {
     private final com.example.admin.repository.NilaiKelompokRepository nilaiKelompokRepository;
     private final com.example.admin.repository.NilaiMahasiswaRepository nilaiMahasiswaRepository;
 
-    // ==================== STEP 1: DAFTAR TUGAS ====================
+    // ===============step 1:bagian daftar tubes===============
     @GetMapping("/tubes")
     public String listTugas(@RequestParam Integer kelasId,
                           HttpSession session,
@@ -67,9 +63,9 @@ public class DosenEditController {
             model.addAttribute("dosen", dosen);
             model.addAttribute("kelas", kelas);
             model.addAttribute("kelasId", kelasId);
-            model.addAttribute("listTubes", listTubes); // Add this line
+            model.addAttribute("listTubes", listTubes); 
             
-            return "dosenTubes";  // Render dosenTubes.html
+            return "dosenTubes";
             
         } catch (Exception e) {
             model.addAttribute("error", "Kelas tidak ditemukan");
@@ -77,10 +73,10 @@ public class DosenEditController {
         }
     }
     
-    // ==================== STEP 1: FORM BUAT TUGAS (NEW/EDIT) ====================
+    //bikin tubes baru dengan nama dan desk
     @GetMapping("/edit")
     public String formTugas(@RequestParam Integer kelasId,
-                          @RequestParam(required = false) Integer idTubes, // Opsional untuk edit
+                          @RequestParam(required = false) Integer idTubes,
                           HttpSession session,
                           Model model) {
         
@@ -95,7 +91,6 @@ public class DosenEditController {
             model.addAttribute("kelas", kelas);
             model.addAttribute("kelasId", kelasId);
             
-            // Jika ada idTubes, berarti mode EDIT
             if (idTubes != null) {
                 TugasBesar tugasBesar = tugasBesarService.getTugasById(idTubes);
                 model.addAttribute("tugasBesar", tugasBesar);
@@ -105,7 +100,7 @@ public class DosenEditController {
                 model.addAttribute("isEditMode", false);
             }
             
-            return "dosenEdit";  // Render dosenEdit.html
+            return "dosenEdit";
             
         } catch (Exception e) {
             model.addAttribute("error", "Kelas tidak ditemukan");
@@ -113,7 +108,7 @@ public class DosenEditController {
         }
     }
     
-    // ==================== SIMPAN TUGAS BARU KE DATABASE ====================
+    // tugasnya simpen dulu
     @PostMapping("/save-tugas")
     public String saveTugas(@RequestParam Integer kelasId,
                         @RequestParam String namaTugas,
@@ -127,7 +122,6 @@ public class DosenEditController {
         }
         
         try {
-            // Simpan ke database
             TugasBesar tugas = tugasBesarService.createTugasBesar(kelasId, namaTugas, deskripsi);
             
             if (tugas == null || tugas.getIdTubes() == null) {
@@ -135,7 +129,6 @@ public class DosenEditController {
                 return "redirect:/dosen/edit?kelasId=" + kelasId;
             }
             
-            // Redirect ke step 2 dengan parameter
             ra.addFlashAttribute("success", "Tugas berhasil disimpan!");
             return "redirect:/dosen/upload-jadwal?kelasId=" + kelasId + "&idTubes=" + tugas.getIdTubes();
             
@@ -145,7 +138,7 @@ public class DosenEditController {
         }
     }
     
-    // ==================== UPDATE TUGAS YANG SUDAH ADA ====================
+    //klo mau diupdate sebelom ke step 2
     @PostMapping("/update-tugas")
     public String updateTugas(@RequestParam Integer kelasId,
                            @RequestParam Integer idTubes,
@@ -154,11 +147,9 @@ public class DosenEditController {
                            RedirectAttributes ra) {
         
         try {
-            // Update tugas yang sudah ada
             tugasBesarService.updateTugasBesar(idTubes, namaTugas, deskripsi);
             
             ra.addFlashAttribute("success", "Tugas berhasil diupdate!");
-            // Kembali ke halaman yang sama atau ke step berikutnya
             return "redirect:/dosen/edit?kelasId=" + kelasId + "&idTubes=" + idTubes;
             
         } catch (Exception e) {
@@ -167,7 +158,7 @@ public class DosenEditController {
         }
     }
     
-    // ==================== STEP 2: UPLOAD JADWAL ====================
+    //================stef 2: upload jadwal================
     @GetMapping("/upload-jadwal")
     public String showUploadJadwal(@RequestParam Integer kelasId,
                                 @RequestParam Integer idTubes,
@@ -182,17 +173,16 @@ public class DosenEditController {
         try {
             Kelas kelas = kelasService.findById(kelasId);
             TugasBesar tugasBesar = tugasBesarService.getTugasById(idTubes);
+            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
             
             model.addAttribute("dosen", dosen);
             model.addAttribute("kelas", kelas);
             model.addAttribute("tugasBesar", tugasBesar);
             model.addAttribute("idTubes", idTubes);
             model.addAttribute("kelasId", kelasId);
-            // For enabling/disabling penilaian step
-            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
             model.addAttribute("kelompokList", kelompokList);
             
-            return "uploadJadwal"; // template: uploadJadwal.html
+            return "uploadJadwal";
             
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -240,13 +230,13 @@ public class DosenEditController {
                 return response;
             }
             
-            // Parse and save Excel data
+            //parse excelnya
             List<JadwalNilaiDto> parsedData = ExcelParseJadwalService.parseAndSaveExcel(jadwalFile, idTubes);
             
-            // Store in session for potential page refresh
+            //masukin ke session
             session.setAttribute("parsedJadwalData_" + idTubes, parsedData);
             
-            // Format dates for display
+            //perlu format tertentu nanti pas buat tabelnya
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             List<Map<String, Object>> formattedData = parsedData.stream()
                 .map(dto -> {
@@ -267,7 +257,7 @@ public class DosenEditController {
             return response;
             
         } catch (Exception e) {
-            e.printStackTrace(); // For debugging
+            e.printStackTrace();
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
             return response;
@@ -288,10 +278,10 @@ public class DosenEditController {
         }
         
         try {
-            // Delete the data from database
+            //ilangin dr db
             ExcelParseJadwalService.deleteExistingData(idTubes);
             
-            // Remove from session
+            //ilangin dr sessionnya
             session.removeAttribute("parsedJadwalData_" + idTubes);
             
             response.put("success", true);
@@ -304,6 +294,7 @@ public class DosenEditController {
         }
     }
 
+    //di check ada jadwalnya udh ad blom biar masih ngasi liat kalo misalnya keluar
     @GetMapping("/check-existing-jadwal")
     @ResponseBody
     public Map<String, Object> checkExistingJadwal(@RequestParam Integer idTubes, HttpSession session) {
@@ -316,7 +307,7 @@ public class DosenEditController {
         }
         
         try {
-            // Check if there's data in session first
+            // ada di session g
             String sessionKey = "parsedJadwalData_" + idTubes;
             List<JadwalNilaiDto> sessionData = (List<JadwalNilaiDto>) session.getAttribute(sessionKey);
             
@@ -339,7 +330,7 @@ public class DosenEditController {
                 return response;
             }
             
-            // If no session data, check database
+            // klo g ada cek database
             List<JadwalNilaiDto> dbData = ExcelParseJadwalService.getParsedDataForTubes(idTubes);
             if (!dbData.isEmpty()) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
@@ -370,7 +361,7 @@ public class DosenEditController {
         }
     }
     
-    // ==================== STEP 3: UPLOAD RUBRIK ====================
+    // ==================== step 3: upload rubrik ====================
     @GetMapping("/upload-rubrik")
     public String showUploadRubrik(@RequestParam Integer kelasId,
                                 @RequestParam Integer idTubes,
@@ -385,17 +376,16 @@ public class DosenEditController {
         try {
             Kelas kelas = kelasService.findById(kelasId);
             TugasBesar tugasBesar = tugasBesarService.getTugasById(idTubes);
+            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
             
             model.addAttribute("dosen", dosen);
             model.addAttribute("kelas", kelas);
             model.addAttribute("tugasBesar", tugasBesar);
             model.addAttribute("idTubes", idTubes);
             model.addAttribute("kelasId", kelasId);
-            // For enabling/disabling penilaian step
-            List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
             model.addAttribute("kelompokList", kelompokList);
             
-            return "uploadRubrik"; // template: uploadRubrik.html
+            return "uploadRubrik"; 
             
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -421,7 +411,7 @@ public class DosenEditController {
         }
         
         try {
-            // Basic validations
+            //mirip2 kek upload excel lah
             if (rubrikFile.isEmpty()) {
                 response.put("success", false);
                 response.put("message", "File tidak boleh kosong");
@@ -435,16 +425,16 @@ public class DosenEditController {
                 return response;
             }
             
-            if (rubrikFile.getSize() > 10 * 1024 * 1024) { // 10MB
+            if (rubrikFile.getSize() > 10 * 1024 * 1024) { 
                 response.put("success", false);
                 response.put("message", "Ukuran file maksimal 10MB");
                 return response;
             }
             
-            // Store file - FIXED: Use instance method
+            //method untuk nyimpen di folder static/uploads
             String filePath = rubrikService.storeFile(rubrikFile, idTubes);
             
-            // Store file path in session for potential use
+            //simpen seesion
             session.setAttribute("rubrikFilePath_" + idTubes, filePath);
             
             response.put("success", true);
@@ -454,14 +444,14 @@ public class DosenEditController {
             return response;
             
         } catch (Exception e) {
-            e.printStackTrace(); // Add this for debugging
+            e.printStackTrace();
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
             return response;
         }
     }
     
-    // ==================== STEP 4: BUAT KELOMPOK ====================
+    // ==================== step 4 buat kelompok ====================
     @GetMapping("/buat-kelompok")
     public String showBuatKelompok(@RequestParam Integer kelasId,
                                 @RequestParam Integer idTubes,
@@ -476,28 +466,24 @@ public class DosenEditController {
         try {
             Kelas kelas = kelasService.findById(kelasId);
             TugasBesar tugasBesar = tugasBesarService.getTugasById(idTubes);
-            
-            // Ambil daftar mahasiswa di kelas (jika ada service)
-            // List<Mahasiswa> mahasiswaList = mahasiswaService.getByKelasId(kelasId);
-            
+                    
             model.addAttribute("dosen", dosen);
             model.addAttribute("kelas", kelas);
             model.addAttribute("tugasBesar", tugasBesar);
             model.addAttribute("idTubes", idTubes);
             model.addAttribute("kelasId", kelasId);
-            // model.addAttribute("mahasiswaList", mahasiswaList);
             
-            // Add existing groups to model (FORMATTED FOR JS)
+            //klompok yg udh kebentuk masukin tbael
             List<com.example.admin.entity.Kelompok> groups = kelompokService.getByTubesId(idTubes);
             List<Map<String, Object>> formattedGroups = new ArrayList<>();
             
             for (com.example.admin.entity.Kelompok k : groups) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("id", k.getIdKelompok()); // Add ID for invalidation/editing
+                map.put("id", k.getIdKelompok());
                 map.put("nama", "Kelompok " + k.getNamaKelompok());
                 map.put("maxAnggota", k.getJumlahAnggota());
                 
-                // Fetch members
+                //ambil anggotanya siapa aj
                 List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(k.getIdKelompok());
                 map.put("jumlahAnggota", members.size());
                 
@@ -516,7 +502,7 @@ public class DosenEditController {
             model.addAttribute("existingGroups", formattedGroups);
             model.addAttribute("hasExistingGroups", !formattedGroups.isEmpty());
             
-            return "dosenBuatKelompok"; // template: dosenBuatKelompok.html
+            return "dosenBuatKelompok";
             
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -544,16 +530,14 @@ public class DosenEditController {
         }
         
         try {
-            // Generate kelompok using service
+            //bikin klompok
             List<com.example.admin.entity.Kelompok> groups = kelompokService.generateKelompok(idTubes, jumlahGrup, jumlahAnggota, isAutoAssign);
-            
-            // Format response matching frontend expectation
             List<Map<String, Object>> groupsData = new ArrayList<>();
             
             for (com.example.admin.entity.Kelompok g : groups) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("nama", "Kelompok " + g.getNamaKelompok());
-                map.put("id", g.getIdKelompok()); // Add ID
+                map.put("id", g.getIdKelompok());
                 map.put("maxAnggota", g.getJumlahAnggota());
                 
                 // Fetch members for this group
@@ -585,10 +569,126 @@ public class DosenEditController {
         }
     }
 
+        //buat tambah member ke kelompok
+    @PostMapping("/kelompok/add-member")
+    @ResponseBody
+    public Map<String, Object> addMember(@RequestParam String npm, @RequestParam Integer idKelompok) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            com.example.admin.entity.Kelompok kelompok = kelompokService.findById(idKelompok);
+            if (kelompok == null) {
+                response.put("success", false);
+                response.put("message", "Kelompok tidak ditemukan.");
+                return response;
+            }
+            //cek udh penuh blom kalo udh g tambahin
+            int currentMembers = anggotaKelompokRepository.countAnggotaByKelompok(idKelompok);
+            if (currentMembers >= kelompok.getJumlahAnggota()) {
+                response.put("success", false);
+                response.put("message", "Gagal: Kelompok sudah penuh (Max: " + kelompok.getJumlahAnggota() + ").");
+                return response;
+            }
 
+            //klo udh tambah simpen
+            AnggotaKelompok newMember = new AnggotaKelompok();
+            newMember.setIdKelompok(idKelompok);
+            newMember.setNpm(npm);
+            anggotaKelompokRepository.save(newMember);
+            
+            response.put("success", true);
+            response.put("message", "Anggota berhasil ditambahkan.");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+        }
+        return response;
+    }
+
+        //klo udh selesai masalah klompoknya bakal di redirect ke halaman selanjutnya
+    @PostMapping("/selesai-kelompok")
+    @ResponseBody
+    public Map<String, Object> selesaiKelompok(@RequestParam Integer kelasId,
+                                                @RequestParam Integer idTubes) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Konfigurasi kelompok selesai.");
+        response.put("redirect", "/dosen/edit?kelasId=" + kelasId + "&idTubes=" + idTubes);
+        return response;
+    }
+
+    //ngilangin member dr klompok
+    @PostMapping("/kelompok/remove-member")
+    @ResponseBody
+    public Map<String, Object> removeMember(@RequestParam String npm, @RequestParam Integer idKelompok) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            anggotaKelompokRepository.deleteByNpmAndIdKelompok(npm, idKelompok);
+            response.put("success", true);
+            response.put("message", "Anggota berhasil dihapus.");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Gagal menghapus: " + e.getMessage());
+        }
+        return response;
+    }
+
+    //method buat cari anggota yg blom masuk klompok
+    @GetMapping("/kelompok/available-students")
+    @ResponseBody
+    public List<Map<String, String>> getAvailableStudents(@RequestParam Integer idTubes, @RequestParam Integer kelasId) {
+        //cari anggota di kelas itu
+        List<PengambilanKelas> allStudentsInClass = pengambilanKelasRepository.findByKelasWithMahasiswa(kelasId);
+        
+        //cari anggota yg udh di kelompok
+        List<com.example.admin.entity.Kelompok> groups = kelompokService.getByTubesId(idTubes);
+        Set<String> studentsInGroups = new HashSet<>();
+        for(com.example.admin.entity.Kelompok k : groups) {
+            List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(k.getIdKelompok());
+            for(com.example.admin.entity.Mahasiswa m : members) {
+                studentsInGroups.add(m.getNpm());
+            }
+        }
+        
+        //return yg blom masuk
+        List<Map<String, String>> available = new ArrayList<>();
+        for(PengambilanKelas pk : allStudentsInClass) {
+            if(!studentsInGroups.contains(pk.getMahasiswa().getNpm())) {
+                Map<String, String> s = new HashMap<>();
+                s.put("npm", pk.getMahasiswa().getNpm());
+                s.put("name", pk.getMahasiswa().getNama());
+                available.add(s);
+            }
+        }
+        return available;
+    }
+
+        //delete kelompok klo dosen salah input
+    @DeleteMapping("/delete-kelompok/{id}")
+    @ResponseBody
+    public Map<String, Object> deleteKelompok(@PathVariable Integer id, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Dosen dosen = (Dosen) session.getAttribute("dosen");
+        
+        if (dosen == null) {
+            response.put("success", false);
+            response.put("message", "Session expired");
+            return response;
+        }
+
+        try {
+            kelompokService.deleteKelompok(id);
+            response.put("success", true);
+            response.put("message", "Kelompok berhasil dihapus");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Gagal menghapus kelompok: " + e.getMessage());
+        }
+        
+        return response;
+    }
 
     
-    // ==================== STEP 5: PENILAIAN ====================
+    // ==================== step 5: penilaian ====================
     @GetMapping("/penilaian")
     public String showPenilaian(@RequestParam Integer kelasId,
                              @RequestParam Integer idTubes,
@@ -604,9 +704,9 @@ public class DosenEditController {
             Kelas kelas = kelasService.findById(kelasId);
             TugasBesar tugasBesar = tugasBesarService.getTugasById(idTubes);
             
-            // Ambil data kelompok untuk tugas ini
+            // Ambil data kelompok
             List<com.example.admin.entity.Kelompok> kelompokList = kelompokService.getByTubesId(idTubes);
-            // Ambil data jadwal/kegiatan untuk tugas ini
+            // Ambil data jadwal/kegiatan 
             List<com.example.admin.dto.JadwalNilaiDto> jadwalList = ExcelParseJadwalService.getParsedDataForTubes(idTubes);
 
             model.addAttribute("dosen", dosen);
@@ -617,7 +717,7 @@ public class DosenEditController {
             model.addAttribute("kelompokList", kelompokList);
             model.addAttribute("jadwalList", jadwalList);
             
-            return "dosenPenilaian"; // template: dosenPenilaian.html
+            return "dosenPenilaian";
             
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -625,6 +725,7 @@ public class DosenEditController {
         }
     }
     
+    //nilainya disimpen klo udh dikasi
     @PostMapping("/simpan-nilai")
     @ResponseBody
     public Map<String, Object> simpanNilai(@RequestBody Map<String, Object> payload,
@@ -641,7 +742,6 @@ public class DosenEditController {
         }
         
         try {
-            // Extract idTubes / kelasId and nilaiData from JSON body
             Integer idTubes = null;
             Integer kelasId = null;
 
@@ -680,65 +780,9 @@ public class DosenEditController {
         }
     }
 
-    @PostMapping("/selesai-kelompok")
-    @ResponseBody
-    public Map<String, Object> selesaiKelompok(@RequestParam Integer kelasId,
-                                                @RequestParam Integer idTubes) {
-        Map<String, Object> response = new HashMap<>();
-        // Logic to finalize groups (can be empty if just redirecting)
-        // For now, just redirect to sorting/penilaian page
-        response.put("success", true);
-        response.put("message", "Konfigurasi kelompok selesai.");
-        response.put("redirect", "/dosen/edit?kelasId=" + kelasId + "&idTubes=" + idTubes); // Or next step
-        return response;
-    }
 
-    // --- API FOR EDITING GROUPS ---
 
-    @PostMapping("/kelompok/remove-member")
-    @ResponseBody
-    public Map<String, Object> removeMember(@RequestParam String npm, @RequestParam Integer idKelompok) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            anggotaKelompokRepository.deleteByNpmAndIdKelompok(npm, idKelompok);
-            response.put("success", true);
-            response.put("message", "Anggota berhasil dihapus.");
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Gagal menghapus: " + e.getMessage());
-        }
-        return response;
-    }
-
-    @GetMapping("/kelompok/available-students")
-    @ResponseBody
-    public List<Map<String, String>> getAvailableStudents(@RequestParam Integer idTubes, @RequestParam Integer kelasId) {
-        // 1. Get all students in class
-        List<PengambilanKelas> allStudentsInClass = pengambilanKelasRepository.findByKelasWithMahasiswa(kelasId);
-        
-        // 2. Get students already in groups for this tubes
-        List<com.example.admin.entity.Kelompok> groups = kelompokService.getByTubesId(idTubes);
-        Set<String> studentsInGroups = new HashSet<>();
-        for(com.example.admin.entity.Kelompok k : groups) {
-            List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(k.getIdKelompok());
-            for(com.example.admin.entity.Mahasiswa m : members) {
-                studentsInGroups.add(m.getNpm());
-            }
-        }
-        
-        // 3. Filter
-        List<Map<String, String>> available = new ArrayList<>();
-        for(PengambilanKelas pk : allStudentsInClass) {
-            if(!studentsInGroups.contains(pk.getMahasiswa().getNpm())) {
-                Map<String, String> s = new HashMap<>();
-                s.put("npm", pk.getMahasiswa().getNpm());
-                s.put("name", pk.getMahasiswa().getNama());
-                available.add(s);
-            }
-        }
-        return available;
-    }
-
+    //ngasi nilai kelompok
     @GetMapping("/penilaian/kelompok-nilai")
     @ResponseBody
     public List<Map<String, Object>> getKelompokNilai(@RequestParam Integer idTubes,
@@ -746,16 +790,16 @@ public class DosenEditController {
                                                       @RequestParam String namaKelompok) {
         List<Map<String, Object>> result = new ArrayList<>();
 
-        // Find kelompok
+        //dapetin dulu klompoknnya
         com.example.admin.entity.Kelompok kelompok = kelompokService.findByIdTubesAndNama(idTubes, namaKelompok);
         if (kelompok == null) {
             return result;
         }
 
-        // Find nilaiKelompok record for this kelompok+kegiatan
+        //udd pernah ada nilainya blom
         com.example.admin.entity.NilaiKelompok nk = nilaiKelompokRepository.findByIdKelompokAndIdKegiatan(kelompok.getIdKelompok(), idKegiatan);
 
-        // Fetch members
+        //ambil anggotanya
         List<com.example.admin.entity.Mahasiswa> members = anggotaKelompokRepository.findMahasiswaByKelompok(kelompok.getIdKelompok());
         for (com.example.admin.entity.Mahasiswa m : members) {
             Map<String, Object> map = new HashMap<>();
@@ -778,7 +822,6 @@ public class DosenEditController {
 
             map.put("nilai", nilai);
             map.put("keterangan", keterangan == null ? "" : keterangan);
-            // Include group-level nilai/keterangan so frontend can populate kelompok table cells easily
             map.put("groupNilai", groupNilai);
             map.put("groupKeterangan", groupKeterangan == null ? "" : groupKeterangan);
             result.add(map);
@@ -786,43 +829,8 @@ public class DosenEditController {
 
         return result;
     }
-
-    @PostMapping("/kelompok/add-member")
-    @ResponseBody
-    public Map<String, Object> addMember(@RequestParam String npm, @RequestParam Integer idKelompok) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            // 1. Cek kapasitas kelompok
-            com.example.admin.entity.Kelompok kelompok = kelompokService.findById(idKelompok);
-            if (kelompok == null) {
-                response.put("success", false);
-                response.put("message", "Kelompok tidak ditemukan.");
-                return response;
-            }
-
-            int currentMembers = anggotaKelompokRepository.countAnggotaByKelompok(idKelompok);
-            if (currentMembers >= kelompok.getJumlahAnggota()) {
-                response.put("success", false);
-                response.put("message", "Gagal: Kelompok sudah penuh (Max: " + kelompok.getJumlahAnggota() + ").");
-                return response;
-            }
-
-            // 2. Simpan anggota baru
-            AnggotaKelompok newMember = new AnggotaKelompok();
-            newMember.setIdKelompok(idKelompok);
-            newMember.setNpm(npm);
-            anggotaKelompokRepository.save(newMember);
-            
-            response.put("success", true);
-            response.put("message", "Anggota berhasil ditambahkan.");
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error: " + e.getMessage());
-        }
-        return response;
-    }
     
-    // ==================== HAPUS TUGAS ====================
+    // udh g dipake harusnya
     @GetMapping("/delete-tugas")
     public String deleteTugas(@RequestParam Integer kelasId,
                            @RequestParam Integer idTubes,
@@ -845,7 +853,7 @@ public class DosenEditController {
         return "redirect:/dosen/tubes?kelasId=" + kelasId;
     }
     
-    // ==================== GET TUGAS BY ID (AJAX) ====================
+    // udh g dipake harusnya
     @GetMapping("/get-tugas")
     @ResponseBody
     public Map<String, Object> getTugas(@RequestParam Integer idTubes,
@@ -871,29 +879,5 @@ public class DosenEditController {
             response.put("message", e.getMessage());
             return response;
         }
-    }
-
-    @DeleteMapping("/delete-kelompok/{id}")
-    @ResponseBody
-    public Map<String, Object> deleteKelompok(@PathVariable Integer id, HttpSession session) {
-        Map<String, Object> response = new HashMap<>();
-        Dosen dosen = (Dosen) session.getAttribute("dosen");
-        
-        if (dosen == null) {
-            response.put("success", false);
-            response.put("message", "Session expired");
-            return response;
-        }
-
-        try {
-            kelompokService.deleteKelompok(id);
-            response.put("success", true);
-            response.put("message", "Kelompok berhasil dihapus");
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Gagal menghapus kelompok: " + e.getMessage());
-        }
-        
-        return response;
     }
 }

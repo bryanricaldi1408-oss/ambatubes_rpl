@@ -23,13 +23,7 @@ public class DosenController {
     
     private final DosenService dosenService;
     
-    // ==========================================
-    // DASHBOARD & PROFILE DOSEN
-    // ==========================================
-    
-    /**
-     * Dashboard utama dosen dengan search dan filter
-     */
+    //ini buat home dosen
     @GetMapping("/home")
     public String home(@RequestParam(required = false) String search,
                     @RequestParam(required = false) Boolean inProgress,
@@ -42,7 +36,7 @@ public class DosenController {
         
         List<Kelas> kelasList;
         
-        // Ambil semua kelas untuk dosen ini terlebih dahulu
+        // Ambil semua kelas untuk dosen ini 
         List<Kelas> allKelas = dosenService.getKelasByDosenNik(dosen.getNik());
         
         // Filter berdasarkan search keyword
@@ -53,14 +47,7 @@ public class DosenController {
             kelasList = allKelas;
         }
         
-        // Apply filters
         kelasList = applyFilters(kelasList, inProgress, past, semester);
-        
-        // Tambahkan status ke setiap kelas untuk ditampilkan di HTML
-        kelasList.forEach(kelas -> {
-            Map<String, Object> kelasWithStatus = new HashMap<>();
-            // Anda bisa menambahkan properti status di sini jika perlu
-        });
         
         // Ekstrak daftar semester unik untuk dropdown
         Set<String> semesterList = allKelas.stream()
@@ -78,9 +65,7 @@ public class DosenController {
         return "dosenHome";
     }
     
-    /**
-     * Helper method untuk apply filters
-     */
+
     private List<Kelas> applyFilters(List<Kelas> kelasList, Boolean inProgress, Boolean past, String semester) {
         if (kelasList == null) {
             return new ArrayList<>();
@@ -115,9 +100,8 @@ public class DosenController {
                 .collect(Collectors.toList());
     }
     
-    /**
-     * Helper method untuk menentukan status kelas berdasarkan semester
-     */
+
+    //method untuk menentukan status kelas berdasarkan semester
     private String determineClassStatus(String semester) {
         if (semester == null || semester.trim().isEmpty()) {
             return "in-progress";
@@ -127,7 +111,7 @@ public class DosenController {
             // Ekstrak tahun dari string semester (misal: "Genap 2023/2024")
             String lowerSemester = semester.toLowerCase();
             
-            // Cari pola tahun 4 digit
+            // cari thaunnya pake regex
             java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\d{4}");
             java.util.regex.Matcher matcher = pattern.matcher(semester);
             
@@ -135,7 +119,7 @@ public class DosenController {
                 int classYear = Integer.parseInt(matcher.group());
                 int currentYear = Year.now().getValue();
                 
-                // Jika semester mengandung "pendek" atau tahun >= tahun sekarang, anggap in-progress
+                // Jika semester mengandung "pendek" atau tahun sekarang, anggap in-progress
                 if (lowerSemester.contains("pendek")) {
                     return "in-progress";
                 }
@@ -146,7 +130,7 @@ public class DosenController {
             log.warn("Error determining class status for semester: {}", semester, e);
         }
         
-        // Default ke in-progress jika tidak bisa ditentukan
+        // Default ke in-progress 
         return "in-progress";
     }
 }
