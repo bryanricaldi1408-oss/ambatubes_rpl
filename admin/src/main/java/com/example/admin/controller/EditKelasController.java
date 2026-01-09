@@ -42,13 +42,9 @@ public class EditKelasController {
 
     @GetMapping("/{classId}")
     public String showEditKelasPage(@PathVariable("classId") Integer classId, Model model) {
-        // Get class details
+
         ClassDisplayDto classDetails = kelasService.getClassById(classId);
-        
-        // Get lecturers teaching this class
         List<Dosen> dosenList = dosenService.getDosenByKelas(classId);
-        
-        // Get students taking this class
         List<Mahasiswa> mahasiswaList = mahasiswaService.getMahasiswaByKelas(classId);
         
         model.addAttribute("classId", classId);
@@ -61,7 +57,6 @@ public class EditKelasController {
 
     @GetMapping("/tambahDosen/{classId}")
     public String showTambahDosenPage(@PathVariable("classId") Integer classId, Model model) {
-        // Get class details for context
         ClassDisplayDto classDetails = kelasService.getClassById(classId);
         
         model.addAttribute("classId", classId);
@@ -76,13 +71,13 @@ public class EditKelasController {
                                    @ModelAttribute TambahDosenDto tambahDosenDto,
                                    RedirectAttributes redirectAttributes) {
         try {
-            // Check if dosen already exists
+            //cek data dosennya ada g
             if (dosenService.existsByNik(tambahDosenDto.getNik())) {
-                // Dosen exists, check if already teaching this class
+                //udh ngajar kelas ini?
                 if (pengajaranKelasService.existsByNikAndIdKelas(tambahDosenDto.getNik(), classId)) {
                     redirectAttributes.addFlashAttribute("error", "Dosen sudah mengajar kelas ini");
                 } else {
-                    // Dosen exists but not teaching this class - create relationship
+                    //tambahin ke kelas klo blom
                     PengajaranKelas pengajaranKelas = new PengajaranKelas();
                     pengajaranKelas.setNik(tambahDosenDto.getNik());
                     pengajaranKelas.setIdKelas(classId);
@@ -90,15 +85,14 @@ public class EditKelasController {
                     redirectAttributes.addFlashAttribute("success", "Dosen berhasil ditambahkan ke kelas");
                 }
             } else {
-                // Dosen doesn't exist - create new dosen and relationship
+                //data dosen g ada
+                //bikin baru trs save
                 Dosen newDosen = new Dosen();
                 newDosen.setNik(tambahDosenDto.getNik());
                 newDosen.setNama(tambahDosenDto.getNamaLengkap());
                 
-                // Save the new dosen
                 dosenService.saveDosen(newDosen);
-                
-                // Create teaching relationship
+
                 PengajaranKelas pengajaranKelas = new PengajaranKelas();
                 pengajaranKelas.setNik(tambahDosenDto.getNik());
                 pengajaranKelas.setIdKelas(classId);
@@ -117,28 +111,25 @@ public class EditKelasController {
 
     @GetMapping("/tambahMahasiswa/{classId}")
     public String showTambahMahasiswaPage(@PathVariable("classId") Integer classId, Model model) {
-        // Get class details for context
         ClassDisplayDto classDetails = kelasService.getClassById(classId);
         
         model.addAttribute("classId", classId);
         model.addAttribute("classDetails", classDetails);
-        model.addAttribute("tambahMahasiswaDto", new TambahMahasiswaDto()); // Add empty DTO for form binding
+        model.addAttribute("tambahMahasiswaDto", new TambahMahasiswaDto());
         
         return "tambahMahasiswa";
     }
 
+    //prosesnya sama lah kek tambah dosen
     @PostMapping("/tambahMahasiswa/{classId}")
     public String processTambahMahasiswa(@PathVariable("classId") Integer classId,
                                     @ModelAttribute TambahMahasiswaDto tambahMahasiswaDto,
                                     RedirectAttributes redirectAttributes) {
         try {
-            // Check if mahasiswa already exists
             if (mahasiswaService.existsByNpm(tambahMahasiswaDto.getNpm())) {
-                // Mahasiswa exists, check if already enrolled in this class
                 if (pengambilanKelasService.existsByNpmAndIdKelas(tambahMahasiswaDto.getNpm(), classId)) {
                     redirectAttributes.addFlashAttribute("error", "Mahasiswa sudah terdaftar di kelas ini");
                 } else {
-                    // Mahasiswa exists but not enrolled in this class - create relationship
                     PengambilanKelas pengambilanKelas = new PengambilanKelas();
                     pengambilanKelas.setNpm(tambahMahasiswaDto.getNpm());
                     pengambilanKelas.setIdKelas(classId);
@@ -146,15 +137,13 @@ public class EditKelasController {
                     redirectAttributes.addFlashAttribute("success", "Mahasiswa berhasil ditambahkan ke kelas");
                 }
             } else {
-                // Mahasiswa doesn't exist - create new mahasiswa and relationship
+
                 Mahasiswa newMahasiswa = new Mahasiswa();
                 newMahasiswa.setNpm(tambahMahasiswaDto.getNpm());
                 newMahasiswa.setNama(tambahMahasiswaDto.getNamaLengkap());
-                
-                // Save the new mahasiswa
+
                 mahasiswaService.saveMahasiswa(newMahasiswa);
                 
-                // Create enrollment relationship
                 PengambilanKelas pengambilanKelas = new PengambilanKelas();
                 pengambilanKelas.setNpm(tambahMahasiswaDto.getNpm());
                 pengambilanKelas.setIdKelas(classId);

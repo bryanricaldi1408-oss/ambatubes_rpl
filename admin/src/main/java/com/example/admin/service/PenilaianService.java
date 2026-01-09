@@ -28,7 +28,7 @@ public class PenilaianService {
     public void simpanNilai(Integer idTubes, List<Map<String, Object>> nilaiList) {
         for (Map<String, Object> item : nilaiList) {
             log.info("simpanNilai() item: {}", item);
-            // Expected keys: npm, kelompok (letter), idKegiatan (Integer), nilai (Number), keterangan (String)
+            
             String npm = (String) item.get("npm");
             String kelompokName = (String) item.get("kelompok");
             Integer idKegiatan = item.get("idKegiatan") == null ? null : ((Number) item.get("idKegiatan")).intValue();
@@ -36,7 +36,7 @@ public class PenilaianService {
             Double nilai = nilaiNum == null ? null : nilaiNum.doubleValue();
             String keterangan = (String) item.get("keterangan");
 
-            // npm is optional (present for perorangan), but kelompokName, idKegiatan and nilai are required
+            
             if (kelompokName == null || idKegiatan == null || nilai == null) {
                 log.warn("Skipping malformed nilai entry (missing required fields): {}", item);
                 continue;
@@ -44,10 +44,9 @@ public class PenilaianService {
 
             Kelompok kelompok = kelompokRepository.findByIdTubesAndNamaKelompok(idTubes, kelompokName);
             if (kelompok == null) {
-                continue; // cannot find kelompok
+                continue; //klo klompok g nemu
             }
 
-            // If npm provided, treat as perorangan (existing behavior)
             if (npm != null) {
                 log.info("Processing perorangan: npm={} kelompok={} idKegiatan={} nilai={}", npm, kelompokName, idKegiatan, nilai);
                 // Find or create NilaiKelompok for this kelompok-kegiatan

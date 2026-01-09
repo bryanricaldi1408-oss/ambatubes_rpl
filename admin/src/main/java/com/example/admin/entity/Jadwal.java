@@ -20,7 +20,7 @@ public class Jadwal {
     @Column(name = "idtubes")
     private Integer idTubes;
 
-    // Relasi ke Tugas Besar
+    // relasi ke Tugas Besar
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idtubes", insertable = false, updatable = false)
     @ToString.Exclude

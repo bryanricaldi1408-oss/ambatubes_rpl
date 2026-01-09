@@ -26,16 +26,15 @@ public class NilaiKelompok {
     @Column(name = "idkegiatan")
     private Integer idKegiatan;
     
-    // --- RELASI ---
-    
-    // Relasi ke Kelompok (Many-to-One)
+
+    // relasi ke Kelompok (Many-to-One)
     // Pastikan Entity Kelompok sudah ada, jika belum, buat dummy dulu atau hapus bagian ini
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idkelompok", insertable = false, updatable = false)
     @ToString.Exclude
     private Kelompok kelompok;
     
-    // Relasi ke Kegiatan (Many-to-One)
+    // relasi ke Kegiatan (Many-to-One)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idkegiatan", insertable = false, updatable = false)
     @ToString.Exclude
